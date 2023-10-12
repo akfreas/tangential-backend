@@ -1,0 +1,17 @@
+{
+  "name": "tangential",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless": "^3.35.2",
+    "serverless-offline": "^13.2.0",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "aws-xray-sdk": "^3.5.2",
+    "http-proxy-agent": "^7.0.0",
+    "https-proxy-agent": "^7.0.2"
+  }
+}

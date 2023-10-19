@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { httpsAgent } from '../config/config';
-import { TruffleHTTPRequestError } from '../models/errors/TruffleHTTPRequestError';
+import { TangentialHTTPRequestError } from '../models/errors/TangentialHTTPRequestError';
 
 export const axiosInstance = axios.create({ httpsAgent });
 
@@ -18,7 +18,7 @@ export function processError({
   error,
 }: ProcessErrorParams): Promise<never> {
   const headers = error.response ? error.response.headers : undefined;
-  return Promise.reject(new TruffleHTTPRequestError(`error on ${method}`, error, url, params, headers));
+  return Promise.reject(new TangentialHTTPRequestError(`error on ${method}`, error, url, params, headers));
 }
 
 interface JsonPostParams {
@@ -90,6 +90,6 @@ export async function jsonPatch({ url, data, ...params }: JsonPatchParams): Prom
     const response: AxiosResponse = await axiosInstance(px);
     return response.data;
   } catch (error) {
-    return Promise.reject(new TruffleHTTPRequestError('error patching', error, url, data, params));
+    return Promise.reject(new TangentialHTTPRequestError('error patching', error, url, data, params));
   }
 }

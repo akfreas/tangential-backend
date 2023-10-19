@@ -10,8 +10,9 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "aws-xray-sdk": "^3.5.2",
+    "axios": "^1.5.1",
     "http-proxy-agent": "^7.0.0",
-    "https-proxy-agent": "^7.0.2"
+    "https-proxy-agent": "^7.0.2",
+    "serverless-dotenv-plugin": "^6.0.0"
   }
 }

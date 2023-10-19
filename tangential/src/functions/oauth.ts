@@ -5,31 +5,59 @@ export async function handler(
   event: APIGatewayEvent,
   context: Context
 ): Promise<{ statusCode: number; body: string }> {
-  const clientId = "lKCXKlNw2myH1xNmrapHhpq5KGkbq91j";
-  const secret = "ATOA-AdVQkT9_X9SJG_Vx_nHyf3u3YjNWI2ho_Tynam2ar3VwEH7xg-ztbH8SY91oUT_511E0D4B";
-  console.log("event", event);
+  const clientId = process.env.ATLASSIAN_CLIENT_ID;
+  const secret = process.env.ATLASSIAN_CLIENT_SECRET;
   const { code } = event.queryStringParameters;
 
-  /*
-  curl --request POST \
-  --url 'https://auth.atlassian.com/oauth/token' \
-  --header 'Content-Type: application/json' \
-  --data '{ "grant_type": "refresh_token", "client_id": "YOUR_CLIENT_ID", "client_secret": "YOUR_CLIENT_SECRET", "refresh_token": "YOUR_REFRESH_TOKEN" }'
-
-  */
   const url = "https://auth.atlassian.com/oauth/token";
-  const result = await jsonPost({
+  const { access_token,
+    refresh_token,
+    scope,
+    token_type,
+    expires_in,
+    error,
+    error_description,
+  } = await jsonPost({
     url,
     data: {
-      grant_type: "refresh_token",
+      grant_type: "authorization_code",
       client_id: clientId,
       client_secret: secret,
-      refresh_token: code,
+      code,
+      redirect_uri: "https://tangential.ngrok.io/offline/oauth",
     },
   });
 
-  return {
-    statusCode: 200,
-    body: "ok",
-  };
+  const resourceUrl = "https://api.atlassian.com/oauth/token/accessible-resources";
+
+  const [{
+    id,
+
+  }] = await jsonGet({
+
+    url: resourceUrl,
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+  try {
+    const response = await jsonGet({
+      url: `https://api.atlassian.com/ex/jira/${id}/rest/api/3/project`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+    };
+  } catch (error) {
+    console.log(error)
+    return {
+      statusCode: 500,
+      body: JSON.stringify(error),
+    };
+  }
 }

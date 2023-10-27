@@ -118,4 +118,6 @@ dist
 **/parse_errors/*
 **/.build
 **/.vscode
-
+credentials.json
+refresh_token.txt
+token.json

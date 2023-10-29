@@ -293,7 +293,6 @@ def analyze_epic(epic_key, last_checked_date):
                       in_progress_date = datetime.strptime(log['created'], '%Y-%m-%dT%H:%M:%S.%f%z')
                       days_in_status = (gmt.localize(datetime.now()) - in_progress_date).days
                       if days_in_status > 1:
-                          import ipdb; ipdb.set_trace()
                           long_running_issues.append({
                               'id': child.get('id'), 
                               'key': child.get('key'), 
@@ -328,5 +327,5 @@ def analyze_epic(epic_key, last_checked_date):
 # # # # print(f'Velocity for the last {days} days is: {velocity}')
 # pprint(result)
 # pprint(get_workspace_statuses())
-pprint(analyze_epic('TAN-93', gmt.localize(datetime.now() - timedelta(days=30))))
+pprint(analyze_epic('TAN-93', gmt.localize(datetime.now() - timedelta(days=14))))
 import ipdb; ipdb.set_trace()

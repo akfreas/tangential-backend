@@ -13,6 +13,8 @@
     "axios": "^1.5.1",
     "http-proxy-agent": "^7.0.0",
     "https-proxy-agent": "^7.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.4.3",
     "serverless-dotenv-plugin": "^6.0.0"
   }
 }

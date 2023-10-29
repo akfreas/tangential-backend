@@ -8,15 +8,16 @@ plugins:
 provider:
   name: aws
   runtime: nodejs18.x
+  timeout: 60
   environment:
-    LOCAL_HTTP_PROXY: http://localhost:8080
+    LOCAL_HTTP_PROXY: http://localhost:8081
     NODE_TLS_REJECT_UNAUTHORIZED: 0
     ATLASSIAN_CLIENT_ID: lKCXKlNw2myH1xNmrapHhpq5KGkbq91j
     ATLASSIAN_CLIENT_SECRET: ATOA-AdVQkT9_X9SJG_Vx_nHyf3u3YjNWI2ho_Tynam2ar3VwEH7xg-ztbH8SY91oUT_511E0D4B
 functions:
-  oauth:
-    handler: src/functions/oauth.handler
+  epicAnalysis:
+    handler: src/functions/epicAnalysis.handler
     events:
       - http:
           method: get
-          path: oauth
+          path: epicAnalysis

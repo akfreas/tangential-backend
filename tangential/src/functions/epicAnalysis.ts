@@ -1,14 +1,9 @@
 import { APIGatewayEvent, Context, Handler } from 'aws-lambda';
 import { jsonLog } from '../utils/logging';
-import { analyzeEpic, fetchIssueQueryChangelogs } from '../utils/jira';
-import { JiraRequestAuth } from '../types/jiraTypes';
+import { analyzeEpic, analyzeProject, fetchIssueQueryChangelogs } from '../utils/jira';
 import { DateTime } from 'luxon';
-
-function extractAtlassianHeaders(headers: any): JiraRequestAuth {
-  const accessToken = headers['x-atlassian-token'];
-  const atlassianId = headers['x-atlassian-id'];
-  return { accessToken, atlassianId };
-}
+import { storeProjectReport } from '../utils/analysisStorage';
+import { extractAtlassianHeaders } from '../utils/request';
 
 export async function handler(
   event: APIGatewayEvent,
@@ -19,8 +14,11 @@ export async function handler(
 
   const auth = extractAtlassianHeaders(headers);
 
-  const changeLogs = await analyzeEpic('TAN-93', DateTime.now().minus({ days: 10 }), auth);
-  jsonLog('Changelogs', changeLogs);
+  const analysis = await analyzeProject('TAN', DateTime.now().minus({ days: 10 }), auth);
+
+  await storeProjectReport(analysis);
+
+  jsonLog('Changelogs', analysis);
   // rest of the code
 
   return {

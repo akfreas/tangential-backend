@@ -4,20 +4,63 @@ frameworkVersion: "3"
 plugins:
   - serverless-offline
   - serverless-plugin-typescript
+  - serverless-offline-sqs
+  - serverless-dotenv-plugin
+
+useDotenv: true
 
 provider:
   name: aws
   runtime: nodejs18.x
   timeout: 60
+  stage: ${opt:stage, 'offline'}
   environment:
-    LOCAL_HTTP_PROXY: http://localhost:8081
-    NODE_TLS_REJECT_UNAUTHORIZED: 0
-    ATLASSIAN_CLIENT_ID: lKCXKlNw2myH1xNmrapHhpq5KGkbq91j
-    ATLASSIAN_CLIENT_SECRET: ATOA-AdVQkT9_X9SJG_Vx_nHyf3u3YjNWI2ho_Tynam2ar3VwEH7xg-ztbH8SY91oUT_511E0D4B
+    projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
+
+custom:
+  projectAnalysisQueueUrl:
+    offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/ProjectAnalysisQueue-${self:provider.stage}
+    remote:
+      Ref: ProjectAnalysisQueue
+  serverless-offline-sqs:
+    autoCreate: false
+    apiVersion: "2012-11-05"
+    endpoint: https://localhost:4566
+    region: eu-west-1
+    accessKeyId: root
+    secretAccessKey: root
+    skipCacheInvalidation: false
+
 functions:
-  epicAnalysis:
-    handler: src/functions/epicAnalysis.handler
+  startWorkpaceAnalysis:
+    handler: src/functions/startWorkspaceAnalysis.handler
     events:
       - http:
           method: get
-          path: epicAnalysis
+          path: startWorkpaceAnalysis
+
+  analyzeProjectFromQueue:
+    handler: src/functions/analyzeProjectFromQueue.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - ProjectAnalysisQueue
+              - Arn
+          batchSize: 5
+
+resources:
+  Resources:
+    ProjectAnalysisQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ProjectAnalysisQueue-${self:provider.stage}
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt ProjectAnalysisDeadLetterQueue.Arn
+          maxReceiveCount: 2
+        VisibilityTimeout: ${self:provider.timeout}
+
+    ProjectAnalysisDeadLetterQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ProjectAnalysisDeadLetterQueue-${self:provider.stage}

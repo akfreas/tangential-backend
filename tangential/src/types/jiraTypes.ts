@@ -1,3 +1,4 @@
+import { Document } from "mongodb";
 
 export interface ChangelogEntry {
   issue_id: string;
@@ -64,7 +65,7 @@ export interface Changelog {
 }
 
 
-export interface ChildIssue {
+export interface ChildIssue {  // probably rename to "ticket" or "story"
   id: string;
   key: string;
   fields?: any;
@@ -75,4 +76,20 @@ export interface LongRunningIssue {
   key: string;
   self: string;
   timeInStatus: number;
+}
+
+export interface EpicReport {
+  epicKey: string;
+  velocity: number;
+  changelogs: ChangelogEntry[];
+  longRunningIssues: LongRunningIssue[];
+  childIssues: ChildIssue[];
+}
+
+export interface ProjectReport extends Document {
+  velocity: number;
+  epics: EpicReport[];
+  windowStartDate: string;
+  windowEndDate: string;
+  projectKey: string;
 }

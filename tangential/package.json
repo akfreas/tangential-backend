@@ -6,15 +6,26 @@
   "devDependencies": {
     "serverless": "^3.35.2",
     "serverless-offline": "^13.2.0",
+    "serverless-offline-sqs": "^7.3.2",
     "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@aws-sdk/client-comprehend": "^3.438.0",
+    "@aws-sdk/client-s3": "^3.438.0",
+    "@aws-sdk/client-secrets-manager": "^3.438.0",
+    "@aws-sdk/client-sns": "^3.438.0",
+    "@aws-sdk/client-sqs": "^3.438.0",
+    "@aws-sdk/client-ssm": "^3.438.0",
+    "@aws-sdk/lib-dynamodb": "^3.438.0",
+    "aws-xray-sdk-core": "^3.5.3",
     "axios": "^1.5.1",
     "http-proxy-agent": "^7.0.0",
     "https-proxy-agent": "^7.0.2",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.3",
+    "mongodb": "6.2",
+    "proxy-agent": "^6.3.1",
     "serverless-dotenv-plugin": "^6.0.0"
   }
 }

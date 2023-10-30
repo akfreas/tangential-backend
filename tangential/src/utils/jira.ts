@@ -1,4 +1,4 @@
-import { Changelog, ChangelogEntry, ChangelogValue, GetByJqlResponse, JiraRequestAuth, JiraRequestOptions, LongRunningIssue, PointsField } from '../types/jiraTypes';
+import { Changelog, ChangelogEntry, ChangelogValue, GetByJqlResponse, JiraRequestAuth, JiraRequestOptions, LongRunningIssue, PointsField, ProjectReport } from '../types/jiraTypes';
 import { jsonLog } from './logging';
 import { axiosInstance } from './request';
 import { DateTime } from 'luxon';
@@ -129,7 +129,57 @@ export async function fetchIssueQueryChangelogs(jqlQuery: string, auth: JiraRequ
 
   return changelogs;
 }
+interface ProjectInfo {
+  id: string;
+  key: string;
+  name: string;
+}
 
+export async function fetchProjects(auth: JiraRequestAuth, maxItems: number = 5000): Promise<ProjectInfo[]> {
+  let projects: ProjectInfo[] = [];
+  let startAt = 0;
+  const maxResults = 50;  // Max items per request, can be changed if needed
+
+  while (projects.length < maxItems) {
+    const options = {
+      path: 'project/search',
+      method: 'GET',
+      qs: {  // Query parameters
+        startAt: startAt,
+        maxResults: maxResults
+      }
+    };
+
+    const response = await makeJiraRequest(options, auth);
+    const newProjects = response.values;  // The projects are in the `values` field based on your sample response
+
+    if (!newProjects || newProjects.length === 0) {
+      break;  // Exit loop if no more projects
+    }
+
+    // Extract only the "id", "key", and "name" fields
+    const extractedProjects = newProjects.map((project: any) => ({
+      id: project.id,
+      key: project.key,
+      name: project.name
+    }));
+
+    projects = projects.concat(extractedProjects);
+
+    if (projects.length >= maxItems) {
+      projects = projects.slice(0, maxItems);  // Trim excess projects if any
+      break;  // Exit loop if maxItems or more projects fetched
+    }
+
+    if (response.isLast) {
+      break;  // Exit loop if this is the last batch
+    }
+
+    startAt += maxResults;  // Update start index for the next request
+  }
+
+  return projects;
+}
 
 async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxResults: number = 50): Promise<ChangelogValue[]> {
   let changelogItems: ChangelogValue[] = [];
@@ -219,18 +269,49 @@ async function getFields(auth: JiraRequestAuth, filter?: string): Promise<Points
   }
 }
 
+export async function analyzeProject(
+  projectKey: string,
+  windowStartDate: DateTime,
+  auth: JiraRequestAuth,
+  velocityWindowDays: number = 30,
+  longRunningDays: number = 10
+): Promise<ProjectReport> {
+
+  const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND status != "Done"`, auth);
+  const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND status = "Done" AND status changed DURING (-10d, now())`, auth)
+
+  const epics = [...notCompletedResults, ...recentlyCompletedResults];
+
+  const projectAnalysis = await Promise.all(epics.map((epic: any) => {
+    return analyzeEpic(epic.key, windowStartDate, auth, longRunningDays);
+  }))
+
+  const fields = await getFields(auth, 'point')
+  const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
+
+  const report: ProjectReport = {
+    projectKey,
+    windowEndDate: DateTime.local().toISO(),
+    windowStartDate: windowStartDate.toISO(),
+    epics: projectAnalysis,
+    velocity: projectVelocity
+  };
+
+  return report;
+}
+
 export async function analyzeEpic(
   epicKey: string,
-  lastCheckedDate: DateTime,
+  windowStartDate: DateTime,
   auth: JiraRequestAuth,
   longRunningDays: number = 10
 ): Promise<any> {
-  const result: any = {};
+  const result: any = { epicKey };
 
   // Step 1: Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;
   const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points
-  const velocity = await calculateVelocity(30, pointsFields, auth); // Assuming 30 days
+  const velocity = await calculateVelocity(jql, 30, pointsFields, auth); // Assuming 30 days
   result.velocity = velocity;
 
   // Step 2: Fetch the changelog for that epic
@@ -238,7 +319,7 @@ export async function analyzeEpic(
   result.epic_changelog = changelogs.length ? changelogs[0] : null;
 
   // Step 3: Fetch child issues
-  const childIssues = await fetchChildIssues(epicKey, auth);
+  const childIssues = await getByJql(jql, auth);
   result.child_issues = [];
 
   // Step 4: Pull changelog and comments and filter out everything before last checked date
@@ -254,11 +335,11 @@ export async function analyzeEpic(
 
     if (changelog) {
 
-      const filteredChangelog = changelog.filter((log: ChangelogValue) => DateTime.fromISO(log.created) > lastCheckedDate);
+      const filteredChangelog = changelog.filter((log: ChangelogValue) => DateTime.fromISO(log.created) > windowStartDate);
       childData.changelog = filteredChangelog;
 
       const comments = child.fields?.comment?.comments || [];
-      const filteredComments = comments.filter(comment => DateTime.fromISO(comment.updated) > lastCheckedDate);
+      const filteredComments = comments.filter(comment => DateTime.fromISO(comment.updated) > windowStartDate);
       childData.comments = filteredComments;
 
       const currentStatus = child.fields?.status;

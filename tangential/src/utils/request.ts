@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { httpsAgent } from '../config/config';
 import { TangentialHTTPRequestError } from '../models/errors/TangentialHTTPRequestError';
+import { JiraRequestAuth } from '../types/jiraTypes';
 
 export const axiosInstance = axios.create({ httpsAgent });
 
@@ -26,6 +27,12 @@ interface JsonPostParams {
   headers?: any;
   params?: any;
   data?: any;
+}
+
+export function extractAtlassianHeaders(headers: any): JiraRequestAuth {
+  const accessToken = headers['x-atlassian-token'];
+  const atlassianId = headers['x-atlassian-id'];
+  return { accessToken, atlassianId };
 }
 
 export async function jsonPost({ url, headers = {}, ...params }: JsonPostParams): Promise<any> {

@@ -1,0 +1,11 @@
+version: "3"
+services:
+  localstack:
+    image: localstack/localstack
+    network_mode: bridge
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs
+      - LS_LOG=debug
+      - DEBUG=1

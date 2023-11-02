@@ -6,7 +6,6 @@ import { DateTime } from 'luxon';
 
 export const handler: SQSHandler = async (event) => {
   try {
-    jsonLog('Event', event);
     for (const record of event.Records) {
       const { projectKey, windowStartDate, auth,
         velocityWindowDays, longRunningDays } = JSON.parse(record.body);
@@ -19,7 +18,6 @@ export const handler: SQSHandler = async (event) => {
         longRunningDays
       );
       await storeProjectReport(result);
-      doLog('Stored Project analysis');
     }
   } catch (err) {
     console.error(err);

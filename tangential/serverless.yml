@@ -5,7 +5,7 @@ plugins:
   - serverless-offline
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
-  - serverless-offline-sqs
+  - "@akfreas/serverless-offline-sqs"
 useDotenv: true
 
 provider:
@@ -15,8 +15,7 @@ provider:
   stage: ${opt:stage, 'offline'}
   region: eu-west-1
   environment:
-    # projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
-    HTTP_PROXY: http://localhost:8081
+    projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
 
 custom:
   projectAnalysisQueueUrl:
@@ -24,13 +23,8 @@ custom:
     remote:
       Ref: ProjectAnalysisQueue
   serverless-offline-sqs:
-    autoCreate: false
-    apiVersion: "2012-11-05"
-    endpoint: https://localhost:4566
+    endpoint: http://localhost:4566
     region: eu-west-1
-    accessKeyId: root
-    secretAccessKey: root
-    skipCacheInvalidation: false
     debug: true
 
 functions:

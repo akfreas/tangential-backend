@@ -18,8 +18,6 @@ export async function handler(
 
   await storeProjectReport(analysis);
 
-  jsonLog('Changelogs', analysis);
-  // rest of the code
 
   return {
     statusCode: 200,

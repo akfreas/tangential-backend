@@ -1,5 +1,9 @@
 import {
-  Changelog, ChangelogEntry, ChangelogValue, GetByJqlResponse, JiraRequestAuth, JiraRequestOptions, LongRunningIssue, PointsField, ProjectReport,
+  Changelog, ChangelogEntry,
+  ChangelogValue, GetByJqlResponse,
+  JiraRequestAuth, JiraRequestOptions,
+  LongRunningIssue, PointsField, ProjectReport,
+  JiraProfile,
   EpicReport
 } from '@akfreas/tangential-core';
 import { jsonLog } from './logging';
@@ -136,7 +140,10 @@ interface ProjectInfo {
   id: string;
   key: string;
   name: string;
+  displayName?: string;
   avatarUrls: any;
+  active: boolean;
+  lead: JiraProfile;
 }
 
 export async function fetchProjects(auth: JiraRequestAuth, maxItems: number = 5000): Promise<ProjectInfo[]> {
@@ -196,7 +203,10 @@ export async function fetchProjectById(projectId: string, auth: JiraRequestAuth)
     id: response.id,
     key: response.key,
     name: response.name,
-    avatarUrls: response.avatarUrls
+    avatarUrls: response.avatarUrls,
+    active: response.active,
+    displayName: response.displayName,
+    lead: response.lead
   };
 
   return project;
@@ -306,7 +316,7 @@ export async function analyzeProject(
   velocityWindowDays: number = 30,
   longRunningDays: number = 10
 ): Promise<ProjectReport> {
-  const { avatarUrls } = await fetchProjectById(projectKey, auth);
+  const { avatarUrls, displayName, name, active, lead } = await fetchProjectById(projectKey, auth);
   const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND status != "Done"`, auth);
   const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND status = "Done" AND status changed DURING (-10d, now())`, auth)
 
@@ -320,7 +330,10 @@ export async function analyzeProject(
   const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
 
   const report: ProjectReport = {
+    active,
+    name: displayName || name,
     projectKey,
+    lead,
     avatar: avatarUrls['48x48'],
     windowEndDate: DateTime.local().toISO(),
     windowStartDate: windowStartDate.toISO(),
@@ -339,8 +352,8 @@ export async function analyzeEpic(
 ): Promise<EpicReport> {
   let result: any = { epicKey };
 
-  const { fields: { status: { name: statusName }, priority: { name: priority } } } = await getIssue(epicKey, auth);
-  result = { ...result, statusName, priority };
+  const { fields: { status: { name: statusName }, priority: { name: priority }, summary } } = await getIssue(epicKey, auth);
+  result = { ...result, statusName, priority, summary };
 
   // Step 1: Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;

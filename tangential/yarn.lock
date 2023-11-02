@@ -12,16 +12,16 @@
 
 "@akfreas/serverless-offline-sqs@^7.3.2":
   version "7.3.2"
-  resolved "https://npm.pkg.github.com/download/@akfreas/serverless-offline-sqs/7.3.2/73da5fb1ab2cef1c46f3f17e053685e4b8c33807#73da5fb1ab2cef1c46f3f17e053685e4b8c33807"
+  resolved "https://npm.pkg.github.com/download/@akfreas/serverless-offline-sqs/7.3.2/73da5fb1ab2cef1c46f3f17e053685e4b8c33807"
   integrity sha512-sAAOtIR/XuFcY696xxW0KLisc8mdr2cdFWSUzhkRQh9eJlJUjiU5NTkCwuq8+3q3De7ID6W6aYbhCzY7d26VFA==
   dependencies:
     aws-sdk "^2.1234.0"
     lodash "^4.17.21"
     p-queue "^6.6.2"
 
-"@akfreas/tangential-core@*":
+"@akfreas/tangential-core@^1.0.0":
   version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@akfreas/tangential-core/1.0.0/0f91fcba3cf2034e78453efee69993ed9139b839"
+  resolved "https://npm.pkg.github.com/download/@akfreas/tangential-core/1.0.0/0f91fcba3cf2034e78453efee69993ed9139b839#0f91fcba3cf2034e78453efee69993ed9139b839"
   integrity sha512-LcDR8TZqQcdTP0o2ONZ6adqDQqzWU+xt/ZRgBTQ3Thc+3Ye98mXGNeTnwYJhh53ljzQRuEhnhKx0IagAdLr9fQ==
 
 "@aws-crypto/crc32@3.0.0":
@@ -3373,7 +3373,7 @@ event-target-shim@^5.0.0:
 
 eventemitter3@^4.0.4:
   version "4.0.7"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
 events@1.1.1:
@@ -4760,7 +4760,7 @@ p-memoize@^7.1.1:
 
 p-queue@^6.6.2:
   version "6.6.2"
-  resolved "https://registry.yarnpkg.com/p-queue/-/p-queue-6.6.2.tgz#2068a9dcf8e67dd0ec3e7a2bcb76810faa85e426"
+  resolved "https://registry.npmjs.org/p-queue/-/p-queue-6.6.2.tgz"
   integrity sha512-RwFpb72c/BhQLEXIZ5K2e+AhgNVmIejGlTgiB9MzZ0e93GRvqZ7uSi0dvRF7/XIXDeNkra2fNHBxTyPDGySpjQ==
   dependencies:
     eventemitter3 "^4.0.4"

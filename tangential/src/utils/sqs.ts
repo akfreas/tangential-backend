@@ -33,6 +33,5 @@ export async function sendProjectAnalysisQueueMessage(
       longRunningDays
     })
   };
-  jsonLog('Sending SQS message', payload);
   await sendMessage(payload);
 }

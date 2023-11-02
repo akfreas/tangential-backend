@@ -1,7 +1,7 @@
 import { SendMessageCommand, SendMessageCommandInput } from "@aws-sdk/client-sqs";
 import { sqs } from "../config/config";
-import { doError } from "./logging";
-import { JiraRequestAuth } from "../types/jiraTypes";
+import { doError, jsonLog } from "./logging";
+import { JiraRequestAuth } from "@akfreas/tangential-core";
 
 const maxDeadLetterMessages = 10;
 
@@ -33,5 +33,6 @@ export async function sendProjectAnalysisQueueMessage(
       longRunningDays
     })
   };
+  jsonLog('Sending SQS message', payload);
   await sendMessage(payload);
 }

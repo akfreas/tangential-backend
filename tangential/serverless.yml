@@ -4,9 +4,8 @@ frameworkVersion: "3"
 plugins:
   - serverless-offline
   - serverless-plugin-typescript
-  - serverless-offline-sqs
   - serverless-dotenv-plugin
-
+  - serverless-offline-sqs
 useDotenv: true
 
 provider:
@@ -14,8 +13,10 @@ provider:
   runtime: nodejs18.x
   timeout: 60
   stage: ${opt:stage, 'offline'}
+  region: eu-west-1
   environment:
-    projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
+    # projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
+    HTTP_PROXY: http://localhost:8081
 
 custom:
   projectAnalysisQueueUrl:
@@ -30,14 +31,15 @@ custom:
     accessKeyId: root
     secretAccessKey: root
     skipCacheInvalidation: false
+    debug: true
 
 functions:
-  startWorkpaceAnalysis:
+  startWorkspaceAnalysis:
     handler: src/functions/startWorkspaceAnalysis.handler
     events:
       - http:
           method: get
-          path: startWorkpaceAnalysis
+          path: /workspace/analyze
 
   analyzeProjectFromQueue:
     handler: src/functions/analyzeProjectFromQueue.handler

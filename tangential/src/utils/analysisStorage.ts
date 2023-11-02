@@ -1,6 +1,6 @@
-import { ProjectReport } from "../types/jiraTypes";
 import MongoDBWrapper from "./databaseWrapper";
 import { doError, doLog, jsonLog } from "./logging";
+import { ProjectReport } from "@akfreas/tangential-core"
 
 export async function storeProjectReport(report: ProjectReport): Promise<void> {
   try {

@@ -1,4 +1,7 @@
-import { Changelog, ChangelogEntry, ChangelogValue, GetByJqlResponse, JiraRequestAuth, JiraRequestOptions, LongRunningIssue, PointsField, ProjectReport } from '../types/jiraTypes';
+import {
+  Changelog, ChangelogEntry, ChangelogValue, GetByJqlResponse, JiraRequestAuth, JiraRequestOptions, LongRunningIssue, PointsField, ProjectReport,
+  EpicReport
+} from '@akfreas/tangential-core';
 import { jsonLog } from './logging';
 import { axiosInstance } from './request';
 import { DateTime } from 'luxon';
@@ -133,6 +136,7 @@ interface ProjectInfo {
   id: string;
   key: string;
   name: string;
+  avatarUrls: any;
 }
 
 export async function fetchProjects(auth: JiraRequestAuth, maxItems: number = 5000): Promise<ProjectInfo[]> {
@@ -179,6 +183,23 @@ export async function fetchProjects(auth: JiraRequestAuth, maxItems: number = 50
   }
 
   return projects;
+}
+
+export async function fetchProjectById(projectId: string, auth: JiraRequestAuth): Promise<ProjectInfo> {
+  const options = {
+    path: `project/${projectId}`,
+    method: 'GET',
+  };
+
+  const response = await makeJiraRequest(options, auth);
+  const project: ProjectInfo = {
+    id: response.id,
+    key: response.key,
+    name: response.name,
+    avatarUrls: response.avatarUrls
+  };
+
+  return project;
 }
 
 async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxResults: number = 50): Promise<ChangelogValue[]> {
@@ -269,6 +290,15 @@ async function getFields(auth: JiraRequestAuth, filter?: string): Promise<Points
   }
 }
 
+async function getIssue(issueId: string, auth: JiraRequestAuth): Promise<any> {
+  const options = {
+    path: `issue/${issueId}`,
+    method: 'GET',
+  };
+
+  return await makeJiraRequest(options, auth);
+}
+
 export async function analyzeProject(
   projectKey: string,
   windowStartDate: DateTime,
@@ -276,7 +306,7 @@ export async function analyzeProject(
   velocityWindowDays: number = 30,
   longRunningDays: number = 10
 ): Promise<ProjectReport> {
-
+  const { avatarUrls } = await fetchProjectById(projectKey, auth);
   const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND status != "Done"`, auth);
   const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND status = "Done" AND status changed DURING (-10d, now())`, auth)
 
@@ -291,6 +321,7 @@ export async function analyzeProject(
 
   const report: ProjectReport = {
     projectKey,
+    avatar: avatarUrls['48x48'],
     windowEndDate: DateTime.local().toISO(),
     windowStartDate: windowStartDate.toISO(),
     epics: projectAnalysis,
@@ -305,8 +336,11 @@ export async function analyzeEpic(
   windowStartDate: DateTime,
   auth: JiraRequestAuth,
   longRunningDays: number = 10
-): Promise<any> {
-  const result: any = { epicKey };
+): Promise<EpicReport> {
+  let result: any = { epicKey };
+
+  const { fields: { status: { name: statusName }, priority: { name: priority } } } = await getIssue(epicKey, auth);
+  result = { ...result, statusName, priority };
 
   // Step 1: Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;

@@ -5,4 +5,5 @@ set -e
 
 ./setup_resources.py --stage offline
 cd ..
+export HTTP_PROXY=http://localhost:8081
 sls offline start --reloadHandler --stage offline --httpPort 3001

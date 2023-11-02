@@ -6,7 +6,7 @@ import { jsonLog } from "../utils/logging";
 import { sendProjectAnalysisQueueMessage } from "../utils/sqs";
 import { DateTime } from 'luxon';
 import MongoDBWrapper from "../utils/databaseWrapper";
-import { ProjectReport } from "../types/jiraTypes";
+import { ProjectReport } from "@akfreas/tangential-core";
 
 export async function handler(
   event: APIGatewayEvent,
@@ -20,29 +20,29 @@ export async function handler(
   const dbWrapper = await MongoDBWrapper.getInstance();
 
   const reportsCollection = dbWrapper.getCollection<ProjectReport>('reports');
+  try {
+    const projects = await fetchProjects(auth);
 
-  const result = await reportsCollection.updateOne(
-    { projectKey: '234' }, // filter
-    { $set: { test: '123455' } }, // update
-    { upsert: true } // options: create a new document if no documents match the filter
-  );
+    await Promise.all(projects.map(p => p.key).map((projectKey) => {
+      return sendProjectAnalysisQueueMessage(
+        projectKey,
+        DateTime.now().minus({ days: 10 }).toISODate(),
+        auth,
+        30,
+        7
+      )
+    }));
 
-  jsonLog('Result', result);
-  const projects = await fetchProjects(auth);
-
-  await Promise.all(projects.map(p => p.key).map((projectKey) => {
-    return sendProjectAnalysisQueueMessage(
-      projectKey,
-      DateTime.now().minus({ days: 10 }).toISODate(),
-      auth,
-      30,
-      7
-    )
-  }));
-
-  // jsonLog('Analyzing Projects', projects);
-  return {
-    statusCode: 200,
-    body: 'Success'
-  };
+    // jsonLog('Analyzing Projects', projects);
+    return {
+      statusCode: 200,
+      body: 'Success'
+    };
+  } catch (err) {
+    console.error(err);
+    return {
+      statusCode: 500,
+      body: 'Error'
+    };
+  }
 }

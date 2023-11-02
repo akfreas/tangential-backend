@@ -4,14 +4,26 @@ import {
   JiraRequestAuth, JiraRequestOptions,
   LongRunningIssue, PointsField, ProjectReport,
   JiraProfile,
-  EpicReport
+  EpicReport,
+  IssueComment
 } from '@akfreas/tangential-core';
 import { jsonLog } from './logging';
 import { axiosInstance } from './request';
 import { DateTime } from 'luxon';
+import { makeJiraRequest } from './jiraRequest';
+
+interface ProjectInfo {
+  id: string;
+  key: string;
+  name: string;
+  displayName?: string;
+  avatarUrls: any;
+  active: boolean;
+  lead: JiraProfile;
+}
 
 
-async function getByJql(jql: string = 'project=10001', auth: JiraRequestAuth, maxItems: number = 5000): Promise<GetByJqlResponse> {
+export async function getByJql(jql: string = 'project=10001', auth: JiraRequestAuth, maxItems: number = 5000): Promise<GetByJqlResponse> {
   const path = 'search';
   let startAt = 0;
   const maxResults = 100;  // Jira usually has a limit per request, often 100
@@ -80,26 +92,6 @@ async function sumStoryPoints(jql: string, pointsFields: PointsField[], auth: Ji
   return totalPoints;
 }
 
-
-async function makeJiraRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
-
-  const { accessToken, atlassianId } = auth;
-
-  const url = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/${options.path}`;
-
-  const response = await axiosInstance(url,
-    {
-      method: options.method,
-      data: options.body,
-      params: options.params,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-  return response.data;
-}
-
 export async function fetchIssueQueryChangelogs(jqlQuery: string, auth: JiraRequestAuth, maxResults: number = 50): Promise<ChangelogEntry[]> {
   const body = {
     jql: jqlQuery,
@@ -135,15 +127,6 @@ export async function fetchIssueQueryChangelogs(jqlQuery: string, auth: JiraRequ
   }
 
   return changelogs;
-}
-interface ProjectInfo {
-  id: string;
-  key: string;
-  name: string;
-  displayName?: string;
-  avatarUrls: any;
-  active: boolean;
-  lead: JiraProfile;
 }
 
 export async function fetchProjects(auth: JiraRequestAuth, maxItems: number = 5000): Promise<ProjectInfo[]> {
@@ -279,6 +262,64 @@ async function calculateVelocity(
   return await sumStoryPoints(combinedJql, pointsFields, auth);
 }
 
+
+interface IssueCommentsTimeline {
+  beforeDate: IssueComment[];
+  afterDate: IssueComment[];
+}
+
+async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivotDate: string, maxResults: number = 50): Promise<IssueCommentsTimeline | null> {
+  let beforeDate: IssueComment[] = [];
+  let afterDate: IssueComment[] = [];
+  let startAt = 0;
+  let total = 0;
+
+  // Convert pivotDate to Date object for comparison
+  const pivot = DateTime.fromISO(pivotDate);
+
+  while (true) {
+    const options = {
+      path: `issue/${issueId}/comment?startAt=${startAt}&maxResults=${maxResults}`,
+      method: 'GET',
+    };
+
+    let response;
+    try {
+      response = await makeJiraRequest(options, auth);
+    } catch (error) {
+      console.error(`Failed to get comments for issue ID: ${issueId}`);
+      return { beforeDate, afterDate }; // Return the partial lists if there's an error
+    }
+
+    const pageComments: IssueComment[] = response.comments;
+    pageComments.forEach(comment => {
+      const createdDate = DateTime.fromISO(comment.created);
+      if (createdDate < pivot) {
+        beforeDate.push(comment);
+      } else if (createdDate > pivot) {
+        afterDate.push(comment);
+      }
+      // Comments exactly at the pivot time are not included, as per the initial request
+    });
+
+    total = response.total; // Assuming the response includes a 'total' field indicating the total number of comments
+
+    // Check if we've fetched all items or reached the last page
+    if (pageComments.length < maxResults || beforeDate.length + afterDate.length >= total) {
+      break;
+    }
+
+    // Update the starting index for the next page of results
+    startAt += maxResults;
+  }
+
+  if (beforeDate.length + afterDate.length === 0) {
+    return null;
+  }
+
+  return { beforeDate, afterDate };
+}
+
 async function fetchChildIssues(parentIssueKey: string, auth: JiraRequestAuth, maxResults: number = 5000): Promise<any> {
   const jql = `parent = ${parentIssueKey}`;
   return await getByJql(jql, auth, maxResults);
@@ -328,6 +369,12 @@ export async function analyzeProject(
 
   const fields = await getFields(auth, 'point')
   const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
+  const windowEndDate = DateTime.local().toISO();
+  const windowStartDateObject = windowStartDate.toISO()
+
+  if (windowEndDate === null || windowStartDateObject === null) {
+    throw new Error('Failed to format window dates');
+  }
 
   const report: ProjectReport = {
     active,
@@ -335,8 +382,8 @@ export async function analyzeProject(
     projectKey,
     lead,
     avatar: avatarUrls['48x48'],
-    windowEndDate: DateTime.local().toISO(),
-    windowStartDate: windowStartDate.toISO(),
+    windowEndDate,
+    windowStartDate: windowStartDateObject,
     epics: projectAnalysis,
     velocity: projectVelocity
   };
@@ -355,22 +402,24 @@ export async function analyzeEpic(
   const { fields: { status: { name: statusName }, priority: { name: priority }, summary } } = await getIssue(epicKey, auth);
   result = { ...result, statusName, priority, summary };
 
-  // Step 1: Compute the 30-day velocity for issues with that epic as a parent
+  // Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;
   const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points
   const velocity = await calculateVelocity(jql, 30, pointsFields, auth); // Assuming 30 days
   result.velocity = velocity;
 
-  // Step 2: Fetch the changelog for that epic
+  // Fetch the changelog for that epic
   const changelogs = await fetchIssueChangelog(epicKey, auth);
   result.epic_changelog = changelogs.length ? changelogs[0] : null;
 
-  // Step 3: Fetch child issues
+  // Fetch child issues
   const childIssues = await getByJql(jql, auth);
   result.child_issues = [];
 
-  // Step 4: Pull changelog and comments and filter out everything before last checked date
+  // Pull changelog and comments and filter out everything before last checked date
   const longRunningIssues: LongRunningIssue[] = [];
+
+  result.comments = await getCommentsTimeline(epicKey, auth, windowStartDate.toISO()!);
 
   for (const child of childIssues.issues) {
     const childData: any = {
@@ -378,16 +427,15 @@ export async function analyzeEpic(
       key: child.key
     };
 
+    const comments = await getCommentsTimeline(child.id, auth, windowStartDate.toISO()!);
+    childData.comments = comments;
+
     const changelog = await fetchIssueChangelog(child.id, auth);
 
     if (changelog) {
 
       const filteredChangelog = changelog.filter((log: ChangelogValue) => DateTime.fromISO(log.created) > windowStartDate);
       childData.changelog = filteredChangelog;
-
-      const comments = child.fields?.comment?.comments || [];
-      const filteredComments = comments.filter(comment => DateTime.fromISO(comment.updated) > windowStartDate);
-      childData.comments = filteredComments;
 
       const currentStatus = child.fields?.status;
 

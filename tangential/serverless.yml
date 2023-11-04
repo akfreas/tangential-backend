@@ -16,6 +16,16 @@ provider:
   region: us-east-1
   environment:
     projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
+  httpApi:
+    cors:
+      allowedOrigins:
+        - "https://${self:provider.stage}.tangential.app"
+      allowedHeaders:
+        - "Content-Type"
+        - "X-Atlassian-Token"
+        - "X-Atlassian-Id"
+      allowCredentials: false
+
 custom:
   projectAnalysisQueueUrl:
     offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/ProjectAnalysisQueue-${self:provider.stage}
@@ -30,7 +40,7 @@ functions:
   startWorkspaceAnalysis:
     handler: src/functions/startWorkspaceAnalysis.handler
     events:
-      - http:
+      - httpApi:
           method: get
           path: /workspace/analyze
 

@@ -2,8 +2,10 @@ import { Agent as HttpsAgent } from 'https';
 import { Agent as HttpAgent } from 'http';
 import * as https from 'https';
 import * as http from 'http';
-import * as HTTPSProxyAgent from 'https-proxy-agent';
-import * as HTTPProxyAgent from 'http-proxy-agent';
+
+let HTTPSProxyAgent: typeof import('https-proxy-agent');
+let HTTPProxyAgent: typeof import('http-proxy-agent');
+
 
 let agent: https.Agent;
 // import { captureAWS, captureHTTPs, capturePromise } from 'aws-xray-sdk-core';
@@ -31,9 +33,10 @@ let httpInstance = new HttpAgent();
 let elasticSearchHttpInstance = httpsInstance;
 
 if (process.env.LOCAL_HTTP_PROXY) {
+  HTTPSProxyAgent = require('https-proxy-agent');
+  HTTPProxyAgent = require('http-proxy-agent');
   httpsInstance = new HTTPSProxyAgent.HttpsProxyAgent(process.env.LOCAL_HTTP_PROXY);
   httpInstance = new HTTPProxyAgent.HttpProxyAgent(process.env.LOCAL_HTTP_PROXY);
-  elasticSearchHttpInstance = httpsInstance;
 
   const config = { ...configInfo, httpsAgent: httpsInstance };
   // snsInstance = new SNSClient(config);

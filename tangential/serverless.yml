@@ -11,7 +11,6 @@ useDotenv: true
 provider:
   name: aws
   runtime: nodejs18.x
-  profile: tangential
   timeout: 60
   stage: ${opt:stage, 'offline'}
   region: us-east-1

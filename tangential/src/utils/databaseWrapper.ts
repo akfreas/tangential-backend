@@ -7,8 +7,8 @@ import { doLog, jsonLog } from './logging';
 
 export default class MongoDBWrapper {
   private static instance: MongoDBWrapper;
-  private client: MongoClient;
-  public db: Db;
+  private client?: MongoClient;
+  public db?: Db;
 
   private constructor() { }
 
@@ -41,13 +41,16 @@ export default class MongoDBWrapper {
       //   }
       // }
       this.client = new MongoClient(url, options);
-      this.db = this.client.db(); // You can specify a database name here if needed
+      this.db = this.client.db(process.env.MONGODB_DATABASE); // You can specify a database name here if needed
     } catch (error) {
       console.error('Failed to connect to MongoDB:', error);
     }
   }
 
   public getCollection<T extends Document>(name: string): Collection<T> {
+    if (!this.db) {
+      throw new Error('Database connection not established');
+    }
     return this.db.collection<T>(name);
   }
 

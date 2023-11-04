@@ -14,11 +14,7 @@ local_session = boto3.session.Session(region_name='localhost', aws_access_key_id
 
 dynamodb_port = 8001
 
-dynamodb = local_session.client('dynamodb', endpoint_url='http://localhost:%s' % dynamodb_port)
-sqs = local_session.client('sqs', endpoint_url='http://0.0.0.0:4566')
-
 cloudformation = session.client('cloudformation')
-s3 = session.resource('s3')
 
 def deploy_stage(stage, skip_message_upload):
     
@@ -34,7 +30,6 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--stage', help='Deploy stage', required=True)
-    parser.add_argument('--skip-message-upload', help='Prevent messages from uploading to S3', action='store_true', default=False)
     args = parser.parse_args()
 
     deploy_stage(args.stage, args.skip_message_upload)

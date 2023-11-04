@@ -14,6 +14,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tangential
     steps:
     - name: Checkout code
       uses: actions/checkout@v2

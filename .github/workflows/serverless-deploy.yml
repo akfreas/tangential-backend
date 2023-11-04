@@ -32,7 +32,7 @@ jobs:
         PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
     - name: Run tests
-      run: yarn test
+      run: yarn unit-test
       id: unit-tests
       env:
         PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}

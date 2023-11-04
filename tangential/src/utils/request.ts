@@ -9,7 +9,7 @@ interface ProcessErrorParams {
   method: string;
   url: string;
   params: any;
-  error: AxiosError;
+  error: any;
 }
 
 export function processError({

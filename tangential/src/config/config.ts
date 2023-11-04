@@ -81,5 +81,3 @@ export const sqs = sqsInstance;
 export const httpsAgent = httpsInstance;
 export const httpAgent = httpInstance;
 // export const dynamoDbDocumentClient = documentClientInstance;
-
-globalThis.jsonLog = jsonLog;

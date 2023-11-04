@@ -9,7 +9,13 @@ export const handler: SQSHandler = async (event) => {
     for (const record of event.Records) {
       const { projectKey, windowStartDate, auth,
         velocityWindowDays, longRunningDays } = JSON.parse(record.body);
-
+      jsonLog("params", [
+        projectKey,
+        DateTime.fromISO(windowStartDate),
+        auth,
+        velocityWindowDays,
+        longRunningDays
+      ])
       const result = await analyzeProject(
         projectKey,
         DateTime.fromISO(windowStartDate),

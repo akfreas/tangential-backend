@@ -11,9 +11,10 @@ useDotenv: true
 provider:
   name: aws
   runtime: nodejs18.x
+  profile: tangential
   timeout: 60
   stage: ${opt:stage, 'offline'}
-  region: eu-west-1
+  region: us-east-1
   environment:
     projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
 
@@ -24,7 +25,7 @@ custom:
       Ref: ProjectAnalysisQueue
   serverless-offline-sqs:
     endpoint: http://localhost:4566
-    region: eu-west-1
+    region: us-east-1
     debug: true
 
 functions:

@@ -1,10 +1,10 @@
-
 import {
   JiraRequestAuth, JiraRequestOptions,
 } from '@akfreas/tangential-core';
 import { axiosInstance } from './request';
-import { promises as fs } from 'fs'; // Use the Promise-based version of fs for async/await
-import * as path from 'path'; // For path manipulation
+import { promises as fs } from 'fs';
+import * as path from 'path';
+import qs from 'qs'; // qs is a querystring parsing library that can handle complex objects
 
 export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
 
@@ -36,16 +36,26 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
 
   // Create a directory called 'recordings' if it doesn't exist
   const recordingsPath = path.join(__dirname, 'recordings');
-  const result = await fs.mkdir(recordingsPath, { recursive: true });
-  console.log(`Created directory ${recordingsPath}, ${result}}`);
+  await fs.mkdir(recordingsPath, { recursive: true });
 
-  // Construct the filename from the request path and method
-  const sanitizedPath = options.path.replace(/\//g, '-'); // Replace slashes with dashes to avoid directory issues
-  const filename = `${sanitizedPath}-${options.method}.json`;
+  // Construct the filename from the request path, method, and parameters if it's a GET request
+  const sanitizedPath = options.path.replace(/\//g, '-');
+  let filename = `${sanitizedPath}-${options.method}.json`;
+
+  if (options.method.toUpperCase() === 'GET' && options.params) {
+    // URL-encode the parameters to ensure they are safe for a filename
+    const encodedParams = qs.stringify(options.params, { format: 'RFC1738' }).replace(/[?=&]/g, '-');
+    filename = `${sanitizedPath}-${encodedParams}-${options.method}.json`;
+  }
+
+  // Replace characters that are not allowed in filenames
+  filename = filename.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
 
   // Write the request and response to the filesystem
-  await fs.writeFile(path.join(recordingsPath, filename), JSON.stringify(requestData, null, 2), 'utf8');
+  const filePath = path.join(recordingsPath, filename);
+  await fs.writeFile(filePath, JSON.stringify(requestData, null, 2), 'utf8');
 
   // Return the response data
   return response.data;
 }
+

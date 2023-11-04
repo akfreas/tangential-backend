@@ -225,7 +225,8 @@ async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxRe
     for (const item of changelog) {
       item.author = {
         accountId: item.author?.accountId ?? '',
-        displayName: item.author?.displayName ?? ''
+        displayName: item.author?.displayName ?? '',
+        avatarUrls: item.author?.avatarUrls ?? {}
       };
     }
 
@@ -268,7 +269,7 @@ interface IssueCommentsTimeline {
   afterDate: IssueComment[];
 }
 
-async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivotDate: string, maxResults: number = 50): Promise<IssueCommentsTimeline | null> {
+export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivotDate: string, maxResults: number = 50): Promise<IssueCommentsTimeline | null> {
   let beforeDate: IssueComment[] = [];
   let afterDate: IssueComment[] = [];
   let startAt = 0;
@@ -279,8 +280,13 @@ async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivot
 
   while (true) {
     const options = {
-      path: `issue/${issueId}/comment?startAt=${startAt}&maxResults=${maxResults}`,
+      path: `issue/${issueId}/comment`,
       method: 'GET',
+      params: {
+        startAt,
+        maxResults,
+        expand: 'renderedBody'
+      }
     };
 
     let response;
@@ -291,7 +297,48 @@ async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivot
       return { beforeDate, afterDate }; // Return the partial lists if there's an error
     }
 
-    const pageComments: IssueComment[] = response.comments;
+    const pageComments: IssueComment[] = response.comments.map((comment: any): IssueComment => {
+      const {
+        self,
+        id,
+        author: {
+          accountId: authorAccountId,
+          avatarUrls: authorAvatarUrls,
+          displayName: authorDisplayName,
+        },
+        renderedBody,
+        updateAuthor: {
+          accountId: updateAuthorAccountId,
+          avatarUrls: updateAuthorAvatarUrls,
+          displayName: updateAuthorDisplayName,
+        },
+        created,
+        updated,
+      } = comment;
+
+      const author: JiraProfile = {
+        accountId: authorAccountId,
+        avatarUrls: authorAvatarUrls,
+        displayName: authorDisplayName,
+      };
+
+      const updateAuthor: JiraProfile = {
+        accountId: updateAuthorAccountId,
+        avatarUrls: updateAuthorAvatarUrls,
+        displayName: updateAuthorDisplayName,
+      };
+
+      return {
+        self,
+        id,
+        author,
+        renderedBody,
+        updateAuthor,
+        created,
+        updated,
+      };
+    });
+
     pageComments.forEach(comment => {
       const createdDate = DateTime.fromISO(comment.created);
       if (createdDate < pivot) {

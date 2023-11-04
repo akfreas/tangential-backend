@@ -5,6 +5,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.8.10",
+    "@types/qs": "^6.9.9",
     "serverless": "^3.35.2",
     "serverless-offline": "^13.2.0",
     "serverless-plugin-typescript": "^2.1.5",

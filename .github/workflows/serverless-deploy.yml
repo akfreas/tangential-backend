@@ -28,6 +28,8 @@ jobs:
 
     - name: Install dependencies
       run: yarn install
+      env:
+        PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
     - name: Run tests
       run: yarn test
@@ -37,11 +39,17 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: sls deploy --stage dev
       id: deploy-dev
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Deploy to live
       if: github.event_name == 'release' && github.event.action == 'published'
       run: sls deploy --stage live
       id: deploy-live
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Slack Notification for Test Failures
       if: ${{ failure() && steps.unit-tests.outcome == 'failure' }}

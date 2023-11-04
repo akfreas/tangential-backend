@@ -11,7 +11,6 @@ export async function makeDiskRequest(options: JiraRequestOptions, auth: JiraReq
   const recordingsPath = path.join(__dirname, '../data');
   const sanitizedPath = options.path.replace(/\//g, '-'); // Replace slashes with dashes
 
-  jsonLog("Making disk request", options)
   // Initialize the filename based on the method
   let filename = `${sanitizedPath}-${options.method}.json`;
 
@@ -23,7 +22,6 @@ export async function makeDiskRequest(options: JiraRequestOptions, auth: JiraReq
 
   // Replace characters that are not allowed in filenames
   filename = filename.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
-  console.log("Pulling from disk", filename)
   const filePath = path.join(recordingsPath, filename);
 
   if (options.method.toUpperCase() === 'GET') {

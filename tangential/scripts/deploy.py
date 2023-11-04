@@ -7,7 +7,7 @@ import subprocess
 import argparse
 import requests
 import yaml
-session = boto3.session.Session(region_name='eu-west-1')
+session = boto3.session.Session(region_name='us-east-1')
 
 
 local_session = boto3.session.Session(region_name='localhost', aws_access_key_id='access-key', aws_secret_access_key='secret-key')

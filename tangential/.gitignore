@@ -122,4 +122,4 @@ credentials.json
 refresh_token.txt
 token.json
 **/recordings
-**/tests/unit/data
+**/tests/integration/data

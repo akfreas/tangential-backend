@@ -37,6 +37,7 @@
     "ts-node": "^10.9.1"
   },
   "scripts": {
-    "test": "jest --config ./tests/unit/jest.config.ts"
+    "unit-tests": "jest --config ./tests/unit/jest.config.ts",
+    "int-tests": "jest --config ./tests/integration/jest.config.ts"
   }
 }

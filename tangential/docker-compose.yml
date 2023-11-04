@@ -7,5 +7,5 @@ services:
       - "4566:4566"
     environment:
       - SERVICES=sqs
-      - LS_LOG=debug
+      - LS_LOG=trace
       - DEBUG=1

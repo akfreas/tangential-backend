@@ -6,22 +6,7 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import qs from 'qs'; // qs is a querystring parsing library that can handle complex objects
 
-export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
-
-  const { accessToken, atlassianId } = auth;
-
-  const url = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/${options.path}`;
-
-  // Make the request and get the response
-  const response = await axiosInstance(url,
-    {
-      method: options.method,
-      data: options.body,
-      params: options.params,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+async function writeRequestToDisk(options: JiraRequestOptions, response: any) {
 
   // Prepare the data to be stored
   const requestData = {
@@ -33,7 +18,6 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
     },
     response: response.data
   };
-
   // Create a directory called 'recordings' if it doesn't exist
   const recordingsPath = path.join(__dirname, 'recordings');
   await fs.mkdir(recordingsPath, { recursive: true });
@@ -54,6 +38,28 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
   // Write the request and response to the filesystem
   const filePath = path.join(recordingsPath, filename);
   await fs.writeFile(filePath, JSON.stringify(requestData, null, 2), 'utf8');
+}
+
+export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
+
+  const { accessToken, atlassianId } = auth;
+
+  const url = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/${options.path}`;
+
+  // Make the request and get the response
+  const response = await axiosInstance(url,
+    {
+      method: options.method,
+      data: options.body,
+      params: options.params,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+  if (process.env.recordJiraRequests) {
+    await writeRequestToDisk(options, response);
+  }
 
   // Return the response data
   return response.data;

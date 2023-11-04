@@ -17,7 +17,6 @@ provider:
   region: us-east-1
   environment:
     projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
-
 custom:
   projectAnalysisQueueUrl:
     offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/ProjectAnalysisQueue-${self:provider.stage}

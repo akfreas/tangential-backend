@@ -34,6 +34,9 @@ jobs:
     - name: Run tests
       run: yarn test
       id: unit-tests
+      env:
+        PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+
 
     - name: Deploy to dev
       if: github.ref == 'refs/heads/main'

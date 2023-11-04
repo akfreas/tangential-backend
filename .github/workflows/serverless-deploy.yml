@@ -1,7 +1,7 @@
 name: Serverless Deployment
 
 env:
-  SLACK_WEBHOOK: https://hooks.slack.com/services/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 
+  SLACK_WEBHOOK: https://hooks.slack.com/services/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
   SLACK_CHANNEL: tangential-ci-updates
 
 on:
@@ -45,7 +45,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: danger
-        SLACK_MESSAGE: 'Tangential Backend: Unit tests failed on ${{ github.ref == 'refs/heads/main' ? 'dev' : 'live' }} :bomb:'
+        SLACK_MESSAGE: 'Tangential Backend: Unit tests failed :bomb:'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Slack Notification for Dev Deployment Failure
@@ -69,6 +69,6 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: good
-        SLACK_MESSAGE: 'Tangential Backend: Deployment successful on ${{ github.event_name == 'release' && github.event.action == 'published' ? 'live' : 'dev' }} :tada:'
+        SLACK_MESSAGE: 'Tangential Backend: Deployment successful :tada:'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 

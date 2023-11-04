@@ -31,10 +31,19 @@ custom:
     offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/ProjectAnalysisQueue-${self:provider.stage}
     remote:
       Ref: ProjectAnalysisQueue
+
   serverless-offline-sqs:
     endpoint: http://localhost:4566
     region: us-east-1
     debug: true
+
+  customDomain:
+    domainName: api.tangential.app
+    stage: ${self:provider.stage}
+    basePath: ${self:provider.stage}
+    certificateArn: arn:aws:acm:us-east-1:556167323904:certificate/680b6cce-755d-403f-b116-4a1d3d88295a
+    createRoute53Record: true
+    endpointType: edge
 
 functions:
   startWorkspaceAnalysis:

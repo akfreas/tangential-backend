@@ -263,6 +263,14 @@ async function calculateVelocity(
   return await sumStoryPoints(combinedJql, pointsFields, auth);
 }
 
+async function sumRemainingStoryPointsForEpic(epicId: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
+  // Formulate JQL for issues within an epic, excluding completed issues
+  const jql = `"Epic Link" = ${epicId} AND status != "Done"`;
+
+  // Use the sumStoryPoints function to get the total of remaining points
+  return await sumStoryPoints(jql, pointsFields, auth);
+}
+
 
 interface IssueCommentsTimeline {
   beforeDate: IssueComment[];
@@ -455,6 +463,9 @@ export async function analyzeEpic(
   const velocity = await calculateVelocity(jql, 30, pointsFields, auth); // Assuming 30 days
   result.velocity = velocity;
 
+  const remainingPoints = await sumRemainingStoryPointsForEpic(epicKey, pointsFields, auth);
+  result.remainingPoints = remainingPoints;
+
   // Fetch the changelog for that epic
   const changelogs = await fetchIssueChangelog(epicKey, auth);
   result.epic_changelog = changelogs.length ? changelogs[0] : null;
@@ -466,7 +477,11 @@ export async function analyzeEpic(
   // Pull changelog and comments and filter out everything before last checked date
   const longRunningIssues: LongRunningIssue[] = [];
 
-  result.comments = await getCommentsTimeline(epicKey, auth, windowStartDate.toISO()!);
+  const comments = await getCommentsTimeline(epicKey, auth, windowStartDate.toISO()!);
+
+  if (comments) {
+    result.comments = comments;
+  }
 
   for (const child of childIssues.issues) {
     const childData: any = {

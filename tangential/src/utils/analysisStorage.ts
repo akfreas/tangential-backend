@@ -1,6 +1,5 @@
-import MongoDBWrapper from "./databaseWrapper";
-import { doError, doLog, jsonLog } from "./logging";
-import { ProjectReport } from "@akfreas/tangential-core"
+
+import { ProjectReport, MongoDBWrapper } from "@akfreas/tangential-core"
 
 export async function storeProjectReport(report: ProjectReport): Promise<void> {
   try {
@@ -10,7 +9,7 @@ export async function storeProjectReport(report: ProjectReport): Promise<void> {
       return;
     }
 
-    const dbWrapper = await MongoDBWrapper.getInstance();
+    const dbWrapper = await MongoDBWrapper.getInstance(process.env.MONGODB_URI, process.env.MONGODB_DATABASE)
 
     const reportsCollection = dbWrapper.getCollection<ProjectReport>('reports');
     // Storing the report in the database

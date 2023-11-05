@@ -15,6 +15,11 @@ provider:
   timeout: 60
   stage: ${opt:stage, 'offline'}
   region: us-east-1
+  profile: tangential
+  iam:
+    role:
+      statements: ${file(./iam-role.yml)}
+
   environment:
     projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
   httpApi:
@@ -39,12 +44,13 @@ custom:
     debug: true
 
   customDomain:
-    domainName: api.tangential.app
-    stage: ${self:provider.stage}
-    basePath: ${self:provider.stage}
-    certificateArn: arn:aws:acm:us-east-1:556167323904:certificate/680b6cce-755d-403f-b116-4a1d3d88295a
-    createRoute53Record: true
-    endpointType: edge
+    domainName: ${self:provider.stage}.api.tangential.app
+    stage: $default
+    certificateArn: arn:aws:acm:us-east-1:556167323904:certificate/ba19fbb2-0c34-4cd6-984a-0c5562fd6e9d
+    endpointType: regional
+    hostedZoneId: Z091731134YSQCRRMM86I
+    autoDomain: true
+    apiType: http
 
 functions:
   startWorkspaceAnalysis:

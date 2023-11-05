@@ -3,8 +3,6 @@ import { Agent as HttpAgent } from 'http';
 import * as https from 'https';
 import * as http from 'http';
 
-let HTTPSProxyAgent: typeof import('https-proxy-agent');
-let HTTPProxyAgent: typeof import('http-proxy-agent');
 
 
 let agent: https.Agent;
@@ -33,8 +31,8 @@ let httpInstance = new HttpAgent();
 let elasticSearchHttpInstance = httpsInstance;
 
 if (process.env.LOCAL_HTTP_PROXY) {
-  HTTPSProxyAgent = require('https-proxy-agent');
-  HTTPProxyAgent = require('http-proxy-agent');
+  const HTTPSProxyAgent = require('https-proxy-agent');
+  const HTTPProxyAgent = require('http-proxy-agent');
   httpsInstance = new HTTPSProxyAgent.HttpsProxyAgent(process.env.LOCAL_HTTP_PROXY);
   httpInstance = new HTTPProxyAgent.HttpProxyAgent(process.env.LOCAL_HTTP_PROXY);
 

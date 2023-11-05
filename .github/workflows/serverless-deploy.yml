@@ -1,15 +1,14 @@
+
 name: Serverless Deployment
 
 env:
-  SLACK_WEBHOOK: https://hooks.slack.com/services/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
   SLACK_CHANNEL: tangential-ci-updates
 
 on:
   push:
     branches:
       - main
-  release:
-    types: [published]
+      - develop
 
 jobs:
   deploy:
@@ -37,9 +36,8 @@ jobs:
       env:
         PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
-
     - name: Deploy to dev
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/develop'
       run: ./node_modules/serverless/bin/serverless.js deploy --stage dev
       id: deploy-dev
       env:
@@ -47,7 +45,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Deploy to live
-      if: github.event_name == 'release' && github.event.action == 'published'
+      if: github.ref == 'refs/heads/main'
       run: ./node_modules/serverless/bin/serverless.js deploy --stage live
       id: deploy-live
       env:

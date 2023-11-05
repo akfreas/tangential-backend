@@ -15,7 +15,6 @@ provider:
   timeout: 60
   stage: ${opt:stage, 'offline'}
   region: us-east-1
-  profile: tangential
   iam:
     role:
       statements: ${file(./iam-role.yml)}

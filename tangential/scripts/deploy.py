@@ -16,7 +16,7 @@ dynamodb_port = 8001
 
 cloudformation = session.client('cloudformation')
 
-def deploy_stage(stage, skip_message_upload):
+def deploy_stage(stage):
     
     os.environ.update({'NO_MINIFY_JS': 'true'})
     deploy_handle = subprocess.Popen('node --max-old-space-size=8192 ./node_modules/serverless/bin/serverless.js deploy --stage %s' % stage, cwd="../", shell=True)
@@ -32,4 +32,4 @@ if __name__ == '__main__':
     parser.add_argument('--stage', help='Deploy stage', required=True)
     args = parser.parse_args()
 
-    deploy_stage(args.stage, args.skip_message_upload)
+    deploy_stage(args.stage)

@@ -5,8 +5,9 @@ plugins:
   - serverless-offline
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
-  # - serverless-domain-manager
+  - serverless-domain-manager
   - "@akfreas/serverless-offline-sqs"
+  
 useDotenv: true
 
 provider:
@@ -32,6 +33,7 @@ provider:
       allowCredentials: false
 
 custom:
+
   projectAnalysisQueueUrl:
     offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/ProjectAnalysisQueue-${self:provider.stage}
     remote:
@@ -48,14 +50,14 @@ custom:
     certificateArn: arn:aws:acm:us-east-1:556167323904:certificate/ba19fbb2-0c34-4cd6-984a-0c5562fd6e9d
     endpointType: regional
     hostedZoneId: Z091731134YSQCRRMM86I
-    autoDomain: true
     apiType: http
+    autoDomain: true
 
 functions:
   startWorkspaceAnalysis:
     handler: src/functions/startWorkspaceAnalysis.handler
     events:
-      - http:
+      - httpApi:
           method: get
           path: /workspace/analyze
 

@@ -26,6 +26,7 @@ provider:
     cors:
       allowedOrigins:
         - "https://${self:provider.stage}.tangential.app"
+        - "https://tangential.eu.ngrok.io"
       allowedHeaders:
         - "Content-Type"
         - "X-Atlassian-Token"

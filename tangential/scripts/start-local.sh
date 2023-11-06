@@ -3,7 +3,7 @@
 
 set -e
 export LOCAL_HTTP_PROXY=http://localhost:8081
-
+export AWS_PROFILE=tangential
 ./setup_resources.py --stage offline
 cd ..
 sls offline start --reloadHandler --stage offline --httpPort 3001

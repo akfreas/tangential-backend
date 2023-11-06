@@ -1,32 +1,27 @@
 import { APIGatewayEvent } from "aws-lambda";
-import { Context } from "vm";
 import { extractAtlassianHeaders } from "../utils/request";
 import { fetchProjects } from "../utils/jira";
-import { jsonLog } from "../utils/logging";
 import { sendProjectAnalysisQueueMessage } from "../utils/sqs";
 import { DateTime } from 'luxon';
-import MongoDBWrapper from "../utils/databaseWrapper";
-import { ProjectReport } from "@akfreas/tangential-core";
 
 export async function handler(
-  event: APIGatewayEvent,
-  context: Context
+  event: APIGatewayEvent
 ): Promise<{ statusCode: number; body: string }> {
 
-  const { headers, body } = event;
+  const { headers } = event;
 
   const auth = extractAtlassianHeaders(headers);
 
-  const dbWrapper = await MongoDBWrapper.getInstance();
-
-  const reportsCollection = dbWrapper.getCollection<ProjectReport>('reports');
   try {
     const projects = await fetchProjects(auth);
-
+    const date = DateTime.now().minus({ days: 10 }).toISODate();
+    if (!date) {
+      throw new Error('Could not get date');
+    }
     await Promise.all(projects.map(p => p.key).map((projectKey) => {
       return sendProjectAnalysisQueueMessage(
         projectKey,
-        DateTime.now().minus({ days: 10 }).toISODate(),
+        date,
         auth,
         30,
         7

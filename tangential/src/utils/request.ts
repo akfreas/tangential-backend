@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { httpsAgent } from '../config/config';
 import { TangentialHTTPRequestError } from '../models/errors/TangentialHTTPRequestError';
 import { JiraRequestAuth } from '@akfreas/tangential-core';

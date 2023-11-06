@@ -1,6 +1,5 @@
 import { SQSHandler } from 'aws-lambda';
 import { analyzeProject } from '../utils/jira';
-import { doLog, jsonLog } from '../utils/logging';
 import { storeProjectReport } from '../utils/analysisStorage';
 import { DateTime } from 'luxon';
 

@@ -33,6 +33,7 @@ async function writeRequestToDisk(options: JiraRequestOptions, response: any) {
   }
 
   // Replace characters that are not allowed in filenames
+  // eslint-disable-next-line no-control-regex
   filename = filename.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
 
   // Write the request and response to the filesystem

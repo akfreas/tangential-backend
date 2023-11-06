@@ -2,8 +2,8 @@
 # Start required services with docker-compose up in backend dir
 
 set -e
+export LOCAL_HTTP_PROXY=http://localhost:8081
 
 ./setup_resources.py --stage offline
 cd ..
-export HTTP_PROXY=http://localhost:8081
 sls offline start --reloadHandler --stage offline --httpPort 3001

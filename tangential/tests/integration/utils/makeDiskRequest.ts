@@ -2,11 +2,9 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import qs from 'qs'; // Assuming qs is already installed, otherwise you need to install it
-import { DateTime } from 'luxon';
-import { JiraRequestAuth, JiraRequestOptions } from '@akfreas/tangential-core';
-import { jsonLog } from '../../../src/utils/logging';
+import { JiraRequestOptions } from '@akfreas/tangential-core';
 
-export async function makeDiskRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
+export async function makeDiskRequest(options: JiraRequestOptions): Promise<any> {
   // Construct the directory and file path
   const recordingsPath = path.join(__dirname, '../data');
   const sanitizedPath = options.path.replace(/\//g, '-'); // Replace slashes with dashes
@@ -21,6 +19,7 @@ export async function makeDiskRequest(options: JiraRequestOptions, auth: JiraReq
   }
 
   // Replace characters that are not allowed in filenames
+  // eslint-disable-next-line no-control-regex
   filename = filename.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
   const filePath = path.join(recordingsPath, filename);
 

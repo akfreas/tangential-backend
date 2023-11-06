@@ -1,10 +1,8 @@
-import { JiraRequestAuth, GetByJqlResponse, JiraRequestOptions } from '@akfreas/tangential-core';
 import { makeJiraRequest } from '../../src/utils/jiraRequest';
-import { analyzeEpic, analyzeProject, getByJql, getCommentsTimeline } from '../../src/utils/jira';
+import { analyzeProject } from '../../src/utils/jira';
 import { jest } from '@jest/globals'; // Import Jest's extended types
 import { makeDiskRequest } from './utils/makeDiskRequest';
 import { DateTime } from 'luxon';
-import { jsonLog } from '../../src/utils/logging';
 
 jest.mock('../../src/utils/jiraRequest', () => ({
   makeJiraRequest: jest.fn(),

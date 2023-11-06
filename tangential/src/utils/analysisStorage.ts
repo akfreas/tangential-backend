@@ -1,5 +1,5 @@
 
-import { ProjectReport, MongoDBWrapper } from "@akfreas/tangential-core"
+import { ProjectReport, MongoDBWrapper, doLog } from "@akfreas/tangential-core"
 
 export async function storeProjectReport(report: ProjectReport): Promise<void> {
   try {
@@ -23,7 +23,7 @@ export async function storeProjectReport(report: ProjectReport): Promise<void> {
   } catch (error) {
     doLog(`Failed to store the report: ${error}`);
   }
-};
+}
 
 export async function fetchAllProjectReports(): Promise<ProjectReport[] | null> {
   try {
@@ -39,4 +39,4 @@ export async function fetchAllProjectReports(): Promise<ProjectReport[] | null> 
     doLog(`Failed to fetch reports: ${error}`);
     return null;
   }
-};
+}

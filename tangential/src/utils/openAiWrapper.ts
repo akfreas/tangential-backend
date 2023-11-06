@@ -1,7 +1,5 @@
 import OpenAI from 'openai';
-import { Agent } from 'https';
 import { httpsAgent } from '../config/config';
-import { doError, doLog } from './logging';
 
 interface ChatCompletionParams {
   messages: any[];
@@ -13,8 +11,6 @@ interface ChatCompletionParams {
 export async function createChatCompletion({
   messages,
   model,
-  temperature,
-  maxTokens,
 }: ChatCompletionParams): Promise<any> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {

@@ -18,7 +18,7 @@ from cfn_flip import flip, to_yaml, to_json
 
 
 
-config = Config(region_name=os.environ.get('awsRegion', 'us-east-1'), proxies={'http': 'localhost:8081'})
+config = Config(region_name=os.environ.get('awsRegion', 'us-east-1'), proxies={'https': os.environ.get('LOCAL_HTTP_PROXY')})
 
 def update_secrets_from_files(ssm, secrets_manager, stage):
 

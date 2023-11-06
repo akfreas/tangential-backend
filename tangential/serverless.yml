@@ -5,7 +5,7 @@ plugins:
   - serverless-offline
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
-  - serverless-domain-manager
+  # - serverless-domain-manager
   - "@akfreas/serverless-offline-sqs"
 useDotenv: true
 
@@ -55,7 +55,7 @@ functions:
   startWorkspaceAnalysis:
     handler: src/functions/startWorkspaceAnalysis.handler
     events:
-      - httpApi:
+      - http:
           method: get
           path: /workspace/analyze
 
@@ -63,10 +63,7 @@ functions:
     handler: src/functions/analyzeProjectFromQueue.handler
     events:
       - sqs:
-          arn:
-            Fn::GetAtt:
-              - ProjectAnalysisQueue
-              - Arn
+          arn: !GetAtt ProjectAnalysisQueue.Arn
           batchSize: 5
 
 resources:

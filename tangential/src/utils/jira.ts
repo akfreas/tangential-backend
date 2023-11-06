@@ -7,8 +7,6 @@ import {
   EpicReport,
   IssueComment
 } from '@akfreas/tangential-core';
-import { jsonLog } from './logging';
-import { axiosInstance } from './request';
 import { DateTime } from 'luxon';
 import { makeJiraRequest } from './jiraRequest';
 
@@ -201,14 +199,13 @@ async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxRe
   let fetched = 0;
 
   while (true) {
-    const params = {
-      startAt,
-      maxResults
-    };
-
+  
     const options: JiraRequestOptions = {
       method: 'GET',
       path: `issue/${issueId}/changelog`,
+      params: {
+        startAt
+      }
     };
 
     let response: Changelog;
@@ -278,8 +275,8 @@ interface IssueCommentsTimeline {
 }
 
 export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivotDate: string, maxResults: number = 50): Promise<IssueCommentsTimeline | null> {
-  let beforeDate: IssueComment[] = [];
-  let afterDate: IssueComment[] = [];
+  const beforeDate: IssueComment[] = [];
+  const afterDate: IssueComment[] = [];
   let startAt = 0;
   let total = 0;
 
@@ -375,7 +372,7 @@ export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth
   return { beforeDate, afterDate };
 }
 
-async function fetchChildIssues(parentIssueKey: string, auth: JiraRequestAuth, maxResults: number = 5000): Promise<any> {
+export async function fetchChildIssues(parentIssueKey: string, auth: JiraRequestAuth, maxResults: number = 5000): Promise<any> {
   const jql = `parent = ${parentIssueKey}`;
   return await getByJql(jql, auth, maxResults);
 }

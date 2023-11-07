@@ -1,5 +1,5 @@
 import {
-  JiraRequestAuth, JiraRequestOptions,
+  JiraRequestAuth, JiraRequestOptions, doError,
 } from '@akfreas/tangential-core';
 import { axiosInstance } from './request';
 import { promises as fs } from 'fs';
@@ -47,8 +47,9 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
 
   const url = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/${options.path}`;
 
-  // Make the request and get the response
-  const response = await axiosInstance(url,
+  let response;
+  try {
+  response = await axiosInstance(url,
     {
       method: options.method,
       data: options.body,
@@ -58,6 +59,13 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
       },
     });
 
+  } catch (error) {
+    if (error instanceof Error) { 
+      doError(`Error making request to Jira:`, error);
+    }
+    console.error(error);
+    throw error;
+  }
   if (process.env.recordJiraRequests) {
     await writeRequestToDisk(options, response);
   }

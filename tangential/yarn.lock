@@ -15,10 +15,10 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@akfreas/serverless-offline-sqs@^7.3.2":
-  version "7.3.2"
-  resolved "https://npm.pkg.github.com/download/@akfreas/serverless-offline-sqs/7.3.2/73da5fb1ab2cef1c46f3f17e053685e4b8c33807"
-  integrity sha512-sAAOtIR/XuFcY696xxW0KLisc8mdr2cdFWSUzhkRQh9eJlJUjiU5NTkCwuq8+3q3De7ID6W6aYbhCzY7d26VFA==
+"@akfreas/serverless-offline-sqs@^7.3.3":
+  version "7.3.3"
+  resolved "https://npm.pkg.github.com/download/@akfreas/serverless-offline-sqs/7.3.3/c8c02e78b37bee578b8bdb2c48e2aa413094350a#c8c02e78b37bee578b8bdb2c48e2aa413094350a"
+  integrity sha512-DwtQ1depafjqda74+r6bR1c2t9WlElOiFPBanz1pt1U40/C6YQtc7h6lj4EsVeoKk4gN5F4JEFK7w6ePdykm0A==
   dependencies:
     aws-sdk "^2.1234.0"
     lodash "^4.17.21"

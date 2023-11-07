@@ -5,7 +5,10 @@ import {
   LongRunningIssue, PointsField, ProjectReport,
   JiraProfile,
   EpicReport,
-  IssueComment
+  IssueComment,
+  jsonLog,
+  Velocity,
+  Analysis
 } from '@akfreas/tangential-core';
 import { DateTime } from 'luxon';
 import { makeJiraRequest } from './jiraRequest';
@@ -78,7 +81,6 @@ async function sumStoryPoints(jql: string, pointsFields: PointsField[], auth: Ji
   }
 
   const issues = response.issues;
-
   for (const issue of issues) {
     for (const field of pointsFields) {
       const fieldId = field.id;
@@ -244,25 +246,30 @@ async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxRe
 
 async function calculateVelocity(
   baseJql: string,
-  days: number,
+  window: number,
   pointsFields: PointsField[],
   auth: JiraRequestAuth
-): Promise<number> {
+): Promise<Velocity> {
   const endDate = DateTime.now();
-  const startDate = endDate.minus({ days });
+  const startDate = endDate.minus({ days: window });
 
   // Formulate JQL for issues completed in the last X days
   const dateJql = `status changed to "Done" DURING ("${startDate.toFormat('yyyy/MM/dd')}", "${endDate.toFormat('yyyy/MM/dd')}")`;
 
   // Combine baseJql and dateJql
   const combinedJql = `${baseJql} AND ${dateJql}`;
+  const storyPoints = await sumStoryPoints(combinedJql, pointsFields, auth);
 
-  return await sumStoryPoints(combinedJql, pointsFields, auth);
+  return {
+    daily: storyPoints / window,
+    total: storyPoints,
+    window
+  }
 }
 
-async function sumRemainingStoryPointsForEpic(epicId: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
+export async function sumRemainingStoryPointsForEpic(epicId: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
   // Formulate JQL for issues within an epic, excluding completed issues
-  const jql = `"Epic Link" = ${epicId} AND status != "Done"`;
+  const jql = `parent = ${epicId} AND status != "Done"`;
 
   // Use the sumStoryPoints function to get the total of remaining points
   return await sumStoryPoints(jql, pointsFields, auth);
@@ -377,7 +384,7 @@ export async function fetchChildIssues(parentIssueKey: string, auth: JiraRequest
   return await getByJql(jql, auth, maxResults);
 }
 
-async function getFields(auth: JiraRequestAuth, filter?: string): Promise<PointsField[]> {
+export async function getFields(auth: JiraRequestAuth, filter?: string): Promise<PointsField[]> {
   const options = {
     path: 'field',
     method: 'GET',
@@ -409,7 +416,7 @@ export async function analyzeProject(
   velocityWindowDays: number = 30,
   longRunningDays: number = 10
 ): Promise<ProjectReport> {
-  const { avatarUrls, displayName, name, active, lead } = await fetchProjectById(projectKey, auth);
+  const { avatarUrls, displayName, name, lead } = await fetchProjectById(projectKey, auth);
   const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND status != "Done"`, auth);
   const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND status = "Done" AND status changed DURING (-10d, now())`, auth)
 
@@ -423,13 +430,19 @@ export async function analyzeProject(
   const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
   const windowEndDate = DateTime.local().toISO();
   const windowStartDateObject = windowStartDate.toISO()
-
+  const projectRemainingPoints = await sumStoryPoints(`project = ${projectKey} AND status != "Done"`, fields, auth);
   if (windowEndDate === null || windowStartDateObject === null) {
     throw new Error('Failed to format window dates');
   }
 
+  const reportGenerationDate = DateTime.local().toISO();
+  if (reportGenerationDate === null) {
+    throw new Error('Failed to format report generation date');
+  }
+
   const report: ProjectReport = {
-    active,
+    reportGenerationDate,
+    status: 'active',
     name: displayName || name,
     projectKey,
     lead,
@@ -437,8 +450,18 @@ export async function analyzeProject(
     windowEndDate,
     windowStartDate: windowStartDateObject,
     epics: projectAnalysis,
-    velocity: projectVelocity
+    velocity: projectVelocity,
+    remainingPoints: projectRemainingPoints,
   };
+
+  if (projectVelocity.daily > 0) {
+    const daysRemaining = projectRemainingPoints / projectVelocity.daily;
+    const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
+    if (!predictedEndDate) {
+      throw new Error('Failed to format predicted end date');
+    }
+    report.analysis = createItemAnalysis(projectRemainingPoints, projectVelocity);
+  }
 
   return report;
 }
@@ -449,27 +472,30 @@ export async function analyzeEpic(
   auth: JiraRequestAuth,
   longRunningDays: number = 10
 ): Promise<EpicReport> {
-  let result: any = { epicKey };
+  let report: any = { epicKey };
 
-  const { fields: { status: { name: statusName }, priority: { name: priority }, summary } } = await getIssue(epicKey, auth);
-  result = { ...result, statusName, priority, summary };
+  const { fields: { duedate, status: { name: statusName }, priority: { name: priority }, summary } } = await getIssue(epicKey, auth);
+  report = { ...report, statusName, priority, summary };
 
   // Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;
   const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points
+
+  report.duedate = DateTime.fromISO(duedate)
+
   const velocity = await calculateVelocity(jql, 30, pointsFields, auth); // Assuming 30 days
-  result.velocity = velocity;
+  report.velocity = velocity;
 
   const remainingPoints = await sumRemainingStoryPointsForEpic(epicKey, pointsFields, auth);
-  result.remainingPoints = remainingPoints;
+  report.remainingPoints = remainingPoints;
 
   // Fetch the changelog for that epic
   const changelogs = await fetchIssueChangelog(epicKey, auth);
-  result.epic_changelog = changelogs.length ? changelogs[0] : null;
+  report.epic_changelog = changelogs.length ? changelogs[0] : null;
 
   // Fetch child issues
   const childIssues = await getByJql(jql, auth);
-  result.child_issues = [];
+  report.child_issues = [];
 
   // Pull changelog and comments and filter out everything before last checked date
   const longRunningIssues: LongRunningIssue[] = [];
@@ -477,7 +503,7 @@ export async function analyzeEpic(
   const comments = await getCommentsTimeline(epicKey, auth, windowStartDate.toISO()!);
 
   if (comments) {
-    result.comments = comments;
+    report.comments = comments;
   }
 
   for (const child of childIssues.issues) {
@@ -516,11 +542,46 @@ export async function analyzeEpic(
         }
       }
     }
-    result.child_issues.push(childData);
+    report.child_issues.push(childData);
   }
 
-  // Step 5: Put issue IDs that have been in the “in progress” state for more than 10 days
-  result.long_running = longRunningIssues;
+  report.long_running = longRunningIssues;
 
-  return result;
+  if (velocity.daily > 0) {
+    report.analysis = createItemAnalysis(remainingPoints, velocity, duedate);
+  }
+
+  return report;
+}
+
+function createItemAnalysis(remainingPoints: number, velocity: Velocity, duedate?: string): Analysis | undefined {
+
+  if (remainingPoints === 0) {
+    return undefined;
+  }
+
+  const daysRemaining = remainingPoints / velocity.daily;
+  const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
+  
+  if (!predictedEndDate) {
+    throw new Error('Failed to format predicted end date');
+  }
+
+  const analysis: Analysis = {
+    predictedEndDate,
+  };
+
+  if (duedate) {
+    const predictedOverdue = predictedEndDate && DateTime.fromISO(predictedEndDate) > DateTime.fromISO(duedate)
+    if (predictedOverdue === undefined) {
+      throw new Error('Failed to format predicted end date');
+    }
+    analysis.predictedOverdue = predictedOverdue === "" ? false : predictedOverdue;
+    analysis.state = {
+      id: predictedOverdue ? 'at-risk' : 'on-track',
+      name: predictedOverdue ? 'At Risk' : 'On Track',
+      color: predictedOverdue ? 'red' : 'green'
+    }
+  }
+  return analysis
 }

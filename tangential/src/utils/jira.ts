@@ -8,7 +8,8 @@ import {
   IssueComment,
   jsonLog,
   Velocity,
-  Analysis
+  Analysis,
+  AnalysisState
 } from '@akfreas/tangential-core';
 import { DateTime } from 'luxon';
 import { makeJiraRequest } from './jiraRequest';
@@ -422,7 +423,7 @@ export async function analyzeProject(
 
   const epics = [...notCompletedResults, ...recentlyCompletedResults];
 
-  const projectAnalysis = await Promise.all(epics.map((epic: any) => {
+  const projectAnalysis: EpicReport[] = await Promise.all(epics.map((epic: any) => {
     return analyzeEpic(epic.key, windowStartDate, auth, longRunningDays);
   }))
 
@@ -460,7 +461,7 @@ export async function analyzeProject(
     if (!predictedEndDate) {
       throw new Error('Failed to format predicted end date');
     }
-    report.analysis = createItemAnalysis(projectRemainingPoints, projectVelocity);
+    report.analysis = createProjectAnalysis(projectAnalysis, projectRemainingPoints, projectVelocity);
   }
 
   return report;
@@ -548,16 +549,22 @@ export async function analyzeEpic(
   report.long_running = longRunningIssues;
 
   if (velocity.daily > 0) {
-    report.analysis = createItemAnalysis(remainingPoints, velocity, duedate);
+    report.analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
   }
 
   return report;
 }
 
-function createItemAnalysis(remainingPoints: number, velocity: Velocity, duedate?: string): Analysis | undefined {
+function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, duedate?: string): Analysis | undefined {
 
   if (remainingPoints === 0) {
-    return undefined;
+    return {
+      state: {
+        id: 'completed',
+        name: 'Completed',
+        color: 'green'
+      }
+    };
   }
 
   const daysRemaining = remainingPoints / velocity.daily;
@@ -582,6 +589,65 @@ function createItemAnalysis(remainingPoints: number, velocity: Velocity, duedate
       name: predictedOverdue ? 'At Risk' : 'On Track',
       color: predictedOverdue ? 'red' : 'green'
     }
+  } else {
+    analysis.state = {
+      id: 'no-due-date',
+      name: 'No Due Date',
+      color: 'blue'
+    }
   }
   return analysis
+}
+
+function createProjectAnalysis(epics: EpicReport[], remainingPoints: number, velocity: Velocity): Analysis | undefined {
+
+    if (remainingPoints === 0) {
+      return undefined;
+    }
+  
+    const daysRemaining = remainingPoints / velocity.daily;
+    const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
+    
+    if (!predictedEndDate) {
+      throw new Error('Failed to format predicted end date');
+    }
+  
+    const analysis: Analysis = {
+      predictedEndDate,
+    };
+  
+    analysis.state = createProjectMetricAnalysis(epics) 
+    return analysis
+  }
+function createProjectMetricAnalysis(epics: EpicReport[]): AnalysisState {
+  const totalEpics = epics.length;
+  const atRiskCount = epics.filter(epic => epic.analysis?.state?.id === 'at-risk').length;
+  const onTrackCount = epics.filter(epic => epic.analysis?.state?.id === 'on-track').length;
+
+  if (onTrackCount === totalEpics) {
+    return {
+      id: 'on-track',
+      name: 'On Track',
+      color: 'green'
+    }
+  } else if (atRiskCount / totalEpics > 0.5) {
+    return {
+      id: 'at-risk',
+      name: 'At Risk',
+      color: 'red'
+    }
+  } else if (atRiskCount / totalEpics > 0.2) {
+    return {
+      id: 'off-track',
+      name: 'Off Track',
+      color: 'yellow'
+    }
+  } else {
+    jsonLog('did not match any analysis', { atRiskCount, onTrackCount, totalEpics })
+    return {
+      id: 'on-track',
+      name: 'On Track',
+      color: 'green'
+    }
+  }
 }

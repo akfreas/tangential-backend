@@ -276,6 +276,23 @@ export async function sumRemainingStoryPointsForEpic(epicId: string, pointsField
   return await sumStoryPoints(jql, pointsFields, auth);
 }
 
+export async function sumTotalStoryPointsForEpic(epicId: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
+
+  // Formulate JQL for issues within an epic
+  const jql = `parent = ${epicId}`;
+
+  // Use the sumStoryPoints function to get the total of remaining points
+  return await sumStoryPoints(jql, pointsFields, auth);
+}
+
+export async function sumTotalStoryPointsForProject(projectId: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
+  
+  // Formulate JQL for issues within an epic
+  const jql = `project = ${projectId}`;
+
+  // Use the sumStoryPoints function to get the total of remaining points
+  return await sumStoryPoints(jql, pointsFields, auth);
+}
 
 interface IssueCommentsTimeline {
   beforeDate: IssueComment[];
@@ -427,7 +444,11 @@ export async function analyzeProject(
     return analyzeEpic(epic.key, windowStartDate, auth, longRunningDays);
   }))
 
+
   const fields = await getFields(auth, 'point')
+
+  const totalPoints = await sumTotalStoryPointsForProject(projectKey, fields, auth)
+
   const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
   const windowEndDate = DateTime.local().toISO();
   const windowStartDateObject = windowStartDate.toISO()
@@ -449,6 +470,7 @@ export async function analyzeProject(
     lead,
     avatar: avatarUrls['48x48'],
     windowEndDate,
+    totalPoints,
     windowStartDate: windowStartDateObject,
     epics: projectAnalysis,
     velocity: projectVelocity,
@@ -494,6 +516,9 @@ export async function analyzeEpic(
 
   const remainingPoints = await sumRemainingStoryPointsForEpic(epicKey, pointsFields, auth);
   report.remainingPoints = remainingPoints;
+
+  const totalPoints = await sumTotalStoryPointsForEpic(epicKey, pointsFields, auth);
+  report.totalPoints = totalPoints;
 
   // Fetch the changelog for that epic
   const changelogs = await fetchIssueChangelog(epicKey, auth);

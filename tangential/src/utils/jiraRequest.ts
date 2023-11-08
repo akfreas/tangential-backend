@@ -1,5 +1,5 @@
 import {
-  JiraRequestAuth, JiraRequestOptions, doError,
+  JiraRequestAuth, JiraRequestOptions, doError, doLog,
 } from '@akfreas/tangential-core';
 import { axiosInstance } from './request';
 import { promises as fs } from 'fs';
@@ -38,6 +38,7 @@ async function writeRequestToDisk(options: JiraRequestOptions, response: any) {
 
   // Write the request and response to the filesystem
   const filePath = path.join(recordingsPath, filename);
+  doLog("Writing to disk: ", filePath)
   await fs.writeFile(filePath, JSON.stringify(requestData, null, 2), 'utf8');
 }
 

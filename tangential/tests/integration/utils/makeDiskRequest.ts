@@ -4,9 +4,10 @@ import * as path from 'path';
 import qs from 'qs'; // Assuming qs is already installed, otherwise you need to install it
 import { JiraRequestOptions } from '@akfreas/tangential-core';
 
-export async function makeDiskRequest(options: JiraRequestOptions): Promise<any> {
+async function loadRequestFromDisk(options: JiraRequestOptions, testDataPath?: string): Promise<any> {
+
   // Construct the directory and file path
-  const recordingsPath = path.join(__dirname, '../data');
+  const recordingsPath = path.join(__dirname, `../data${testDataPath ? `/${testDataPath}` : ''}`);
   const sanitizedPath = options.path.replace(/\//g, '-'); // Replace slashes with dashes
 
   // Initialize the filename based on the method
@@ -36,11 +37,9 @@ export async function makeDiskRequest(options: JiraRequestOptions): Promise<any>
     } catch (error: unknown) { // Notice we've added the type here
       // We need to check that error is an instance of Error to access the message property
       if (error instanceof Error) {
-        console.log("Error reading from disk for GET request: ", error.message);
         throw new Error(`Error reading from disk for GET request: ${error.message}`);
       } else {
         // If it's not an Error instance, we can just stringify the unknown error
-        console.log("An unknown error occurred: ", error);
         throw new Error(`An unknown error occurred: ${String(error)}`);
       }
     }
@@ -49,4 +48,16 @@ export async function makeDiskRequest(options: JiraRequestOptions): Promise<any>
     console.log(`Handling ${options.method} request differently.`);
     // Here you need to define how you want to handle POST requests
   }
+}
+
+export async function makeDiskRequest(options: JiraRequestOptions, testDataPath: string): Promise<any> {
+
+  let response;
+  try {
+    response = await loadRequestFromDisk(options, testDataPath);
+  } catch (error) {
+    response = await loadRequestFromDisk(options);
+
+  }
+  return response;
 }

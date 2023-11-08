@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "search",
+    "params": {
+      "expand": "names",
+      "jql": "parent = TAN-117",
+      "startAt": 17,
+      "maxResults": 100
+    }
+  },
+  "response": {
+    "startAt": 17,
+    "maxResults": 100,
+    "total": 17,
+    "issues": []
+  }
+}

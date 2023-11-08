@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "search",
+    "params": {
+      "expand": "names",
+      "jql": "project = TAN",
+      "startAt": 150,
+      "maxResults": 100
+    }
+  },
+  "response": {
+    "startAt": 150,
+    "maxResults": 100,
+    "total": 150,
+    "issues": []
+  }
+}

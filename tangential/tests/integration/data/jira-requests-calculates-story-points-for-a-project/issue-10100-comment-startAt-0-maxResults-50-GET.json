@@ -1,0 +1,207 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "issue/10100/comment",
+    "params": {
+      "startAt": 0,
+      "maxResults": 50
+    }
+  },
+  "response": {
+    "startAt": 0,
+    "maxResults": 50,
+    "total": 2,
+    "comments": [
+      {
+        "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10100/comment/10015",
+        "id": "10015",
+        "author": {
+          "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/user?accountId=712020%3A944e2314-b0b5-4edd-a82a-45406011072b",
+          "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+          "emailAddress": "alex@tangential.app",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+          },
+          "displayName": "Alex Freas",
+          "active": true,
+          "timeZone": "CET",
+          "accountType": "atlassian"
+        },
+        "body": {
+          "version": 1,
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I had a look at the founders agreement and it looks good to me, we can proceed with that on Friday."
+                }
+              ]
+            }
+          ]
+        },
+        "updateAuthor": {
+          "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/user?accountId=712020%3A944e2314-b0b5-4edd-a82a-45406011072b",
+          "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+          "emailAddress": "alex@tangential.app",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+          },
+          "displayName": "Alex Freas",
+          "active": true,
+          "timeZone": "CET",
+          "accountType": "atlassian"
+        },
+        "created": "2023-11-02T15:42:52.035+0100",
+        "updated": "2023-11-02T15:42:52.035+0100",
+        "jsdPublic": true
+      },
+      {
+        "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10100/comment/10017",
+        "id": "10017",
+        "author": {
+          "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/user?accountId=712020%3A944e2314-b0b5-4edd-a82a-45406011072b",
+          "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+          "emailAddress": "alex@tangential.app",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+          },
+          "displayName": "Alex Freas",
+          "active": true,
+          "timeZone": "CET",
+          "accountType": "atlassian"
+        },
+        "body": {
+          "version": 1,
+          "type": "doc",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "So, I just wanted to do a little bit more playing with comments"
+                },
+                {
+                  "type": "hardBreak"
+                }
+              ]
+            },
+            {
+              "type": "blockquote",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "You can have quotes"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": []
+            },
+            {
+              "type": "bulletList",
+              "content": [
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "And some"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "listItem",
+                  "content": [
+                    {
+                      "type": "paragraph",
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "bullet points too"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "inlineCard",
+                  "attrs": {
+                    "url": "https://tangential-app.atlassian.net/browse/TAN-96"
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": " "
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "attrs": {
+                "panelType": "info"
+              },
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "How does this look?"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "updateAuthor": {
+          "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/user?accountId=712020%3A944e2314-b0b5-4edd-a82a-45406011072b",
+          "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+          "emailAddress": "alex@tangential.app",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+          },
+          "displayName": "Alex Freas",
+          "active": true,
+          "timeZone": "CET",
+          "accountType": "atlassian"
+        },
+        "created": "2023-11-03T14:23:00.287+0100",
+        "updated": "2023-11-03T14:23:00.287+0100",
+        "jsdPublic": true
+      }
+    ]
+  }
+}

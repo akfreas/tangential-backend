@@ -21,7 +21,8 @@
     "luxon": "^3.4.3",
     "mongodb": "6.2",
     "openai": "^4.15.0",
-    "qs": "^6.11.2"
+    "qs": "^6.11.2",
+    "serverless-offline-sqs": "^8.0.0"
   },
   "devDependencies": {
     "@akfreas/serverless-offline-sqs": "^7.3.3",

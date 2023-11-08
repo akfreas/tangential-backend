@@ -436,15 +436,14 @@ export async function analyzeProject(
   longRunningDays: number = 10
 ): Promise<ProjectReport> {
   const { avatarUrls, displayName, name, lead } = await fetchProjectById(projectKey, auth);
-  const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND status != "Done"`, auth);
-  const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND status = "Done" AND status changed DURING (-10d, now())`, auth)
+  const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND statusCategory != "Done"`, auth);
+  const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND statusCategory = "Done" AND status changed DURING (-10d, now())`, auth)
 
   const epics = [...notCompletedResults, ...recentlyCompletedResults];
 
   const projectAnalysis: EpicReport[] = await Promise.all(epics.map((epic: any) => {
-    return analyzeEpic(epic.key, windowStartDate, auth, longRunningDays);
+    return analyzeEpic(epic.key, windowStartDate, auth, longRunningDays); // this should be thrown into a queue
   }))
-
 
   const fields = await getFields(auth, 'point')
 
@@ -453,9 +452,9 @@ export async function analyzeProject(
   const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
   const windowEndDate = DateTime.local().toISO();
   const windowStartDateObject = windowStartDate.toISO()
-  const projectRemainingPoints = await sumStoryPoints(`project = ${projectKey} AND status != "Done"`, fields, auth);
-  const inProgressPoints = await sumStoryPoints(`project = ${projectKey} AND status = "In Progress"`, fields, auth);
-  const completedPoints = await sumStoryPoints(`project = ${projectKey} AND status = "Done"`, fields, auth);
+  const projectRemainingPoints = await sumStoryPoints(`project = ${projectKey} AND statusCategory != "Done"`, fields, auth);
+  const inProgressPoints = await sumStoryPoints(`project = ${projectKey} AND statusCategory = "In Progress"`, fields, auth);
+  const completedPoints = await sumStoryPoints(`project = ${projectKey} AND statusCategory = "Done"`, fields, auth);
   if (windowEndDate === null || windowStartDateObject === null) {
     throw new Error('Failed to format window dates');
   }
@@ -519,8 +518,8 @@ export async function analyzeEpic(
 
 
   const totalPoints = await sumTotalStoryPointsForEpic(epicKey, pointsFields, auth);
-  const inProgressPoints = await sumStoryPoints(`parent = ${epicKey} AND status = "In Progress"`, pointsFields, auth);
-  const completedPoints = await sumStoryPoints(`parent = ${epicKey} AND status = "Done"`, pointsFields, auth);
+  const inProgressPoints = await sumStoryPoints(`parent = ${epicKey} AND statusCategory = "In Progress"`, pointsFields, auth);
+  const completedPoints = await sumStoryPoints(`parent = ${epicKey} AND statusCategory = "Done"`, pointsFields, auth);
   // Fetch the changelog for that epic
   const changelogs = await fetchIssueChangelog(epicKey, auth);
 
@@ -583,10 +582,14 @@ export async function analyzeEpic(
     analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
   }
   const reportGenerationDate = DateTime.local().toISO();
-
+  
   if (!reportGenerationDate) {
     throw new Error('Failed to format report generation date');
   }
+
+  const dueDate = DateTime.fromISO(duedate)?.toISODate() ?? undefined;
+
+  
   return {
     epicKey,
     childIssues,
@@ -594,11 +597,11 @@ export async function analyzeEpic(
     analysis,
     assignee,
     changelogs,
-    summary: report.summary,
+    summary,
     reportGenerationDate,
-    statusName: report.statusName,
-    priority: report.priority,
-    dueDate: report.duedate.toISO(),
+    statusName,
+    priority,
+    dueDate,
     velocity: velocity,
     remainingPoints,
     inProgressPoints,
@@ -614,7 +617,7 @@ function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, d
       state: {
         id: 'completed',
         name: 'Completed',
-        color: 'green'
+        color: 'blue'
       }
     };
   }

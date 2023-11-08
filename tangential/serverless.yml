@@ -6,14 +6,14 @@ plugins:
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
   - serverless-domain-manager
-  - "@akfreas/serverless-offline-sqs"
+  - serverless-offline-sqs
   
 useDotenv: true
 
 provider:
   name: aws
   runtime: nodejs18.x
-  timeout: 60
+  timeout: 600
   stage: ${opt:stage, 'offline'}
   region: us-east-1
   iam:

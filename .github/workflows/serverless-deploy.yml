@@ -30,9 +30,15 @@ jobs:
       env:
         PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
-    - name: Run tests
+    - name: Run unit tests
       run: yarn unit-test
       id: unit-tests
+      env:
+        PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+
+    - name: Run integration tests
+      run: yarn int-test
+      id: int-tests
       env:
         PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
@@ -84,3 +90,11 @@ jobs:
         SLACK_MESSAGE: 'Tangential Backend: Deployment successful :tada:'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
+    - name: Slack Notification for Integration Test Failures
+      if: ${{ failure() && steps.int-tests.outcome == 'failure' }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL: ${{ env.SLACK_CHANNEL }}
+        SLACK_COLOR: danger
+        SLACK_MESSAGE: 'Tangential Backend: Integration tests failed :boom:'
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

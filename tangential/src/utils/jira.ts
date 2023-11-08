@@ -475,7 +475,12 @@ export async function analyzeEpic(
 ): Promise<EpicReport> {
   let report: any = { epicKey };
 
-  const { fields: { duedate, status: { name: statusName }, priority: { name: priority }, summary } } = await getIssue(epicKey, auth);
+  const {
+    fields: { assignee, duedate,
+    status: { name: statusName },
+    priority: { name: priority },
+    summary } } = await getIssue(epicKey, auth);
+
   report = { ...report, statusName, priority, summary };
 
   // Compute the 30-day velocity for issues with that epic as a parent
@@ -483,7 +488,7 @@ export async function analyzeEpic(
   const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points
 
   report.duedate = DateTime.fromISO(duedate)
-
+  report.assignee = assignee
   const velocity = await calculateVelocity(jql, 30, pointsFields, auth); // Assuming 30 days
   report.velocity = velocity;
 

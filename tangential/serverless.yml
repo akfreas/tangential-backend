@@ -9,6 +9,8 @@ plugins:
   - serverless-offline-sqs
   
 useDotenv: true
+package:
+  individually: ${self:custom.packageIndividually.${self:provider.stage}, true}
 
 provider:
   name: aws
@@ -34,6 +36,8 @@ provider:
       allowCredentials: false
 
 custom:
+  packageIndividually:
+    offline: false
 
   projectAnalysisQueueUrl:
     offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/ProjectAnalysisQueue-${self:provider.stage}

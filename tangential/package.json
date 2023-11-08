@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@akfreas/tangential-core": "^1.0.2",
+    "@akfreas/tangential-core": "^1.0.6",
     "@aws-sdk/client-comprehend": "^3.438.0",
     "@aws-sdk/client-s3": "^3.438.0",
     "@aws-sdk/client-secrets-manager": "^3.438.0",

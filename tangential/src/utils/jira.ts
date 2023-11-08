@@ -9,7 +9,8 @@ import {
   jsonLog,
   Velocity,
   Analysis,
-  AnalysisState
+  AnalysisState,
+  JiraIssue
 } from '@akfreas/tangential-core';
 import { DateTime } from 'luxon';
 import { makeJiraRequest } from './jiraRequest';
@@ -453,6 +454,8 @@ export async function analyzeProject(
   const windowEndDate = DateTime.local().toISO();
   const windowStartDateObject = windowStartDate.toISO()
   const projectRemainingPoints = await sumStoryPoints(`project = ${projectKey} AND status != "Done"`, fields, auth);
+  const inProgressPoints = await sumStoryPoints(`project = ${projectKey} AND status = "In Progress"`, fields, auth);
+  const completedPoints = await sumStoryPoints(`project = ${projectKey} AND status = "Done"`, fields, auth);
   if (windowEndDate === null || windowStartDateObject === null) {
     throw new Error('Failed to format window dates');
   }
@@ -475,6 +478,10 @@ export async function analyzeProject(
     epics: projectAnalysis,
     velocity: projectVelocity,
     remainingPoints: projectRemainingPoints,
+    inProgressPoints,
+    completedPoints,
+    priority
+    statusName: 'Active',
   };
 
   if (projectVelocity.daily > 0) {
@@ -507,25 +514,19 @@ export async function analyzeEpic(
 
   // Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;
-  const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points
-
-  report.duedate = DateTime.fromISO(duedate)
-  report.assignee = assignee
+  const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points  
   const velocity = await calculateVelocity(jql, 30, pointsFields, auth); // Assuming 30 days
-  report.velocity = velocity;
-
   const remainingPoints = await sumRemainingStoryPointsForEpic(epicKey, pointsFields, auth);
-  report.remainingPoints = remainingPoints;
+
 
   const totalPoints = await sumTotalStoryPointsForEpic(epicKey, pointsFields, auth);
-  report.totalPoints = totalPoints;
-
+  const inProgressPoints = await sumStoryPoints(`parent = ${epicKey} AND status = "In Progress"`, pointsFields, auth);
+  const completedPoints = await sumStoryPoints(`parent = ${epicKey} AND status = "Done"`, pointsFields, auth);
   // Fetch the changelog for that epic
   const changelogs = await fetchIssueChangelog(epicKey, auth);
-  report.epic_changelog = changelogs.length ? changelogs[0] : null;
 
   // Fetch child issues
-  const childIssues = await getByJql(jql, auth);
+  const {issues: epicChildIssues} = await getByJql(jql, auth);
   report.child_issues = [];
 
   // Pull changelog and comments and filter out everything before last checked date
@@ -536,8 +537,9 @@ export async function analyzeEpic(
   if (comments) {
     report.comments = comments;
   }
+  const childIssues: JiraIssue[] = [];
 
-  for (const child of childIssues.issues) {
+  for (const child of epicChildIssues) {
     const childData: any = {
       issue_id: child.id,
       key: child.key
@@ -573,16 +575,37 @@ export async function analyzeEpic(
         }
       }
     }
-    report.child_issues.push(childData);
+    childIssues.push(childData);
   }
 
-  report.long_running = longRunningIssues;
 
+  let analysis: Analysis | undefined = undefined;
   if (velocity.daily > 0) {
-    report.analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
+    analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
   }
+  const reportGenerationDate = DateTime.local().toISO();
 
-  return report;
+  if (!reportGenerationDate) {
+    throw new Error('Failed to format report generation date');
+  }
+  return {
+    epicKey,
+    childIssues,
+    longRunningIssues,
+    analysis,
+    assignee,
+    changelogs,
+    summary: report.summary,
+    reportGenerationDate,
+    statusName: report.statusName,
+    priority: report.priority,
+    dueDate: report.duedate.toISO(),
+    velocity: velocity,
+    remainingPoints,
+    inProgressPoints,
+    completedPoints,
+    totalPoints,
+  };
 }
 
 function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, duedate?: string): Analysis | undefined {

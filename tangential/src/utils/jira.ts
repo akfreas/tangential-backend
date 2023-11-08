@@ -2,7 +2,7 @@ import {
   Changelog, ChangelogEntry,
   ChangelogValue, GetByJqlResponse,
   JiraRequestAuth, JiraRequestOptions,
-  LongRunningIssue, PointsField, ProjectReport,
+  PointsField, ProjectReport,
   JiraProfile,
   EpicReport,
   IssueComment,
@@ -480,7 +480,6 @@ export async function analyzeProject(
     remainingPoints: projectRemainingPoints,
     inProgressPoints,
     completedPoints,
-    priority
     statusName: 'Active',
   };
 
@@ -530,7 +529,7 @@ export async function analyzeEpic(
   report.child_issues = [];
 
   // Pull changelog and comments and filter out everything before last checked date
-  const longRunningIssues: LongRunningIssue[] = [];
+  const longRunningIssues: JiraIssue[] = [];
 
   const comments = await getCommentsTimeline(epicKey, auth, windowStartDate.toISO()!);
 

@@ -1,0 +1,1778 @@
+{
+  "epicKey": "TAN-117",
+  "statusName": "Doing",
+  "priority": "Medium",
+  "summary": "Working MVP",
+  "velocity": {
+    "$numberInt": "33"
+  },
+  "remainingPoints": {
+    "$numberInt": "0"
+  },
+  "epic_changelog": {
+    "id": "10759",
+    "author": {
+      "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+      "displayName": "Alex Freas",
+      "avatarUrls": {
+        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+      }
+    },
+    "created": "2023-11-03T17:14:50.753+0100",
+    "items": [
+      {
+        "field": "status",
+        "fieldtype": "jira",
+        "fieldId": "status",
+        "from": "10006",
+        "fromString": "To Do",
+        "to": "10015",
+        "toString": "Doing"
+      }
+    ]
+  },
+  "child_issues": [
+    {
+      "issue_id": "10189",
+      "key": "TAN-168",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10773",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T15:12:29.552+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        },
+        {
+          "id": "10774",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T15:12:59.208+0100",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "2"
+            }
+          ]
+        },
+        {
+          "id": "10775",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T15:13:00.110+0100",
+          "items": [
+            {
+              "field": "assignee",
+              "fieldtype": "jira",
+              "fieldId": "assignee",
+              "from": null,
+              "fromString": null,
+              "to": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "toString": "Alex Freas",
+              "tmpFromAccountId": null,
+              "tmpToAccountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b"
+            }
+          ]
+        },
+        {
+          "id": "10776",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T15:13:02.812+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10006",
+              "fromString": "To Do",
+              "to": "10015",
+              "toString": "Doing"
+            }
+          ]
+        },
+        {
+          "id": "10814",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-05T14:52:36.329+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10187",
+      "key": "TAN-166",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10765",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T17:31:04.910+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10186",
+      "key": "TAN-165",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10762",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T17:21:13.371+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        },
+        {
+          "id": "10763",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T17:24:36.528+0100",
+          "items": [
+            {
+              "field": "description",
+              "fieldtype": "jira",
+              "fieldId": "description",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "Super minimal, should just go into db and be attached to an issue ID, with date, and a string. When clicking on button, it should open a form that shows context input."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10185",
+      "key": "TAN-164",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10758",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T17:14:30.929+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10184",
+      "key": "TAN-163",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10756",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T17:13:55.270+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10183",
+      "key": "TAN-162",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10754",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T17:13:10.826+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10182",
+      "key": "TAN-161",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10752",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T17:12:48.980+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10180",
+      "key": "TAN-159",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10748",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-11-03T17:09:57.525+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10179",
+      "key": "TAN-158",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10738",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T14:56:47.497+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        },
+        {
+          "id": "10739",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T14:57:35.994+0100",
+          "items": [
+            {
+              "field": "description",
+              "fieldtype": "jira",
+              "fieldId": "description",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "For each Jira type laid out in tangential-core, create a set of utilities that can take those types and build prompt fragments that can be used to feed into GPT."
+            }
+          ]
+        },
+        {
+          "id": "10740",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T14:57:38.617+0100",
+          "items": [
+            {
+              "field": "assignee",
+              "fieldtype": "jira",
+              "fieldId": "assignee",
+              "from": null,
+              "fromString": null,
+              "to": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "toString": "Alex Freas",
+              "tmpFromAccountId": null,
+              "tmpToAccountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b"
+            }
+          ]
+        },
+        {
+          "id": "10741",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-03T14:57:50.587+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10006",
+              "fromString": "To Do",
+              "to": "10015",
+              "toString": "Doing"
+            }
+          ]
+        },
+        {
+          "id": "10777",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T15:13:15.499+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10006",
+              "toString": "To Do"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10178",
+      "key": "TAN-157",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10734",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T23:59:19.167+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        },
+        {
+          "id": "10735",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T23:59:23.295+0100",
+          "items": [
+            {
+              "field": "assignee",
+              "fieldtype": "jira",
+              "fieldId": "assignee",
+              "from": null,
+              "fromString": null,
+              "to": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "toString": "Alex Freas",
+              "tmpFromAccountId": null,
+              "tmpToAccountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b"
+            }
+          ]
+        },
+        {
+          "id": "10781",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T20:53:48.627+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10006",
+              "fromString": "To Do",
+              "to": "10015",
+              "toString": "Doing"
+            }
+          ]
+        },
+        {
+          "id": "10782",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T20:53:51.447+0100",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "3"
+            }
+          ]
+        },
+        {
+          "id": "10815",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-05T14:52:43.573+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        },
+        {
+          "id": "10816",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-05T14:52:43.766+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked higher"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10177",
+      "key": "TAN-156",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10731",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T23:58:39.250+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10006",
+              "fromString": "To Do",
+              "to": "10014",
+              "toString": "Next"
+            }
+          ]
+        },
+        {
+          "id": "10732",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T23:58:53.639+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        },
+        {
+          "id": "10736",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T23:59:31.554+0100",
+          "items": [
+            {
+              "field": "assignee",
+              "fieldtype": "jira",
+              "fieldId": "assignee",
+              "from": null,
+              "fromString": null,
+              "to": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "toString": "Alex Freas",
+              "tmpFromAccountId": null,
+              "tmpToAccountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b"
+            }
+          ]
+        },
+        {
+          "id": "10779",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T20:53:36.348+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10014",
+              "fromString": "Next",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        },
+        {
+          "id": "10780",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T20:53:42.140+0100",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10141",
+      "key": "TAN-125",
+      "comments": {
+        "beforeDate": [
+        ],
+        "afterDate": [
+          {
+            "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10141/comment/10013",
+            "id": "10013",
+            "author": {
+              "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+              },
+              "displayName": "Alex Freas"
+            },
+            "renderedBody": "<p>We’re actually not going to expose the velocity via an API. What we can do is process items on the backend and then the frontend can pick them up using MongoDB server side.</p>",
+            "updateAuthor": {
+              "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+              },
+              "displayName": "Alex Freas"
+            },
+            "created": "2023-11-02T15:41:12.326+0100",
+            "updated": "2023-11-02T15:41:12.326+0100"
+          }
+        ]
+      },
+      "changelog": [
+        {
+          "id": "10461",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:00:53.164+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        },
+        {
+          "id": "10462",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:01:19.078+0100",
+          "items": [
+            {
+              "field": "assignee",
+              "fieldtype": "jira",
+              "fieldId": "assignee",
+              "from": null,
+              "fromString": null,
+              "to": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "toString": "Alex Freas",
+              "tmpFromAccountId": null,
+              "tmpToAccountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b"
+            }
+          ]
+        },
+        {
+          "id": "10463",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:01:19.129+0100",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "4"
+            }
+          ]
+        },
+        {
+          "id": "10473",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:02:19.188+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10006",
+              "fromString": "To Do",
+              "to": "10015",
+              "toString": "Doing"
+            }
+          ]
+        },
+        {
+          "id": "10644",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T13:13:20.800+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked higher"
+            }
+          ]
+        },
+        {
+          "id": "10714",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T15:41:23.032+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10140",
+      "key": "TAN-124",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10456",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T11:59:41.649+0100",
+          "items": [
+            {
+              "field": "IssueParentAssociation",
+              "fieldtype": "jira",
+              "from": null,
+              "fromString": null,
+              "to": "10127",
+              "toString": "10127"
+            }
+          ]
+        },
+        {
+          "id": "10457",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T11:59:51.554+0100",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "6"
+            }
+          ]
+        },
+        {
+          "id": "10458",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:00:18.655+0100",
+          "items": [
+            {
+              "field": "description",
+              "fieldtype": "jira",
+              "fieldId": "description",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "Pull in some data from Jira, analyze it, and store it in mongodb."
+            }
+          ]
+        },
+        {
+          "id": "10459",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:00:24.036+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10006",
+              "fromString": "To Do",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        },
+        {
+          "id": "10464",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:01:22.397+0100",
+          "items": [
+            {
+              "field": "assignee",
+              "fieldtype": "jira",
+              "fieldId": "assignee",
+              "from": null,
+              "fromString": null,
+              "to": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "toString": "Alex Freas",
+              "tmpFromAccountId": null,
+              "tmpToAccountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10135",
+      "key": "TAN-119",
+      "comments": null,
+      "changelog": [
+        {
+          "id": "10465",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:01:26.276+0100",
+          "items": [
+            {
+              "field": "assignee",
+              "fieldtype": "jira",
+              "fieldId": "assignee",
+              "from": null,
+              "fromString": null,
+              "to": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "toString": "Alex Freas",
+              "tmpFromAccountId": null,
+              "tmpToAccountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b"
+            }
+          ]
+        },
+        {
+          "id": "10471",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-30T12:02:05.485+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10006",
+              "fromString": "To Do",
+              "to": "10014",
+              "toString": "Next"
+            }
+          ]
+        },
+        {
+          "id": "10657",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T13:33:15.133+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10014",
+              "fromString": "Next",
+              "to": "10015",
+              "toString": "Doing"
+            }
+          ]
+        },
+        {
+          "id": "10658",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T13:33:15.346+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked higher"
+            }
+          ]
+        },
+        {
+          "id": "10664",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T13:47:11.518+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        },
+        {
+          "id": "10665",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T13:47:11.765+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked higher"
+            }
+          ]
+        },
+        {
+          "id": "10670",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T14:05:26.966+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": "10000",
+              "fromString": "Done",
+              "to": null,
+              "toString": null
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10016",
+              "fromString": "Done",
+              "to": "10015",
+              "toString": "Doing"
+            }
+          ]
+        },
+        {
+          "id": "10671",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T14:05:27.293+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked lower"
+            }
+          ]
+        },
+        {
+          "id": "10674",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T14:46:53.276+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        },
+        {
+          "id": "10675",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T14:46:53.495+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked higher"
+            }
+          ]
+        },
+        {
+          "id": "10676",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T14:46:57.332+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": "10000",
+              "fromString": "Done",
+              "to": null,
+              "toString": null
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10016",
+              "fromString": "Done",
+              "to": "10015",
+              "toString": "Doing"
+            }
+          ]
+        },
+        {
+          "id": "10677",
+          "author": {
+            "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+            "displayName": "Akio Nuernberger",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+            }
+          },
+          "created": "2023-10-31T14:46:57.554+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked lower"
+            }
+          ]
+        },
+        {
+          "id": "10778",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-04T15:13:23.434+0100",
+          "items": [
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10006",
+              "toString": "To Do"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "issue_id": "10126",
+      "key": "TAN-116",
+      "comments": {
+        "beforeDate": [
+        ],
+        "afterDate": [
+          {
+            "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10126/comment/10007",
+            "id": "10007",
+            "author": {
+              "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+              },
+              "displayName": "Alex Freas"
+            },
+            "renderedBody": "<p>Checking out how comments are handled in the changelog.</p>",
+            "updateAuthor": {
+              "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+              },
+              "displayName": "Alex Freas"
+            },
+            "created": "2023-10-27T14:49:23.954+0200",
+            "updated": "2023-10-27T14:49:23.954+0200"
+          },
+          {
+            "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10126/comment/10014",
+            "id": "10014",
+            "author": {
+              "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+              },
+              "displayName": "Alex Freas"
+            },
+            "renderedBody": "<p>I would say it’s at a rough draft currently, which is nice. We will add more features in other tickets.</p>",
+            "updateAuthor": {
+              "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+              "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+              },
+              "displayName": "Alex Freas"
+            },
+            "created": "2023-11-02T15:42:03.291+0100",
+            "updated": "2023-11-02T15:42:03.291+0100"
+          }
+        ]
+      },
+      "changelog": [
+        {
+          "id": "10415",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-27T11:17:29.497+0200",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": null,
+              "to": null,
+              "toString": "10"
+            }
+          ]
+        },
+        {
+          "id": "10416",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-10-27T12:30:23.977+0200",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": "10",
+              "to": null,
+              "toString": "696969"
+            }
+          ]
+        },
+        {
+          "id": "10716",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T15:42:10.649+0100",
+          "items": [
+            {
+              "field": "resolution",
+              "fieldtype": "jira",
+              "fieldId": "resolution",
+              "from": null,
+              "fromString": null,
+              "to": "10000",
+              "toString": "Done"
+            },
+            {
+              "field": "status",
+              "fieldtype": "jira",
+              "fieldId": "status",
+              "from": "10015",
+              "fromString": "Doing",
+              "to": "10016",
+              "toString": "Done"
+            }
+          ]
+        },
+        {
+          "id": "10717",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T15:42:10.903+0100",
+          "items": [
+            {
+              "field": "Rank",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10019",
+              "from": "",
+              "fromString": "",
+              "to": "",
+              "toString": "Ranked higher"
+            }
+          ]
+        },
+        {
+          "id": "10729",
+          "author": {
+            "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+            "displayName": "Alex Freas",
+            "avatarUrls": {
+              "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+              "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+              "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+              "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+            }
+          },
+          "created": "2023-11-02T15:52:49.351+0100",
+          "items": [
+            {
+              "field": "Story point estimate",
+              "fieldtype": "custom",
+              "fieldId": "customfield_10016",
+              "from": null,
+              "fromString": "696969",
+              "to": null,
+              "toString": "16"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "long_running": [
+  ]
+}

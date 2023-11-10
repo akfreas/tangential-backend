@@ -1,6 +1,6 @@
 
 import { ProjectReport, MongoDBWrapper, doLog } from "@akfreas/tangential-core"
-
+import { promises as fs } from 'fs';
 export async function storeProjectReport(report: ProjectReport): Promise<void> {
   try {
     // Validation for essential keys
@@ -8,9 +8,19 @@ export async function storeProjectReport(report: ProjectReport): Promise<void> {
       doLog('Error: projectKey is missing in the provided report');
       return;
     }
+    const fileName = `./reports/${report.projectKey}.json`;
+    try {
+      await fs.mkdir('./reports', { recursive: false });
+    } catch (error) {
+      doLog("Failed to create reports directory: ", error)
+    }
+    await fs.writeFile(fileName, JSON.stringify(report, null, 2));
+
+    console.log(`Successfully wrote report to file: ${fileName}`);
+    
 
     const dbWrapper = await MongoDBWrapper.getInstance(process.env.MONGODB_URI, process.env.MONGODB_DATABASE)
-
+    
     const reportsCollection = dbWrapper.getCollection<ProjectReport>('reports');
     // Storing the report in the database
     await reportsCollection.updateOne(

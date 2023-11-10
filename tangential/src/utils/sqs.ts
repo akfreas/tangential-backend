@@ -36,3 +36,23 @@ export async function sendProjectAnalysisQueueMessage(
   };
   await sendMessage(payload);
 }
+
+export async function sendEpicAnalysisQueueMessage(
+  projectKey: string,
+  epicKey: string,
+  auth: JiraRequestAuth,
+  velocityWindowDays: number,
+  longRunningDays: number
+): Promise<void> {
+  const payload = {
+    QueueUrl: process.env.epicAnalysisQueueUrl as string,
+    MessageBody: JSON.stringify({
+      projectKey,
+      epicKey,
+      auth,
+      velocityWindowDays,
+      longRunningDays
+    })
+  };
+  await sendMessage(payload);
+}

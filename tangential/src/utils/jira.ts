@@ -14,6 +14,7 @@ import {
 } from '@akfreas/tangential-core';
 import { DateTime } from 'luxon';
 import { makeJiraRequest } from './jiraRequest';
+import { summarizeEpicReport } from './summarizationUtils';
 
 interface ProjectInfo {
   id: string;
@@ -588,9 +589,7 @@ export async function analyzeEpic(
   }
 
   const dueDate = DateTime.fromISO(duedate)?.toISODate() ?? undefined;
-
-  
-  return {
+  const epicReport: EpicReport = {
     epicKey,
     childIssues,
     longRunningIssues,
@@ -608,6 +607,10 @@ export async function analyzeEpic(
     completedPoints,
     totalPoints,
   };
+
+  const summaryText = await summarizeEpicReport(epicReport);
+  
+  return {...epicReport, summaryText};
 }
 
 function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, duedate?: string): Analysis | undefined {
@@ -632,7 +635,6 @@ function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, d
   const analysis: Analysis = {
     predictedEndDate,
   };
-
   if (duedate) {
     const predictedOverdue = predictedEndDate && DateTime.fromISO(predictedEndDate) > DateTime.fromISO(duedate)
     if (predictedOverdue === undefined) {

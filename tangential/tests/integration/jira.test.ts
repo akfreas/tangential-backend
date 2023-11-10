@@ -27,7 +27,7 @@ describe('jira requests', () => {
     });
   });
 
-  it.skip('does project analysis', async () => {
+  it('does project analysis', async () => {
 
     const report = await analyzeProject("TAN", DateTime.fromISO('2021-09-01'), auth, 30);
     jsonLog("Result", report);

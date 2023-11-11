@@ -1,9 +1,9 @@
 import { makeJiraRequest } from '../../src/utils/jiraRequest';
-import { analyzeEpic, analyzeProject, fetchProjectById, getFields, sumRemainingStoryPointsForEpic, sumTotalStoryPointsForEpic, sumTotalStoryPointsForProject } from '../../src/utils/jira';
+import { getFields, sumTotalStoryPointsForEpic, sumTotalStoryPointsForProject } from '../../src/utils/jira';
 import { jest } from '@jest/globals'; // Import Jest's extended types
 import { makeDiskRequest } from './utils/makeDiskRequest';
-import { DateTime } from 'luxon';
-import { PointsField, doLog, jsonLog } from '@akfreas/tangential-core';
+
+import { PointsField } from '@akfreas/tangential-core';
 
 jest.mock('../../src/utils/jiraRequest', () => ({
   makeJiraRequest: jest.fn(),

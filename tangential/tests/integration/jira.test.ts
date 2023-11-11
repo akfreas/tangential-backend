@@ -27,12 +27,6 @@ describe('jira requests', () => {
     });
   });
 
-  it('does project analysis', async () => {
-
-    const report = await analyzeProject("TAN", DateTime.fromISO('2021-09-01'), auth, 30);
-    jsonLog("Result", report);
-  });
-
   it('calculates story points for an epic', async () => {
     const epicKey = 'TAN-117';
     const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points

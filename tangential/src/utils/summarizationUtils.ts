@@ -1,4 +1,4 @@
-import { ChangelogValue, EpicReport } from "@akfreas/tangential-core";
+import { ChangelogValue, EpicReport, jsonLog } from "@akfreas/tangential-core";
 import { createChatCompletion } from "./openAiWrapper";
 
 
@@ -83,10 +83,7 @@ export async function summarizeEpicReport(report: EpicReport) {
     Do not mention the epic key or summary in your summary.
     
   `;
-
-  const {
-    choices: [{message: {content}}]
-  } = await createChatCompletion({
+  const result = await createChatCompletion({
     messages: [
       {
         role: 'system',
@@ -98,6 +95,11 @@ export async function summarizeEpicReport(report: EpicReport) {
       }
     ],
   });
+
+  jsonLog("Result", result)
+  const {
+    choices: [{message: {content}}]
+  } = result;
 
   return content;
 }

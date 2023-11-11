@@ -122,3 +122,4 @@ credentials.json
 refresh_token.txt
 token.json
 **/recordings
+.env.offline

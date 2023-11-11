@@ -81,6 +81,7 @@ export async function summarizeEpicReport(report: EpicReport) {
     You are an assistant to a technical program manager. You are tasked with writing a one sentence summary of the epic report below.
     This will be used to provide a quick overview of the epic to the program manager.
     Do not mention the epic key or summary in your summary.
+    Do not mention the epic name.
     
   `;
   const result = await createChatCompletion({

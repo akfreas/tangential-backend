@@ -7,10 +7,15 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-domain-manager
   - serverless-offline-sqs
-  
+
 useDotenv: true
 package:
   individually: ${self:custom.packageIndividually.${self:provider.stage}, true}
+  patterns:
+    - "!node_modules/**"
+    - "!venv/**"
+    - "!apienv/**"
+    - "!__pycache__/**"
 
 provider:
   name: aws

@@ -10,7 +10,8 @@ import {
   Velocity,
   Analysis,
   AnalysisState,
-  JiraIssue
+  JiraIssue,
+  extractFromJiraAuth
 } from '@akfreas/tangential-core';
 import { DateTime } from 'luxon';
 import { makeJiraRequest } from './jiraRequest';
@@ -445,7 +446,7 @@ export async function analyzeProject(
   const projectAnalysis: EpicReport[] = await Promise.all(epics.map((epic: any) => {
     return analyzeEpic(epic.key, windowStartDate, auth, longRunningDays); // this should be thrown into a queue
   }))
-
+  const { atlassianUserId } = extractFromJiraAuth(auth);
   const fields = await getFields(auth, 'point')
 
   const totalPoints = await sumTotalStoryPointsForProject(projectKey, fields, auth)
@@ -466,8 +467,8 @@ export async function analyzeProject(
   }
 
   const report: ProjectReport = {
+    ownerId: atlassianUserId,
     reportGenerationDate,
-    status: 'active',
     name: displayName || name,
     projectKey,
     lead,
@@ -475,7 +476,6 @@ export async function analyzeProject(
     windowEndDate,
     totalPoints,
     windowStartDate: windowStartDateObject,
-    epics: projectAnalysis,
     velocity: projectVelocity,
     remainingPoints: projectRemainingPoints,
     inProgressPoints,

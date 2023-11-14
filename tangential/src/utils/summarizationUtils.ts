@@ -61,7 +61,7 @@ function summarizeEpic(epicReport: EpicReport) {
   const summaryString = `
 Assignee: ${assignee?.displayName ?? "No assignee"}
 Current Status: ${statusName || 'No status'}
-Priority: ${priority ? `${priority.name} (Icon: ${priority.iconUrl})` : 'No priority'}
+Priority: ${priority ? `${priority.name}` : 'No priority'}
 Progress: ${completedPoints} / ${totalPoints} completed, ${remainingPoints} remaining, ${inProgressPoints} in progress
 Velocity: ${velocity.daily} per day, ${velocity.total} in total over ${velocity.window} days
 Deadlines: Due on ${dueDate || 'No due date'}, Predicted to end by ${predictedEndDate || 'No prediction'}, Overdue: ${predictedOverdue ? 'Yes' : 'No'}
@@ -72,7 +72,6 @@ Analysis Summary: ${analysisSummary}
 
   return summaryString.trim(); // Trim to remove any leading/trailing whitespace
 }
-
 
 export async function summarizeEpicReport(report: EpicReport) {
   

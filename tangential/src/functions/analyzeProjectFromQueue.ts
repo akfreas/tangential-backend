@@ -8,7 +8,7 @@ export const handler: SQSHandler = async (event) => {
     for (const record of event.Records) {
       const { projectKey, windowStartDate, auth,
         velocityWindowDays, longRunningDays } = JSON.parse(record.body);
-      const jiraAuth: JiraRequestAuth = auth;
+      const {atlassianId, accessToken}: JiraRequestAuth = auth;
 
       const secretKey = process.env.ATLASSIAN_CLIENT_SECRET;
 
@@ -16,7 +16,7 @@ export const handler: SQSHandler = async (event) => {
         throw new Error('No secret key found');
       }
 
-      const {sub: ownerId = undefined} = decode(jiraAuth.accessToken) ?? {};
+      const {sub: ownerId = undefined} = decode(accessToken) ?? {};
 
       if (!ownerId || typeof ownerId !== 'string') {
         throw new Error('No owner ID found or invalid type');
@@ -29,7 +29,7 @@ export const handler: SQSHandler = async (event) => {
         velocityWindowDays,
         longRunningDays
       );
-      await storeProjectReport(ownerId, result);
+      await storeProjectReport(ownerId, atlassianId, result);
     }
   } catch (err) {
     console.error(err);

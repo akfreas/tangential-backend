@@ -31,8 +31,22 @@ interface JsonPostParams {
 
 export function extractAtlassianHeaders(headers: any): JiraRequestAuth {
   const accessToken = headers['x-atlassian-token'];
-  const atlassianId = headers['x-atlassian-id'];
-  return { accessToken, atlassianId };
+  const atlassianWorkspaceId = headers['x-atlassian-workspace-id'];
+  const refreshToken = headers['x-atlassian-refresh-token'];
+
+  if (!accessToken) {
+    throw new Error('No access token provided');
+  }
+
+  if (!atlassianWorkspaceId) {
+    throw new Error('No Atlassian Workspace ID provided');
+  }
+
+  if (!refreshToken) {
+    throw new Error('No refresh token provided');
+  }
+
+  return { accessToken, atlassianWorkspaceId, refreshToken };
 }
 
 export async function jsonPost({ url, headers = {}, ...params }: JsonPostParams): Promise<any> {

@@ -12,7 +12,7 @@ jest.mock('../../src/utils/jiraRequest', () => ({
 const mockedMakeJiraRequest = makeJiraRequest as jest.MockedFunction<typeof makeJiraRequest>;
 const auth = {
   "accessToken": "",
-  "atlassianId": "d3ad714f-4260-4f1c-9bc4-00c62e1a52e9"
+  "atlassianWorkspaceId": "d3ad714f-4260-4f1c-9bc4-00c62e1a52e9"
 };
 jest.setTimeout(30000);
 

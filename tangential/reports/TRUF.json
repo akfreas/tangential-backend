@@ -1,0 +1,173 @@
+{
+  "reportGenerationDate": "2023-11-11T22:57:49.612+01:00",
+  "status": "active",
+  "name": "Truffle",
+  "projectKey": "TRUF",
+  "lead": {
+    "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/user?accountId=712020:944e2314-b0b5-4edd-a82a-45406011072b",
+    "accountId": "712020:944e2314-b0b5-4edd-a82a-45406011072b",
+    "avatarUrls": {
+      "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/48",
+      "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/24",
+      "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/16",
+      "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:944e2314-b0b5-4edd-a82a-45406011072b/63b57043-e526-41a0-94f1-c32daeda85f4/32"
+    },
+    "displayName": "Alex Freas",
+    "active": true
+  },
+  "avatar": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/universal_avatar/view/type/project/avatar/10552",
+  "windowEndDate": "2023-11-11T22:57:46.222+01:00",
+  "totalPoints": 2,
+  "windowStartDate": "2023-11-01T00:00:00.000+01:00",
+  "epics": [
+    {
+      "epicKey": "TRUF-20",
+      "childIssues": [
+        {
+          "issue_id": "10110",
+          "key": "TRUF-26",
+          "comments": null,
+          "changelog": []
+        },
+        {
+          "issue_id": "10109",
+          "key": "TRUF-25",
+          "comments": null,
+          "changelog": []
+        },
+        {
+          "issue_id": "10108",
+          "key": "TRUF-24",
+          "comments": null,
+          "changelog": []
+        },
+        {
+          "issue_id": "10107",
+          "key": "TRUF-23",
+          "comments": {
+            "beforeDate": [
+              {
+                "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10107/comment/10006",
+                "id": "10006",
+                "author": {
+                  "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+                  "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+                  },
+                  "displayName": "Akio Nuernberger"
+                },
+                "renderedBody": "<p><a href=\"https://www.notion.so/Truffle-06307291adbf4d498684cfa188afb3ae?pvs=4#eb771bab20374e12a6fb8ae66b9781da\" class=\"external-link\" rel=\"nofollow noreferrer\">https://www.notion.so/Truffle-06307291adbf4d498684cfa188afb3ae?pvs=4#eb771bab20374e12a6fb8ae66b9781da</a></p>",
+                "updateAuthor": {
+                  "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+                  "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+                  },
+                  "displayName": "Akio Nuernberger"
+                },
+                "created": "2023-10-20T10:48:06.673+0200",
+                "updated": "2023-10-20T10:48:06.673+0200"
+              }
+            ],
+            "afterDate": []
+          },
+          "changelog": []
+        },
+        {
+          "issue_id": "10105",
+          "key": "TRUF-21",
+          "comments": null,
+          "changelog": []
+        },
+        {
+          "issue_id": "10093",
+          "key": "TRUF-19",
+          "comments": null,
+          "changelog": []
+        },
+        {
+          "issue_id": "10092",
+          "key": "TRUF-18",
+          "comments": null,
+          "changelog": []
+        },
+        {
+          "issue_id": "10090",
+          "key": "TRUF-17",
+          "comments": {
+            "beforeDate": [
+              {
+                "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10090/comment/10005",
+                "id": "10005",
+                "author": {
+                  "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+                  "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+                  },
+                  "displayName": "Akio Nuernberger"
+                },
+                "renderedBody": "<p>0 responses!</p>",
+                "updateAuthor": {
+                  "accountId": "712020:388f3d94-de52-4704-868a-dac1394bdb3d",
+                  "avatarUrls": {
+                    "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/48",
+                    "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/24",
+                    "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/16",
+                    "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:388f3d94-de52-4704-868a-dac1394bdb3d/e5fd898d-3356-4fd9-8478-8161d17f707e/32"
+                  },
+                  "displayName": "Akio Nuernberger"
+                },
+                "created": "2023-10-20T10:23:30.931+0200",
+                "updated": "2023-10-20T10:23:30.931+0200"
+              }
+            ],
+            "afterDate": []
+          },
+          "changelog": []
+        }
+      ],
+      "longRunningIssues": [
+        {
+          "id": "10093",
+          "key": "TRUF-19",
+          "self": "https://api.atlassian.com/ex/jira/d3ad714f-4260-4f1c-9bc4-00c62e1a52e9/rest/api/3/issue/10093",
+          "timeInStatus": 32.30053984953704
+        }
+      ],
+      "assignee": null,
+      "changelogs": [],
+      "summary": "Get the Bag",
+      "reportGenerationDate": "2023-11-11T22:57:41.603+01:00",
+      "statusName": "To Do",
+      "priority": "Medium",
+      "dueDate": "2024-01-01",
+      "velocity": {
+        "daily": 0,
+        "total": 0,
+        "window": 30
+      },
+      "remainingPoints": 0,
+      "inProgressPoints": 0,
+      "completedPoints": 0,
+      "totalPoints": 0,
+      "summaryText": "The epic is in the initial stage with no progress, no assignee, undefined priority, and a due date of January 1, 2024, but with a long-running issue that needs to be addressed."
+    }
+  ],
+  "velocity": {
+    "daily": 0,
+    "total": 0,
+    "window": 30
+  },
+  "remainingPoints": 2,
+  "inProgressPoints": 2,
+  "completedPoints": 0,
+  "statusName": "Active"
+}

@@ -2,4 +2,4 @@
   Action:
     - sqs:SendMessage
   Resource:
-    - !GetAtt ProjectAnalysisQueue.Arn
+    - !GetAtt JiraAnalysisQueue.Arn

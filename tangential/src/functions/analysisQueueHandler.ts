@@ -1,9 +1,9 @@
 import { SQSHandler } from 'aws-lambda';
-import { JiraRequestAuth, doLog } from '@akfreas/tangential-core';
-import {decode, } from 'jsonwebtoken';
+import { doLog, extractFromJiraAuth } from '@akfreas/tangential-core';
 import { handleProjectAnalysisMessage } from '../utils/queueHandling/projectAnalysisMessageHandling';
 import { handleEpicAnalysisMessage } from '../utils/queueHandling/epicAnalysisMessageHandling';
 import { MessageType } from '../utils/sqs';
+import { handleProjectAnalysisFinalizeMessage } from '../utils/queueHandling/finalizeProjectAnalysis';
 export const handler: SQSHandler = async (event) => {
   try {
     for (const record of event.Records) {
@@ -12,19 +12,13 @@ export const handler: SQSHandler = async (event) => {
       if (!messageType) {
         throw new Error('No message type found');
       }
+      
+      const {atlassianUserId} = extractFromJiraAuth(auth);
 
-      const { accessToken}: JiraRequestAuth = auth;
-
-      const secretKey = process.env.ATLASSIAN_CLIENT_SECRET;
-
-      if (!secretKey) {
-        throw new Error('No secret key found');
-      }
-
-      const {sub: ownerId = undefined} = decode(accessToken) ?? {};
-
-      if (!ownerId || typeof ownerId !== 'string') {
-        throw new Error('No owner ID found or invalid type');
+      if (!atlassianUserId) {
+        throw new Error('No atlassian user ID found in auth');
+      } else {
+        doLog("Found atlassian user ID", {atlassianUserId});
       }
 
       switch (messageType) {
@@ -37,7 +31,7 @@ export const handler: SQSHandler = async (event) => {
           break;
         }
         case MessageType.PROJECT_ANALYSIS_FINALIZE: {
-          doLog("Handling project analysis finalize message");
+          await handleProjectAnalysisFinalizeMessage(record);
           break;
         }
       }

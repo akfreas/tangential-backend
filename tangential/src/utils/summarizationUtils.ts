@@ -95,8 +95,6 @@ export async function summarizeEpicReport(report: EpicReport) {
       }
     ],
   });
-
-  jsonLog("Result", result)
   const {
     choices: [{message: {content}}]
   } = result;

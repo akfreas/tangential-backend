@@ -1,8 +1,9 @@
 import { APIGatewayEvent } from "aws-lambda";
 import { extractAtlassianHeaders } from "../utils/request";
 import { fetchProjects } from "../utils/jira";
-import { sendJiraAnalysisQueueMessage } from "../utils/sqs";
+import { sendEpicAnalysisQueueMessage, sendProjectAnalysisBeginQueueMessage } from "../utils/sqs";
 import { DateTime } from 'luxon';
+import { jsonLog } from "@akfreas/tangential-core";
 
 export async function handler(
   event: APIGatewayEvent
@@ -11,7 +12,6 @@ export async function handler(
   const { headers } = event;
 
   const auth = extractAtlassianHeaders(headers);
-
   try {
     const projects = await fetchProjects(auth);
     const date = DateTime.now().minus({ days: 10 }).toISODate();
@@ -19,7 +19,7 @@ export async function handler(
       throw new Error('Could not get date');
     }
     await Promise.all(projects.map(p => p.key).map((projectKey) => {
-      return sendJiraAnalysisQueueMessage(
+      return sendProjectAnalysisBeginQueueMessage(
         projectKey,
         date,
         auth,

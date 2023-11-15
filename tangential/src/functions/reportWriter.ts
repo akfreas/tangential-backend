@@ -1,15 +1,15 @@
 import { SQSHandler } from "aws-lambda";
-import { JiraRequestAuth, extractFromJiraAuth, fetchAllProjectReports, fetchReportByProjectKey, fetchTemplate } from "@akfreas/tangential-core";
+import {  extractFromJiraAuth, fetchReportByProjectKey, fetchTemplate, jsonLog } from "@akfreas/tangential-core";
 
 
-export async function writeReport(templateId: string, projectKey: string, auth: JiraRequestAuth) {
-  const { atlassianId, atlassianUserId } = extractFromJiraAuth(auth);
-  const template = await fetchTemplate(atlassianId, templateId);
-  const report = await fetchReportByProjectKey(atlassianUserId, atlassianId, projectKey);
+// export async function writeReport(templateId: string, projectKey: string, auth: JiraRequestAuth) {
+//   const { atlassianWorkspaceId, atlassianUserId } = extractFromJiraAuth(auth);
+//   const template = await fetchTemplate(atlassianWorkspaceId, templateId);
+//   const report = await fetchReportByProjectKey(atlassianUserId, atlassianWorkspaceId, projectKey);
 
+//   do
 
-
-}
+// }
 export const handler: SQSHandler = async (event) => {
 
   try {
@@ -19,11 +19,12 @@ export const handler: SQSHandler = async (event) => {
         auth,
         templateId } = JSON.parse(record.body);
 
-        const { atlassianId, atlassianUserId } = extractFromJiraAuth(auth);
+        const { atlassianWorkspaceId, atlassianUserId } = extractFromJiraAuth(auth);
         
-        const template = await fetchTemplate(atlassianId, templateId);
-        const report = await fetchReportByProjectKey(atlassianUserId, atlassianId, projectKey);
+        const template = await fetchTemplate(atlassianWorkspaceId, templateId);
+        const report = await fetchReportByProjectKey(atlassianUserId, atlassianWorkspaceId, projectKey);
 
+        jsonLog("Params", {atlassianWorkspaceId, template, report})
 
       }
 

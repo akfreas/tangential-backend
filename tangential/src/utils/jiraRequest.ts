@@ -1,5 +1,5 @@
 import {
-  JiraRequestAuth, JiraRequestOptions, doError, doLog,
+  JiraRequestAuth, JiraRequestOptions, doError, doLog, jsonLog,
 } from '@akfreas/tangential-core';
 import { axiosInstance } from './request';
 import { promises as fs } from 'fs';
@@ -46,6 +46,14 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
 
   const { accessToken, atlassianWorkspaceId } = auth;
 
+  if (!accessToken) {
+    throw doError('No access token provided', new Error('No access token provided'));
+  }
+
+  if (!atlassianWorkspaceId) {
+    throw doError('No Atlassian Workspace ID provided', new Error('No Atlassian Workspace ID provided'));
+  }
+
   const url = `https://api.atlassian.com/ex/jira/${atlassianWorkspaceId}/rest/api/3/${options.path}`;
 
   let response;
@@ -62,7 +70,8 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
 
   } catch (error) {
     if (error instanceof Error) { 
-      doError(`Error making request to Jira:`, error);
+      jsonLog("Error making request to Jira", options);
+      // doError(`Error making request to Jira:`, error);
     }
     console.error(error);
     throw error;

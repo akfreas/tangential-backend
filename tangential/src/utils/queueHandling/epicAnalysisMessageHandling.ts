@@ -1,11 +1,13 @@
 import { SQSRecord } from "aws-lambda";
 import { DateTime } from "luxon";
-import { storeEpicReport } from "@akfreas/tangential-core";
+import { jsonLog, storeEpicReport } from "@akfreas/tangential-core";
 import { analyzeEpic } from "../jira";
 import { sendUpdateProjectAnalysisStatusQueueMessage } from "../sqs";
 
 
 export async function handleEpicAnalysisMessage(record: SQSRecord) {
+
+  jsonLog("Handling Epic Analysis Message", record)
   const { epicKey, jobId,
     velocityWindowDays, windowStartDate,
      longRunningDays, auth } = JSON.parse(record.body);
@@ -21,5 +23,5 @@ export async function handleEpicAnalysisMessage(record: SQSRecord) {
   );
   await storeEpicReport(result);
 
-  await sendUpdateProjectAnalysisStatusQueueMessage(epicKey, jobId);
+  await sendUpdateProjectAnalysisStatusQueueMessage(epicKey, jobId, auth);
 }

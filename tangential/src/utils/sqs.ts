@@ -21,19 +21,6 @@ async function sendMessage(payload: SendMessageCommandInput) {
   return Promise.resolve();
 }
 
-export async function sendUpdateProjectAnalysisStatusQueueMessage(
-  epicKey: string,
-  jobId: string,
-): Promise<void> {
-  const payload = {
-    QueueUrl: process.env.updateProjectAnalysisStatusQueueUrl as string,
-    MessageBody: JSON.stringify({
-      epicKey,
-      jobId
-    })
-  };
-  await sendMessage(payload);
-}
 
 export async function sendProjectAnalysisBeginQueueMessage(
   projectKey: string,
@@ -56,12 +43,13 @@ export async function sendProjectAnalysisBeginQueueMessage(
   await sendMessage(payload);
 }
 
-export async function sendProjectAnalysisFinalizeQueueMessage(jobId: string): Promise<void> {
+export async function sendProjectAnalysisFinalizeQueueMessage(jobId: string, auth: JiraRequestAuth): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
       messageType: MessageType.PROJECT_ANALYSIS_FINALIZE,
-      jobId
+      jobId,
+      auth
     })
   };
   await sendMessage(payload);
@@ -69,6 +57,7 @@ export async function sendProjectAnalysisFinalizeQueueMessage(jobId: string): Pr
 }
 
 export async function sendEpicAnalysisQueueMessage(
+  jobId: string,
   projectKey: string,
   epicKey: string,
   auth: JiraRequestAuth,
@@ -78,6 +67,7 @@ export async function sendEpicAnalysisQueueMessage(
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
+      jobId,
       messageType: MessageType.EPIC_ANALYSIS,
       projectKey,
       epicKey,
@@ -85,6 +75,26 @@ export async function sendEpicAnalysisQueueMessage(
       velocityWindowDays,
       longRunningDays
     })
+  };
+  await sendMessage(payload);
+}
+
+export async function sendUpdateProjectAnalysisStatusQueueMessage(
+  epicKey: string,
+  jobId: string,
+  auth: JiraRequestAuth
+): Promise<void> {
+  if (!jobId) {
+    throw new Error('sendUpdateProjectAnalysisStatusQueueMessage: No job ID provided');
+  }
+  const payload = {
+    QueueUrl: process.env.updateProjectAnalysisStatusQueueUrl as string,
+    MessageBody: JSON.stringify({
+      epicKey,
+      jobId,
+      auth
+    }),
+    MessageGroupId: jobId
   };
   await sendMessage(payload);
 }

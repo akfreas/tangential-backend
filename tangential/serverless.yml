@@ -38,8 +38,8 @@ provider:
       allowedHeaders:
         - "Content-Type"
         - "X-Atlassian-Token"
-        - "x-atlassian-refresh-token"
-        - "X-Atlassian-Id"
+        - "X-Atlassian-Refresh-Token"
+        - "X-Atlassian-Workspace-Id"
       allowCredentials: false
 
 custom:
@@ -86,7 +86,7 @@ functions:
           batchSize: 5
 
   updateProjectAnalysisStatusQueueHandler:
-    handler: src/functions/updateProjectAnalysisStatusQueueHandler.handler
+    handler: src/functions/updateProjectAnalysisStatus.handler
     events:
       - sqs:
           arn: !GetAtt UpdateProjectAnalysisStatusQueueFifo.Arn

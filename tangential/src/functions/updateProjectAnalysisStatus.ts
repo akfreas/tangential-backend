@@ -7,7 +7,7 @@ export const handler: SQSHandler = async (event) => {
   try {
     for (const record of event.Records) {
 
-      const { epicKey, jobId } = JSON.parse(record.body);
+      const { epicKey, jobId, auth } = JSON.parse(record.body);
 
       const dbWrapper = await MongoDBWrapper.getInstance(process.env.MONGODB_URI, process.env.MONGODB_DATABASE);
       
@@ -31,7 +31,7 @@ export const handler: SQSHandler = async (event) => {
       );
 
       if (remainingItems.length === 0) {
-        await sendProjectAnalysisFinalizeQueueMessage(jobId);
+        await sendProjectAnalysisFinalizeQueueMessage(jobId, auth);
         doLog(`Project analysis complete for job ${jobId}, sending finalize message`)
       }
     }

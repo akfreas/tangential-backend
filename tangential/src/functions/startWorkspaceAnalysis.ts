@@ -1,7 +1,7 @@
 import { APIGatewayEvent } from "aws-lambda";
 import { extractAtlassianHeaders } from "../utils/request";
 import { fetchProjects } from "../utils/jira";
-import { sendProjectAnalysisQueueMessage } from "../utils/sqs";
+import { sendJiraAnalysisQueueMessage } from "../utils/sqs";
 import { DateTime } from 'luxon';
 
 export async function handler(
@@ -19,7 +19,7 @@ export async function handler(
       throw new Error('Could not get date');
     }
     await Promise.all(projects.map(p => p.key).map((projectKey) => {
-      return sendProjectAnalysisQueueMessage(
+      return sendJiraAnalysisQueueMessage(
         projectKey,
         date,
         auth,

@@ -44,9 +44,9 @@ async function writeRequestToDisk(options: JiraRequestOptions, response: any) {
 
 export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
 
-  const { accessToken, atlassianId } = auth;
+  const { accessToken, atlassianWorkspaceId } = auth;
 
-  const url = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/${options.path}`;
+  const url = `https://api.atlassian.com/ex/jira/${atlassianWorkspaceId}/rest/api/3/${options.path}`;
 
   let response;
   try {

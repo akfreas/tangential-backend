@@ -28,7 +28,8 @@ provider:
       statements: ${file(./iam-role.yml)}
 
   environment:
-    projectAnalysisQueueUrl: ${self:custom.projectAnalysisQueueUrl.${self:provider.stage}, self:custom.projectAnalysisQueueUrl.remote}
+    jiraAnalysisQueueUrl: ${self:custom.jiraAnalysisQueueUrl.${self:provider.stage}, self:custom.jiraAnalysisQueueUrl.remote}
+    updateProjectAnalysisStatusQueueUrl: ${self:custom.updateProjectAnalysisStatusQueueUrl.${self:provider.stage}, self:custom.updateProjectAnalysisStatusQueueUrl.remote}
   httpApi:
     cors:
       allowedOrigins:
@@ -37,6 +38,7 @@ provider:
       allowedHeaders:
         - "Content-Type"
         - "X-Atlassian-Token"
+        - "x-atlassian-refresh-token"
         - "X-Atlassian-Id"
       allowCredentials: false
 
@@ -44,10 +46,15 @@ custom:
   packageIndividually:
     offline: false
 
-  projectAnalysisQueueUrl:
-    offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/ProjectAnalysisQueue-${self:provider.stage}
+  jiraAnalysisQueueUrl:
+    offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/JiraAnalysisQueue-${self:provider.stage}
     remote:
-      Ref: ProjectAnalysisQueue
+      Ref: JiraAnalysisQueue
+
+  updateProjectAnalysisStatusQueueUrl:
+    offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/UpdateProjectAnalysisStatusQueueFifo-${self:provider.stage}.fifo
+    remote:
+      Ref: UpdateProjectAnalysisStatusQueueFifo
 
   serverless-offline-sqs:
     endpoint: http://localhost:4566
@@ -71,25 +78,50 @@ functions:
           method: get
           path: /workspace/analyze
 
-  analyzeProjectFromQueue:
-    handler: src/functions/analyzeProjectFromQueue.handler
+  analysisQueueHandler:
+    handler: src/functions/analysisQueueHandler.handler
     events:
       - sqs:
-          arn: !GetAtt ProjectAnalysisQueue.Arn
+          arn: !GetAtt JiraAnalysisQueue.Arn
+          batchSize: 5
+
+  updateProjectAnalysisStatusQueueHandler:
+    handler: src/functions/updateProjectAnalysisStatusQueueHandler.handler
+    events:
+      - sqs:
+          arn: !GetAtt UpdateProjectAnalysisStatusQueueFifo.Arn
           batchSize: 5
 
 resources:
   Resources:
-    ProjectAnalysisQueue:
+    JiraAnalysisQueue:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: ProjectAnalysisQueue-${self:provider.stage}
+        QueueName: JiraAnalysisQueue-${self:provider.stage}
         RedrivePolicy:
-          deadLetterTargetArn: !GetAtt ProjectAnalysisDeadLetterQueue.Arn
+          deadLetterTargetArn: !GetAtt JiraAnalysisDeadLetterQueue.Arn
           maxReceiveCount: 2
         VisibilityTimeout: ${self:provider.timeout}
 
-    ProjectAnalysisDeadLetterQueue:
+    JiraAnalysisDeadLetterQueue:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: ProjectAnalysisDeadLetterQueue-${self:provider.stage}
+        QueueName: JiraAnalysisDeadLetterQueue-${self:provider.stage}
+
+    UpdateProjectAnalysisStatusQueueFifo:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: UpdateProjectAnalysisStatusQueueFifo-${self:provider.stage}.fifo
+        VisibilityTimeout: ${self:provider.timeout}
+        FifoQueue: true
+        ContentBasedDeduplication: true
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt UpdateProjectAnalysisStatusDeadLetterQueueFifo.Arn
+          maxReceiveCount: 2
+
+    UpdateProjectAnalysisStatusDeadLetterQueueFifo:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: UpdateProjectAnalysisStatusDeadLetterQueueFifo-${self:provider.stage}.fifo
+        FifoQueue: true
+        ContentBasedDeduplication: true

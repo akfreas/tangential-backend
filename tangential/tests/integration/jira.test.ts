@@ -12,7 +12,8 @@ jest.mock('../../src/utils/jiraRequest', () => ({
 const mockedMakeJiraRequest = makeJiraRequest as jest.MockedFunction<typeof makeJiraRequest>;
 const auth = {
   "accessToken": "",
-  "atlassianWorkspaceId": "d3ad714f-4260-4f1c-9bc4-00c62e1a52e9"
+  "atlassianWorkspaceId": "d3ad714f-4260-4f1c-9bc4-00c62e1a52e9",
+  "refreshToken": "",
 };
 jest.setTimeout(30000);
 
@@ -21,6 +22,7 @@ describe('jira requests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockedMakeJiraRequest.mockImplementation((options) => {
+      // eslint-disable-next-line jest/no-standalone-expect
       const testName = expect.getState().currentTestName?.replace(/\s/g, '-');
       if (!testName) throw new Error("Test name not found");
       return makeDiskRequest(options, testName)

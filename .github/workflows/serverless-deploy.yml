@@ -50,10 +50,10 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-    - name: Deploy to live
+    - name: Deploy to prod
       if: github.ref == 'refs/heads/main'
-      run: ./node_modules/serverless/bin/serverless.js deploy --stage live
-      id: deploy-live
+      run: ./node_modules/serverless/bin/serverless.js deploy --stage prod
+      id: deploy-prod
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -74,12 +74,12 @@ jobs:
         SLACK_MESSAGE: 'Tangential Backend: Deployment to dev failed :fire:'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-    - name: Slack Notification for Live Deployment Failure
-      if: ${{ failure() && steps.deploy-live.outcome == 'failure' }}
+    - name: Slack Notification for prod Deployment Failure
+      if: ${{ failure() && steps.deploy-prod.outcome == 'failure' }}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: danger
-        SLACK_MESSAGE: 'Tangential Backend: Deployment to live failed :fire:'
+        SLACK_MESSAGE: 'Tangential Backend: Deployment to prod failed :fire:'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Slack Success Notification

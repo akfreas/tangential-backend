@@ -25,6 +25,8 @@ provider:
   environment:
     jiraAnalysisQueueUrl: ${self:custom.jiraAnalysisQueueUrl.${self:provider.stage}, self:custom.jiraAnalysisQueueUrl.remote}
     updateProjectAnalysisStatusQueueUrl: ${self:custom.updateProjectAnalysisStatusQueueUrl.${self:provider.stage}, self:custom.updateProjectAnalysisStatusQueueUrl.remote}
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+    MONGODB_URI: ${env:MONGODB_URI}
     MONGODB_DATABASE: tangential-${opt:stage}
 
   httpApi:

@@ -3,6 +3,9 @@ name: Serverless Deployment
 
 env:
   SLACK_CHANNEL: tangential-ci-updates
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+
 
 on:
   push:

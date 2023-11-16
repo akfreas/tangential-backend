@@ -32,7 +32,7 @@ provider:
     updateProjectAnalysisStatusQueueUrl: ${self:custom.updateProjectAnalysisStatusQueueUrl.${self:provider.stage}, self:custom.updateProjectAnalysisStatusQueueUrl.remote}
     OPENAI_API_KEY: ${env:OPENAI_API_KEY}
     MONGODB_URI: ${env:MONGODB_URI}
-    MONGODB_DATABASE: ${env:MONGODB_DATABASE}
+    MONGODB_DATABASE: tangential-${opt:stage}
 
   httpApi:
     cors:

@@ -123,3 +123,4 @@ refresh_token.txt
 token.json
 **/recordings
 .env.offline
+.env*

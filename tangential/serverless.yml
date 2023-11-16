@@ -42,16 +42,18 @@ provider:
       allowCredentials: false
 
 custom:
+  offlineQueueUrl: ${self:custom.serverless-offline-sqs.endpoint}/000000000000
+
   packageIndividually:
     offline: false
 
   jiraAnalysisQueueUrl:
-    offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/JiraAnalysisQueue-${self:provider.stage}
+    offline: ${self:custom.offlineQueueUrl}/JiraAnalysisQueue-${self:provider.stage}
     remote:
       Ref: JiraAnalysisQueue
 
   updateProjectAnalysisStatusQueueUrl:
-    offline: ${self:custom.serverless-offline-sqs.endpoint}/queue/UpdateProjectAnalysisStatusQueueFifo-${self:provider.stage}.fifo
+    offline: ${self:custom.offlineQueueUrl}/UpdateProjectAnalysisStatusQueueFifo-${self:provider.stage}.fifo
     remote:
       Ref: UpdateProjectAnalysisStatusQueueFifo
 

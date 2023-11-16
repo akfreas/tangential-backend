@@ -3,3 +3,4 @@
     - sqs:SendMessage
   Resource:
     - !GetAtt JiraAnalysisQueue.Arn
+    - !GetAtt UpdateProjectAnalysisStatusQueueFifo.Arn

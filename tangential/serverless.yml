@@ -25,6 +25,7 @@ provider:
   environment:
     jiraAnalysisQueueUrl: ${self:custom.jiraAnalysisQueueUrl.${self:provider.stage}, self:custom.jiraAnalysisQueueUrl.remote}
     updateProjectAnalysisStatusQueueUrl: ${self:custom.updateProjectAnalysisStatusQueueUrl.${self:provider.stage}, self:custom.updateProjectAnalysisStatusQueueUrl.remote}
+    writeReportQueueUrl: ${self:custom.writeReportQueueUrl.${self:provider.stage}, self:custom.writeReportQueueUrl.remote}
     OPENAI_API_KEY: ${env:OPENAI_API_KEY}
     MONGODB_URI: ${env:MONGODB_URI}
     MONGODB_DATABASE: tangential-${opt:stage}
@@ -56,6 +57,11 @@ custom:
     offline: ${self:custom.offlineQueueUrl}/UpdateProjectAnalysisStatusQueueFifo-${self:provider.stage}.fifo
     remote:
       Ref: UpdateProjectAnalysisStatusQueueFifo
+
+  writeReportQueueUrl:
+    offline: ${self:custom.offlineQueueUrl}/WriteReportQueue-${self:provider.stage}
+    remote:
+      Ref: WriteReportQueue
 
   serverless-offline-sqs:
     endpoint: http://localhost:4566
@@ -93,6 +99,12 @@ functions:
           arn: !GetAtt UpdateProjectAnalysisStatusQueueFifo.Arn
           batchSize: 5
 
+  writeReportQueueHandler:
+    handler: src/functions/writeReport.handler
+    events:
+      - sqs:
+          arn: !GetAtt WriteReportQueue.Arn
+          batchSize: 5
 resources:
   Resources:
     JiraAnalysisQueue:
@@ -126,3 +138,17 @@ resources:
         QueueName: UpdateProjectAnalysisStatusDeadLetterQueueFifo-${self:provider.stage}.fifo
         FifoQueue: true
         ContentBasedDeduplication: true
+
+    WriteReportQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: WriteReportQueue-${self:provider.stage}
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt WriteReportDeadLetterQueue.Arn
+          maxReceiveCount: 2
+        VisibilityTimeout: ${self:provider.timeout}
+
+    WriteReportDeadLetterQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: WriteReportDeadLetterQueue-${self:provider.stage}

@@ -6,7 +6,7 @@ import { storeProjectReport } from "@akfreas/tangential-core";
 export async function handleProjectAnalysisMessage(record: SQSRecord) {
   const { projectKey, windowStartDate,
     velocityWindowDays, longRunningDays, auth } = JSON.parse(record.body);
-
+    
   const result = await analyzeProject(
     projectKey,
     DateTime.fromISO(windowStartDate),

@@ -43,12 +43,12 @@ export async function sendProjectAnalysisBeginQueueMessage(
   await sendMessage(payload);
 }
 
-export async function sendProjectAnalysisFinalizeQueueMessage(jobId: string, auth: JiraRequestAuth): Promise<void> {
+export async function sendProjectAnalysisFinalizeQueueMessage(buildId: string, auth: JiraRequestAuth): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
       messageType: MessageType.PROJECT_ANALYSIS_FINALIZE,
-      jobId,
+      buildId,
       auth
     })
   };
@@ -57,7 +57,7 @@ export async function sendProjectAnalysisFinalizeQueueMessage(jobId: string, aut
 }
 
 export async function sendEpicAnalysisQueueMessage(
-  jobId: string,
+  buildId: string,
   projectKey: string,
   epicKey: string,
   auth: JiraRequestAuth,
@@ -67,7 +67,7 @@ export async function sendEpicAnalysisQueueMessage(
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
-      jobId,
+      buildId,
       messageType: MessageType.EPIC_ANALYSIS,
       projectKey,
       epicKey,
@@ -81,20 +81,20 @@ export async function sendEpicAnalysisQueueMessage(
 
 export async function sendUpdateProjectAnalysisStatusQueueMessage(
   epicKey: string,
-  jobId: string,
+  buildId: string,
   auth: JiraRequestAuth
 ): Promise<void> {
-  if (!jobId) {
+  if (!buildId) {
     throw new Error('sendUpdateProjectAnalysisStatusQueueMessage: No job ID provided');
   }
   const payload = {
     QueueUrl: process.env.updateProjectAnalysisStatusQueueUrl as string,
     MessageBody: JSON.stringify({
       epicKey,
-      jobId,
+      buildId,
       auth
     }),
-    MessageGroupId: jobId
+    MessageGroupId: buildId
   };
   await sendMessage(payload);
 }

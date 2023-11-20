@@ -440,7 +440,7 @@ export async function analyzeProject(
 ): Promise<ProjectReport> {
   const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
   const reportGenerationDate = DateTime.local().toISO();
-  const jobId = `${atlassianUserId}-${projectKey}-${reportGenerationDate}`;
+  const buildId = `${atlassianUserId}-${projectKey}-${reportGenerationDate}`;
 
   const { avatarUrls, displayName, name, lead } = await fetchProjectById(projectKey, auth);
   const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND statusCategory != "Done"`, auth);
@@ -449,7 +449,7 @@ export async function analyzeProject(
   const epicKeys: string[] = [...notCompletedResults, ...recentlyCompletedResults].map((epic: any) => epic.key);
 
   await Promise.all(epicKeys.map((key: any) => {
-    return sendEpicAnalysisQueueMessage(jobId, 
+    return sendEpicAnalysisQueueMessage(buildId, 
       projectKey, key,
       auth, velocityWindowDays, 
       longRunningDays)
@@ -474,7 +474,7 @@ export async function analyzeProject(
 
 
   const report: ProjectReport = {
-    jobId,
+    buildId,
     reportType: 'project',
     buildStatus: {
       status: 'pending',
@@ -514,7 +514,7 @@ export async function analyzeEpic(
   epicKey: string,
   windowStartDate: DateTime,
   auth: JiraRequestAuth,
-  jobId: string,
+  buildId: string,
   velocityWindowDays: number = 30,
   longRunningDays: number = 10
 ): Promise<EpicReport> {
@@ -607,7 +607,7 @@ export async function analyzeEpic(
 
   const dueDate = DateTime.fromISO(duedate)?.toISODate() ?? undefined;
   const epicReport: EpicReport = {
-    jobId,
+    buildId,
     reportType: 'epic',
     buildStatus: {
       status: 'success',

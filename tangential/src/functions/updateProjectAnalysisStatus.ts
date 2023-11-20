@@ -7,7 +7,7 @@ export const handler: SQSHandler = async (event) => {
   try {
     for (const record of event.Records) {
 
-      const { epicKey, jobId, auth } = JSON.parse(record.body);
+      const { epicKey, buildId, auth } = JSON.parse(record.body);
 
       const dbWrapper = await MongoDBWrapper.getInstance(process.env.MONGODB_URI, process.env.MONGODB_DATABASE);
       
@@ -15,14 +15,14 @@ export const handler: SQSHandler = async (event) => {
       
       doLog(`Wrote report for ${epicKey} to database`)
 
-      const filter = { jobId, reportType: 'project' };
+      const filter = { buildId, reportType: 'project' };
 
       const projectReport: ProjectReport = await dbCollection.findOne(filter);
 
       const remainingItems = projectReport.buildStatus.remainingItems.filter(item => item !== epicKey)
 
       projectReport.buildStatus.remainingItems = remainingItems;
-      doLog(`Removed ${epicKey} from remaining items for job ${jobId}`)
+      doLog(`Removed ${epicKey} from remaining items for job ${buildId}`)
 
       dbCollection.updateOne(
         filter, 
@@ -31,8 +31,8 @@ export const handler: SQSHandler = async (event) => {
       );
 
       if (remainingItems.length === 0) {
-        await sendProjectAnalysisFinalizeQueueMessage(jobId, auth);
-        doLog(`Project analysis complete for job ${jobId}, sending finalize message`)
+        await sendProjectAnalysisFinalizeQueueMessage(buildId, auth);
+        doLog(`Project analysis complete for job ${buildId}, sending finalize message`)
       }
     }
   } catch (error) {

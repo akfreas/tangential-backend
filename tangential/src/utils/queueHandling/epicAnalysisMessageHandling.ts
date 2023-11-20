@@ -8,7 +8,7 @@ import { sendUpdateProjectAnalysisStatusQueueMessage } from "../sqs";
 export async function handleEpicAnalysisMessage(record: SQSRecord) {
 
   jsonLog("Handling Epic Analysis Message", record)
-  const { epicKey, jobId,
+  const { epicKey, buildId,
     velocityWindowDays, windowStartDate,
      longRunningDays, auth } = JSON.parse(record.body);
 
@@ -17,11 +17,11 @@ export async function handleEpicAnalysisMessage(record: SQSRecord) {
     epicKey,
     DateTime.fromISO(windowStartDate),
     auth,
-    jobId,
+    buildId,
     velocityWindowDays,
     longRunningDays,
   );
   await storeEpicReport(result);
 
-  await sendUpdateProjectAnalysisStatusQueueMessage(epicKey, jobId, auth);
+  await sendUpdateProjectAnalysisStatusQueueMessage(epicKey, buildId, auth);
 }

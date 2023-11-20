@@ -123,4 +123,9 @@ refresh_token.txt
 token.json
 **/recordings
 .env.offline
+<<<<<<< Updated upstream:tangential/.gitignore
 .env*
+=======
+*/.DS_Store
+.DS_Store
+>>>>>>> Stashed changes:.gitignore

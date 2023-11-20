@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@akfreas/tangential-core": "^1.0.13",
+    "@akfreas/tangential-core": "^1.0.16",
     "@aws-sdk/client-sqs": "^3.438.0",
     "aws-lambda": "^1.0.7",
     "axios": "^1.6.2",

@@ -478,6 +478,7 @@ export async function analyzeProject(
     reportType: 'project',
     buildStatus: {
       status: 'pending',
+      buildId,
       startedAt: reportGenerationDate,
       remainingItems: epicKeys
     },
@@ -497,15 +498,6 @@ export async function analyzeProject(
     completedPoints,
     statusName: 'Active',
   };
-
-  // if (projectVelocity.daily > 0) {
-  //   const daysRemaining = projectRemainingPoints / projectVelocity.daily;
-  //   const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
-  //   if (!predictedEndDate) {
-  //     throw new Error('Failed to format predicted end date');
-  //   }
-  //   report.analysis = createProjectAnalysis(projectAnalysis, projectRemainingPoints, projectVelocity);
-  // }
 
   return report;
 }
@@ -610,6 +602,7 @@ export async function analyzeEpic(
     buildId,
     reportType: 'epic',
     buildStatus: {
+      buildId,
       status: 'success',
       startedAt: reportGenerationDate,
       remainingItems: []
@@ -682,15 +675,17 @@ function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, d
   return analysis
 }
 
-function createProjectAnalysis(epicKeys: EpicReport[], remainingPoints: number, velocity: Velocity): Analysis | undefined {
+export function createProjectAnalysis(epicKeys: EpicReport[], projectReport: ProjectReport): Analysis | undefined {
+  const daysRemaining = projectReport.remainingPoints / projectReport.velocity.daily;
+  const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
+  if (!predictedEndDate) {
+    throw new Error('Failed to format predicted end date');
+  }
 
-    if (remainingPoints === 0) {
+    if (projectReport.remainingPoints === 0) {
       return undefined;
     }
-  
-    const daysRemaining = remainingPoints / velocity.daily;
-    const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
-    
+      
     if (!predictedEndDate) {
       throw new Error('Failed to format predicted end date');
     }

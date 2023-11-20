@@ -676,7 +676,12 @@ function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, d
 }
 
 export function createProjectAnalysis(epicKeys: EpicReport[], projectReport: ProjectReport): Analysis | undefined {
-  const daysRemaining = projectReport.remainingPoints / projectReport.velocity.daily;
+  const { velocity: { daily } } = projectReport;
+  if (daily === 0) {
+    return undefined;
+  }
+
+  const daysRemaining = projectReport.remainingPoints / daily;
   const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
   if (!predictedEndDate) {
     throw new Error('Failed to format predicted end date');

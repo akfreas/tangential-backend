@@ -1,6 +1,7 @@
 import { SQSHandler } from "aws-lambda";
 import {  ProjectReport, doLog, extractFromJiraAuth, fetchLatestProjectReportsWithEpics, fetchReportByBuildId, fetchReportByProjectKey, fetchTemplate, jsonLog } from "@akfreas/tangential-core";
 import { ReportTemplate } from "@akfreas/tangential-core/dist/types/template";
+import { json } from "stream/consumers";
 
 
 
@@ -20,9 +21,9 @@ async function writeReport(projectReport: ProjectReport) {
   if (projectReport.epics) {
       projectReport.epics.forEach(epic => {
           const epicName = epic.summary;
-          const teamName = epic.assignee.displayName;
+          const teamName = epic.assignee?.displayName || 'Unassigned';
           const epicStatus = epic.analysis && epic.analysis.state ? epic.analysis.state.name : 'Unknown';
-          const details = epic.analysis && epic.analysis.summaryText ? epic.analysis.summaryText : 'No additional details.';
+          const details = epic.analysis?.summaryText ?? 'No additional details.';
           
           epicDetails += `Epic Name: ${epicName}\n   Team: ${teamName}\n   Status: ${epicStatus}\n   Details: ${details}\n\n`;
       });
@@ -50,11 +51,20 @@ export const handler: SQSHandler = async (event) => {
     for (const record of event.Records) {
       const { 
         auth, buildId } = JSON.parse(record.body);
-        const { atlassianUserId } = extractFromJiraAuth(auth);
+        if (!auth) {
+          throw new Error('No auth found');
+        }
 
+        if (!buildId) {
+          throw new Error('No build ID found');
+        }
+        const { atlassianUserId } = extractFromJiraAuth(auth);
+        jsonLog("Input", {auth, atlassianUserId, buildId})
+        
         const report: ProjectReport | null = await fetchReportByBuildId(atlassianUserId, buildId);
+        jsonLog("Report", report)
         if (!report) {
-          throw new Error('Template or report not found');
+          throw new Error('Report not found');
         }
         await writeReport(report);
       }

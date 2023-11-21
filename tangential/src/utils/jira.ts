@@ -10,24 +10,13 @@ import {
   Velocity,
   Analysis,
   AnalysisState,
-  JiraIssue,
-  extractFromJiraAuth
+  ChangelogTimeline,
+  IssueCommentsTimeline,
+  ProjectInfo,
+  doError
 } from '@akfreas/tangential-core';
 import { DateTime } from 'luxon';
 import { makeJiraRequest } from './jiraRequest';
-import { summarizeEpicReport } from './summarizationUtils';
-import { sendEpicAnalysisQueueMessage } from './sqs';
-
-interface ProjectInfo {
-  id: string;
-  key: string;
-  name: string;
-  displayName?: string;
-  avatarUrls: any;
-  active: boolean;
-  lead: JiraProfile;
-}
-
 
 export async function getByJql(jql: string = 'project=10001', auth: JiraRequestAuth, maxItems: number = 5000): Promise<GetByJqlResponse> {
   const path = 'search';
@@ -74,18 +63,9 @@ export async function getByJql(jql: string = 'project=10001', auth: JiraRequestA
 }
 
 
-async function sumStoryPoints(jql: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
+export function sumStoryPoints(issues: any[], pointsFields: PointsField[]): number {
   let totalPoints = 0;
 
-  let response: GetByJqlResponse;
-  try {
-    response = await getByJql(jql, auth);
-  } catch (error) {
-    console.error('Failed to get issues for JQL:', jql);
-    return totalPoints;
-  }
-
-  const issues = response.issues;
   for (const issue of issues) {
     for (const field of pointsFields) {
       const fieldId = field.id;
@@ -93,8 +73,20 @@ async function sumStoryPoints(jql: string, pointsFields: PointsField[], auth: Ji
       totalPoints += points ? points : 0;  // add the points if they exist
     }
   }
-
   return totalPoints;
+}
+
+export async function fetchAndSumStoryPoints(jql: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
+
+  let issues: any[];
+  try {
+    ({issues} = await getByJql(jql, auth));
+  } catch (error) {
+    console.error('Failed to get issues for JQL:', jql);
+    return 0;
+  }
+
+  return sumStoryPoints(issues, pointsFields);
 }
 
 export async function fetchIssueQueryChangelogs(jqlQuery: string, auth: JiraRequestAuth, maxResults: number = 50): Promise<ChangelogEntry[]> {
@@ -200,16 +192,18 @@ export async function fetchProjectById(projectId: string, auth: JiraRequestAuth)
   return project;
 }
 
-async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxResults: number = 50): Promise<ChangelogValue[]> {
+
+export async function fetchIssueChangelogTimeline(issueKey: string, auth: JiraRequestAuth, pivotDate: string, maxResults: number = 50): Promise<ChangelogTimeline> {
   let changelogItems: ChangelogValue[] = [];
   let startAt = 0;
   let fetched = 0;
-
+  const beforeDate: ChangelogValue[] = [];
+  const afterDate: ChangelogValue[] = [];
   while (true) {
   
     const options: JiraRequestOptions = {
       method: 'GET',
-      path: `issue/${issueId}/changelog`,
+      path: `issue/${issueKey}/changelog`,
       params: {
         startAt
       }
@@ -219,8 +213,8 @@ async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxRe
     try {
       response = await makeJiraRequest(options, auth);
     } catch (error) {
-      console.error(`Failed to get changelog for issue ID: ${issueId}`);
-      return [];
+      doError("error", new Error(`Failed to get changelog for ${issueKey}`));
+      return { issueKey, beforeDate, afterDate, all: [] }; // Return the partial lists if there's an error
     }
 
     const changelog: ChangelogValue[] = response.values;
@@ -229,8 +223,7 @@ async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxRe
     for (const item of changelog) {
       item.author = {
         accountId: item.author?.accountId ?? '',
-        displayName: item.author?.displayName ?? '',
-        avatarUrls: item.author?.avatarUrls ?? {}
+        displayName: item.author?.displayName ?? ''
       };
     }
 
@@ -246,10 +239,26 @@ async function fetchIssueChangelog(issueId: string, auth: JiraRequestAuth, maxRe
     startAt += maxResults;
   }
 
-  return changelogItems;
+  // Separating the changelogs based on the pivotDate
+  const pivot = DateTime.fromISO(pivotDate);
+  changelogItems.forEach(item => {
+    const itemDate = DateTime.fromISO(item.created);
+    if (itemDate < pivot) {
+      beforeDate.push(item);
+    } else {
+      afterDate.push(item);
+    }
+  });
+
+  return { 
+    issueKey,
+    beforeDate, 
+    afterDate,
+    all: changelogItems 
+  };
 }
 
-async function calculateVelocity(
+export async function calculateVelocity(
   baseJql: string,
   window: number,
   pointsFields: PointsField[],
@@ -263,7 +272,7 @@ async function calculateVelocity(
 
   // Combine baseJql and dateJql
   const combinedJql = `${baseJql} AND ${dateJql}`;
-  const storyPoints = await sumStoryPoints(combinedJql, pointsFields, auth);
+  const storyPoints = await fetchAndSumStoryPoints(combinedJql, pointsFields, auth);
 
   return {
     daily: storyPoints / window,
@@ -276,8 +285,8 @@ export async function sumRemainingStoryPointsForEpic(epicId: string, pointsField
   // Formulate JQL for issues within an epic, excluding completed issues
   const jql = `parent = ${epicId} AND status != "Done"`;
 
-  // Use the sumStoryPoints function to get the total of remaining points
-  return await sumStoryPoints(jql, pointsFields, auth);
+  // Use the fetchAndSumStoryPoints function to get the total of remaining points
+  return await fetchAndSumStoryPoints(jql, pointsFields, auth);
 }
 
 export async function sumTotalStoryPointsForEpic(epicId: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
@@ -285,8 +294,8 @@ export async function sumTotalStoryPointsForEpic(epicId: string, pointsFields: P
   // Formulate JQL for issues within an epic
   const jql = `parent = ${epicId}`;
 
-  // Use the sumStoryPoints function to get the total of remaining points
-  return await sumStoryPoints(jql, pointsFields, auth);
+  // Use the fetchAndSumStoryPoints function to get the total of remaining points
+  return await fetchAndSumStoryPoints(jql, pointsFields, auth);
 }
 
 export async function sumTotalStoryPointsForProject(projectId: string, pointsFields: PointsField[], auth: JiraRequestAuth): Promise<number> {
@@ -294,16 +303,12 @@ export async function sumTotalStoryPointsForProject(projectId: string, pointsFie
   // Formulate JQL for issues within an epic
   const jql = `project = ${projectId}`;
 
-  // Use the sumStoryPoints function to get the total of remaining points
-  return await sumStoryPoints(jql, pointsFields, auth);
+  // Use the fetchAndSumStoryPoints function to get the total of remaining points
+  return await fetchAndSumStoryPoints(jql, pointsFields, auth);
 }
 
-interface IssueCommentsTimeline {
-  beforeDate: IssueComment[];
-  afterDate: IssueComment[];
-}
 
-export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivotDate: string, maxResults: number = 50): Promise<IssueCommentsTimeline | null> {
+export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth, pivotDate: string, maxResults: number = 50): Promise<IssueCommentsTimeline | undefined> {
   const beforeDate: IssueComment[] = [];
   const afterDate: IssueComment[] = [];
   let startAt = 0;
@@ -337,13 +342,11 @@ export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth
         id,
         author: {
           accountId: authorAccountId,
-          avatarUrls: authorAvatarUrls,
           displayName: authorDisplayName,
         },
         renderedBody,
         updateAuthor: {
           accountId: updateAuthorAccountId,
-          avatarUrls: updateAuthorAvatarUrls,
           displayName: updateAuthorDisplayName,
         },
         created,
@@ -352,13 +355,11 @@ export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth
 
       const author: JiraProfile = {
         accountId: authorAccountId,
-        avatarUrls: authorAvatarUrls,
         displayName: authorDisplayName,
       };
 
       const updateAuthor: JiraProfile = {
         accountId: updateAuthorAccountId,
-        avatarUrls: updateAuthorAvatarUrls,
         displayName: updateAuthorDisplayName,
       };
 
@@ -395,7 +396,7 @@ export async function getCommentsTimeline(issueId: string, auth: JiraRequestAuth
   }
 
   if (beforeDate.length + afterDate.length === 0) {
-    return null;
+    return undefined;
   }
 
   return { beforeDate, afterDate };
@@ -422,7 +423,12 @@ export async function getFields(auth: JiraRequestAuth, filter?: string): Promise
   }
 }
 
-async function getIssue(issueId: string, auth: JiraRequestAuth): Promise<any> {
+export async function getNewIssuesForEpic(projectKey: string, epicId: string, auth: JiraRequestAuth, windowStartDate: DateTime, maxResults: number = 5000): Promise<any> {
+  const jql = `project = "${projectKey}" AND "Epic Link" = "${epicId}" AND created >= "${windowStartDate.toISO()}"`;
+  return await getByJql(jql, auth, maxResults);
+}
+
+export async function getIssue(issueId: string, auth: JiraRequestAuth): Promise<any> {
   const options = {
     path: `issue/${issueId}`,
     method: 'GET',
@@ -431,208 +437,7 @@ async function getIssue(issueId: string, auth: JiraRequestAuth): Promise<any> {
   return await makeJiraRequest(options, auth);
 }
 
-export async function analyzeProject(
-  projectKey: string,
-  windowStartDate: DateTime,
-  auth: JiraRequestAuth,
-  velocityWindowDays: number = 30,
-  longRunningDays: number = 10
-): Promise<ProjectReport> {
-  const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
-  const reportGenerationDate = DateTime.local().toISO();
-  const buildId = `${atlassianUserId}-${projectKey}-${reportGenerationDate}`;
-
-  const { avatarUrls, displayName, name, lead } = await fetchProjectById(projectKey, auth);
-  const { issues: notCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = Epic AND statusCategory != "Done"`, auth);
-  const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND statusCategory = "Done" AND status changed DURING (-10d, now())`, auth)
-
-  const epicKeys: string[] = [...notCompletedResults, ...recentlyCompletedResults].map((epic: any) => epic.key);
-
-  await Promise.all(epicKeys.map((key: any) => {
-    return sendEpicAnalysisQueueMessage(buildId, 
-      projectKey, key,
-      auth, velocityWindowDays, 
-      longRunningDays)
-  }));
-  const fields = await getFields(auth, 'point')
-
-  const totalPoints = await sumTotalStoryPointsForProject(projectKey, fields, auth)
-
-  const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
-  const windowEndDate = DateTime.local().toISO();
-  const windowStartDateObject = windowStartDate.toISO()
-  const projectRemainingPoints = await sumStoryPoints(`project = ${projectKey} AND statusCategory != "Done"`, fields, auth);
-  const inProgressPoints = await sumStoryPoints(`project = ${projectKey} AND statusCategory = "In Progress"`, fields, auth);
-  const completedPoints = await sumStoryPoints(`project = ${projectKey} AND statusCategory = "Done"`, fields, auth);
-  if (windowEndDate === null || windowStartDateObject === null) {
-    throw new Error('Failed to format window dates');
-  }
-
-  if (reportGenerationDate === null) {
-    throw new Error('Failed to format report generation date');
-  }
-
-
-  const report: ProjectReport = {
-    buildId,
-    reportType: 'project',
-    buildStatus: {
-      status: 'pending',
-      buildId,
-      startedAt: reportGenerationDate,
-      remainingItems: epicKeys
-    },
-    ownerId: atlassianUserId,
-    atlassianWorkspaceId,
-    reportGenerationDate,
-    name: displayName || name,
-    projectKey,
-    lead,
-    avatar: avatarUrls['48x48'],
-    windowEndDate,
-    totalPoints,
-    windowStartDate: windowStartDateObject,
-    velocity: projectVelocity,
-    remainingPoints: projectRemainingPoints,
-    inProgressPoints,
-    completedPoints,
-    statusName: 'Active',
-  };
-
-  return report;
-}
-
-export async function analyzeEpic(
-  epicKey: string,
-  windowStartDate: DateTime,
-  auth: JiraRequestAuth,
-  buildId: string,
-  velocityWindowDays: number = 30,
-  longRunningDays: number = 10
-): Promise<EpicReport> {
-  let report: any = { epicKey };
-
-  const {
-    fields: { assignee, duedate,
-    status: { name: statusName },
-    priority: { name: priority },
-    summary } } = await getIssue(epicKey, auth);
-
-  report = { ...report, statusName, priority, summary };
-  const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
-  // Compute the 30-day velocity for issues with that epic as a parent
-  const jql = `parent = ${epicKey}`;
-  const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points  
-  const velocity = await calculateVelocity(jql, velocityWindowDays, pointsFields, auth); // Assuming 30 days
-  const remainingPoints = await sumRemainingStoryPointsForEpic(epicKey, pointsFields, auth);
-
-
-  const totalPoints = await sumTotalStoryPointsForEpic(epicKey, pointsFields, auth);
-  const inProgressPoints = await sumStoryPoints(`parent = ${epicKey} AND statusCategory = "In Progress"`, pointsFields, auth);
-  const completedPoints = await sumStoryPoints(`parent = ${epicKey} AND statusCategory = "Done"`, pointsFields, auth);
-  // Fetch the changelog for that epic
-  const changelogs = await fetchIssueChangelog(epicKey, auth);
-
-  // Fetch child issues
-  const {issues: epicChildIssues} = await getByJql(jql, auth);
-  report.child_issues = [];
-
-  // Pull changelog and comments and filter out everything before last checked date
-  const longRunningIssues: JiraIssue[] = [];
-
-  const comments = await getCommentsTimeline(epicKey, auth, windowStartDate.toISO()!);
-
-  if (comments) {
-    report.comments = comments;
-  }
-  const childIssues: JiraIssue[] = [];
-
-  for (const child of epicChildIssues) {
-    const childData: any = {
-      issue_id: child.id,
-      key: child.key
-    };
-
-    const comments = await getCommentsTimeline(child.id, auth, windowStartDate.toISO()!);
-    childData.comments = comments;
-
-    const changelog = await fetchIssueChangelog(child.id, auth);
-
-    if (changelog) {
-
-      const filteredChangelog = changelog.filter((log: ChangelogValue) => DateTime.fromISO(log.created) > windowStartDate);
-      childData.changelog = filteredChangelog;
-
-      const currentStatus = child.fields?.status;
-
-      if (currentStatus?.statusCategory?.name === 'In Progress') {
-        for (const log of changelog) {
-          if (log.items.some(item => item.to === currentStatus.id)) {
-            const inProgressDate = DateTime.fromISO(log.created);
-            const daysInStatus = DateTime.local().diff(inProgressDate, 'days').days;
-
-            if (daysInStatus > longRunningDays) {
-              longRunningIssues.push({
-                id: child.id,
-                key: child.key,
-                self: child.self,
-                timeInStatus: daysInStatus
-              });
-            }
-          }
-        }
-      }
-    }
-    childIssues.push(childData);
-  }
-
-
-  let analysis: Analysis | undefined = undefined;
-  if (velocity.daily > 0) {
-    analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
-  }
-  const reportGenerationDate = DateTime.local().toISO();
-  
-  if (!reportGenerationDate) {
-    throw new Error('Failed to format report generation date');
-  }
-
-  const dueDate = DateTime.fromISO(duedate)?.toISODate() ?? undefined;
-  const epicReport: EpicReport = {
-    buildId,
-    reportType: 'epic',
-    buildStatus: {
-      buildId,
-      status: 'success',
-      startedAt: reportGenerationDate,
-      remainingItems: []
-    },
-    ownerId: atlassianUserId,
-    atlassianWorkspaceId,
-    epicKey,
-    childIssues,
-    longRunningIssues,
-    analysis,
-    assignee,
-    changelogs,
-    summary,
-    reportGenerationDate,
-    statusName,
-    priority,
-    dueDate,
-    velocity: velocity,
-    remainingPoints,
-    inProgressPoints,
-    completedPoints,
-    totalPoints,
-  };
-
-  const summaryText = await summarizeEpicReport(epicReport);
-  
-  return {...epicReport, summaryText};
-}
-
-function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, duedate?: string): Analysis | undefined {
+export function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, duedate?: string): Analysis | undefined {
 
   if (remainingPoints === 0) {
     return {
@@ -644,6 +449,15 @@ function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, d
     };
   }
 
+  if (velocity.daily === 0) {
+    return {
+        state: {
+        id: 'no-velocity',
+        name: 'No Velocity',
+        color: 'blue'
+      }
+    }
+  }
   const daysRemaining = remainingPoints / velocity.daily;
   const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
   
@@ -675,33 +489,6 @@ function createEpicMetricAnalysis(remainingPoints: number, velocity: Velocity, d
   return analysis
 }
 
-export function createProjectAnalysis(epicKeys: EpicReport[], projectReport: ProjectReport): Analysis | undefined {
-  const { velocity: { daily } } = projectReport;
-  if (daily === 0) {
-    return undefined;
-  }
-
-  const daysRemaining = projectReport.remainingPoints / daily;
-  const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
-  if (!predictedEndDate) {
-    throw new Error('Failed to format predicted end date');
-  }
-
-    if (projectReport.remainingPoints === 0) {
-      return undefined;
-    }
-      
-    if (!predictedEndDate) {
-      throw new Error('Failed to format predicted end date');
-    }
-  
-    const analysis: Analysis = {
-      predictedEndDate,
-    };
-  
-    analysis.state = createProjectMetricAnalysis(epicKeys) 
-    return analysis
-  }
 function createProjectMetricAnalysis(epicKeys: EpicReport[]): AnalysisState {
   const totalEpics = epicKeys.length;
   const atRiskCount = epicKeys.filter(epic => epic.analysis?.state?.id === 'at-risk').length;
@@ -734,3 +521,32 @@ function createProjectMetricAnalysis(epicKeys: EpicReport[]): AnalysisState {
     }
   }
 }
+
+export function createProjectAnalysis(epicKeys: EpicReport[], projectReport: ProjectReport): Analysis | undefined {
+  const { velocity: { daily } } = projectReport;
+  if (daily === 0) {
+    return undefined;
+  }
+
+  const daysRemaining = projectReport.remainingPoints / daily;
+  const predictedEndDate = DateTime.now().plus({ days: daysRemaining }).toISODate();
+  if (!predictedEndDate) {
+    throw new Error('Failed to format predicted end date');
+  }
+
+  if (projectReport.remainingPoints === 0) {
+    return undefined;
+  }
+    
+  if (!predictedEndDate) {
+    throw new Error('Failed to format predicted end date');
+  }
+
+  const analysis: Analysis = {
+    predictedEndDate,
+  };
+
+  analysis.state = createProjectMetricAnalysis(epicKeys) 
+  return analysis
+}
+

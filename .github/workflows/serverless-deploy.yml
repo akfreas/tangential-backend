@@ -60,13 +60,12 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
     - name: Slack Notification for Test Failures
       if: ${{ failure() && steps.unit-tests.outcome == 'failure' }}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: danger
-        SLACK_MESSAGE: 'Tangential Backend: Unit tests failed :bomb:'
+        SLACK_MESSAGE: 'Tangential Backend: Unit tests failed :bomb: | ${{ github.event.head_commit.message }}'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Slack Notification for Dev Deployment Failure
@@ -74,7 +73,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: danger
-        SLACK_MESSAGE: 'Tangential Backend: Deployment to dev failed :fire:'
+        SLACK_MESSAGE: 'Tangential Backend: Deployment to dev failed :fire: | ${{ github.event.head_commit.message }}'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Slack Notification for prod Deployment Failure
@@ -82,7 +81,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: danger
-        SLACK_MESSAGE: 'Tangential Backend: Deployment to prod failed :fire:'
+        SLACK_MESSAGE: 'Tangential Backend: Deployment to prod failed :fire: | ${{ github.event.head_commit.message }}'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Slack Success Notification
@@ -90,7 +89,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_COLOR: good
-        SLACK_MESSAGE: 'Tangential Backend: Deployment successful :tada:'
+        SLACK_MESSAGE: 'Tangential Backend: Deployment successful :tada: | ${{ github.event.head_commit.message }}'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Slack Notification for Integration Test Failures
@@ -99,5 +98,6 @@ jobs:
       env:
         SLACK_CHANNEL: ${{ env.SLACK_CHANNEL }}
         SLACK_COLOR: danger
-        SLACK_MESSAGE: 'Tangential Backend: Integration tests failed :boom:'
+        SLACK_MESSAGE: 'Tangential Backend: Integration tests failed :boom: | ${{ github.event.head_commit.message }}'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+

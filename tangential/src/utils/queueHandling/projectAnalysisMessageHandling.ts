@@ -1,7 +1,7 @@
 import { SQSRecord } from "aws-lambda";
-import { analyzeProject } from "../jira";
 import { DateTime } from "luxon";
 import { storeProjectReport } from "@akfreas/tangential-core";
+import { analyzeProject } from "../projectAnalysis";
 
 export async function handleProjectAnalysisMessage(record: SQSRecord) {
   const { projectKey, windowStartDate,

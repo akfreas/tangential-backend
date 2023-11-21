@@ -29,8 +29,6 @@ function formatChangelog(changelog: ChangelogValue[]) {
 function summarizeEpic(epicReport: EpicReport) {
   // Destructure for easier access
   const {
-    epicKey,
-    summary,
     assignee,
     statusName,
     priority,
@@ -40,7 +38,7 @@ function summarizeEpic(epicReport: EpicReport) {
     inProgressPoints,
     velocity,
     dueDate,
-    changelogs,
+    changelogTimeline,
     longRunningIssues,
     analysis
   } = epicReport;
@@ -48,7 +46,7 @@ function summarizeEpic(epicReport: EpicReport) {
   const { predictedEndDate, predictedOverdue } = analysis ?? {};
 
   // Create a list of recent changes
-  const recentChanges = formatChangelog(changelogs);
+  const recentChanges = formatChangelog(changelogTimeline.afterDate);
 
   // List long running issues
   const longRunning = (longRunningIssues ?? []).map(issue => `${issue.key}`).join(', ');
@@ -74,7 +72,9 @@ Analysis Summary: ${analysisSummary}
 }
 
 export async function summarizeEpicReport(report: EpicReport) {
-  
+  if (process.env.DISABLE_SUMMARIZATION === 'true') {
+    return "Disabled";
+  }
   const summary = summarizeEpic(report);
   const prompt = `
     You are an assistant to a technical program manager. You are tasked with writing a one sentence summary of the epic report below.

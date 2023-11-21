@@ -2,7 +2,7 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import qs from 'qs'; // Assuming qs is already installed, otherwise you need to install it
-import { JiraRequestOptions } from '@akfreas/tangential-core';
+import { JiraRequestOptions, doLog } from '@akfreas/tangential-core';
 
 async function loadRequestFromDisk(options: JiraRequestOptions, testDataPath?: string): Promise<any> {
 
@@ -45,7 +45,7 @@ async function loadRequestFromDisk(options: JiraRequestOptions, testDataPath?: s
     }
   } else {
     // Handle POST request or other methods
-    console.log(`Handling ${options.method} request differently.`);
+    doLog(`Handling ${options.method} request differently.`);
     // Here you need to define how you want to handle POST requests
   }
 }

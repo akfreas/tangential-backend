@@ -58,8 +58,7 @@ export async function sendProjectAnalysisFinalizeQueueMessage(buildId: string, a
 
 export async function sendEpicAnalysisQueueMessage(
   buildId: string,
-  projectKey: string,
-  epicKey: string,
+  key: string,
   auth: JiraRequestAuth,
   velocityWindowDays: number,
   longRunningDays: number
@@ -69,8 +68,7 @@ export async function sendEpicAnalysisQueueMessage(
     MessageBody: JSON.stringify({
       buildId,
       messageType: MessageType.EPIC_ANALYSIS,
-      projectKey,
-      epicKey,
+      key,
       auth,
       velocityWindowDays,
       longRunningDays

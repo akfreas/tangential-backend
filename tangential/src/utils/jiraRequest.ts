@@ -5,6 +5,7 @@ import { axiosInstance } from './request';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import qs from 'qs'; // qs is a querystring parsing library that can handle complex objects
+import axios from 'axios';
 
 async function writeRequestToDisk(options: JiraRequestOptions, response: any) {
 
@@ -42,25 +43,24 @@ async function writeRequestToDisk(options: JiraRequestOptions, response: any) {
   await fs.writeFile(filePath, JSON.stringify(requestData, null, 2), 'utf8');
 }
 
-export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
 
+export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
   const { accessToken, atlassianWorkspaceId } = auth;
 
   if (!accessToken) {
-    throw doError('No access token provided', new Error('No access token provided'));
+    throw new Error('No access token provided');
   }
 
   if (!atlassianWorkspaceId) {
-    throw doError('No Atlassian Workspace ID provided', new Error('No Atlassian Workspace ID provided'));
+    throw new Error('No Atlassian Workspace ID provided');
   }
 
   const url = `https://api.atlassian.com/ex/jira/${atlassianWorkspaceId}/rest/api/3/${options.path}`;
 
-  let response;
   try {
-  response = await axiosInstance(url,
-    {
+    const response = await axiosInstance({
       method: options.method,
+      url,
       data: options.body,
       params: options.params,
       headers: {
@@ -68,19 +68,47 @@ export async function makeJiraRequest(options: JiraRequestOptions, auth: JiraReq
       },
     });
 
+    return response.data;
   } catch (error) {
-    if (error instanceof Error) { 
-      jsonLog("Error making request to Jira", options);
-      // doError(`Error making request to Jira:`, error);
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        // Token expired, refresh it
+        return await refreshTokenAndRetry(options, auth);
+      }
+      throw error;
+    } else {
+      // For non-Axios errors
+      throw new Error('An unexpected error occurred');
     }
-    console.error(error);
-    throw error;
   }
-  if (process.env.recordJiraRequests) {
-    await writeRequestToDisk(options, response);
-  }
-
-  // Return the response data
-  return response.data;
 }
 
+async function refreshTokenAndRetry(options: JiraRequestOptions, auth: JiraRequestAuth): Promise<any> {
+  const clientId = process.env.ATLASSIAN_CLIENT_ID;
+  const clientSecret = process.env.ATLASSIAN_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    throw new Error('Client ID or Client Secret is not set in the environment variables.');
+  }
+
+  try {
+    const tokenResponse = await axiosInstance.post('https://auth.atlassian.com/oauth/token', {
+      grant_type: 'refresh_token',
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: auth.refreshToken,
+    });
+
+    const newAccessToken = tokenResponse.data.access_token;
+    auth.accessToken = newAccessToken; // Update the access token in auth
+
+    return makeJiraRequest(options, auth); // Retry the original request with the new token
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error;
+    } else {
+      // For non-Axios errors
+      throw new Error('Error while refreshing token');
+    }
+  }
+}

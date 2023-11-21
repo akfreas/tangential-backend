@@ -105,6 +105,7 @@ functions:
       - sqs:
           arn: !GetAtt WriteReportQueue.Arn
           batchSize: 5
+
 resources:
   Resources:
     JiraAnalysisQueue:

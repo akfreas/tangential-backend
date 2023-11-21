@@ -15,7 +15,7 @@ export async function createChatCompletion({
   const openai = new OpenAI({
     httpAgent: httpsAgent,
   });
- 
+
   const completion = await openai.chat.completions.create({
     messages,
     model,
@@ -23,8 +23,14 @@ export async function createChatCompletion({
     max_tokens: 256,
     top_p: 1,
     frequency_penalty: 0,
+    response_format:{ "type": "json_object" },
     presence_penalty: 0,
   }, { httpAgent: httpsAgent });
-
-  return completion;
+  const {
+    choices: [{message: {content}}]
+  } = completion;
+  if (!content) {
+    throw new Error("No content in completion")
+  }
+  return JSON.parse(content);
 }

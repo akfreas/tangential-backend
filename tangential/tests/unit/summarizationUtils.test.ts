@@ -1,5 +1,5 @@
 import 'jest';
-import { summarizeEpicReport } from "../../src/utils/summarizationUtils";
+import { summarizeEpicReport } from "../../src/utils/summarization/summarizationUtils";
 import fs from 'fs';
 import { EpicReport, jsonLog } from '@akfreas/tangential-core';
 import { createChatCompletion } from '../../src/utils/openAiWrapper';

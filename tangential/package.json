@@ -10,7 +10,7 @@
     "axios": "^1.6.2",
     "luxon": "^3.4.3",
     "mongodb": "6.2",
-    "openai": "^4.15.0",
+    "openai": "^4.19",
     "qs": "^6.11.2"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import { JiraRequestAuth, EpicReport, extractFromJiraAuth,
   PointsField, IssueReport, LongRunningIssue, ScopeDelta } from "@akfreas/tangential-core";
 import { DateTime } from "luxon";
 import { getFields, calculateVelocity, sumRemainingStoryPointsForEpic, sumTotalStoryPointsForEpic, sumStoryPoints, getByJql, getCommentsTimeline, createEpicMetricAnalysis, fetchIssueChangelogTimeline, getIssue, fetchAndSumStoryPoints } from "./jira";
-import { summarizeEpicReport } from "./summarizationUtils";
+import { summarizeEpicReport } from "./summarization/summarizationUtils";
 
 async function analyzeChildIssues(
   jql: string, 

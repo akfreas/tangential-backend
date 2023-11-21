@@ -93,20 +93,25 @@ export async function summarizeEpicReport(report: EpicReport) {
   }
   const summary = summarizeEpic(report);
   const prompt = `
-    You are an assistant to a technical program manager. You are tasked with writing a one sentence summary of the epic report below.
+    You are an assistant to a technical program manager. You are tasked with writing a summary of the epic report below.
     This will be used to provide a quick overview of the epic to the program manager.
     Identify any risks that the program manager should be aware of, especially if the epic is at risk of not being completed on time.
     Scope changes are important to note, especially if they are large. Long running issues are also important to note, as they may be blocking the epic.
     Do not mention the epic key or summary in your summary.
     Do not mention the epic name.
 
-    Give two responses, one that is only one sentence long, and another that is between two and four sentences long and goes into more detail about potential risks and recent changes
-    Respond in JSON format, with the following structure:
+    Give two responses, one that is only a few short sentences long, and another that is between three and four sentences long and goes into more detail about potential risks and recent changes
+    Respond in JSON format, using the following structures as examples:
     {
-      shortSummary: "This is a short summary",
-      longSummary: "This is a long summary with more details",
-      potentialRisks: "These are the potential risks",
+      shortSummary: "Projected to complete on time. One long running issue (TAN-123) may block the epic. Velocity is 5 points per day.",
+      longSummary: "Projected to complete on time. One long running issue (TAN-123) may block the epic. Velocity is 5 points per day. Recent changes include a change in assignee and a change in status.",
+      potentialRisks: "A change in assignee may cause delays. Because there's a long running issue, that may also have potential impacts because it may mean that someone is blocked.",
     }
+    {
+      "shortSummary": "Significantly behind schedule. Multiple long running issues (TAN-234, TAN-345) severely blocking the epic. Velocity is only 2 points per day.",
+      "longSummary": "The epic is significantly behind schedule due to multiple long running issues (TAN-234, TAN-345), which are severely blocking progress. Current team velocity has dropped to only 2 points per day. Recent changes include multiple shifts in assignee roles and several status updates indicating stalled progress.",
+      "potentialRisks": "Frequent changes in assignees leading to loss of context and delays. The long running issues indicate deep-rooted problems that are hindering progress. Additionally, the low velocity suggests team burnout or resource allocation issues, further impeding the epic's completion."
+    }    
   `;
   const result = await createChatCompletion({
     messages: [

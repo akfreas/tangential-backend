@@ -42,7 +42,12 @@ describe("summarizeEpicReport", () => {
 
     const summary = await summarizeEpicReport(epicReport);
 
-    expect(summary).toEqual("i am a human");
+    expect(summary).toEqual({"choices":
+     [
+      {"finish_reason": "stop", "index": 0, "message": {"content": "i am a human", "role": "assistant"}}],
+       "created": 1699708896, "id": "chatcmpl-8JiDYs8wa9sDuv2jW4qXOX5573d6Q", 
+       "model": "gpt-4-1106-preview", "object": "chat.completion", 
+       "system_fingerprint": "fp_a24b4d720c", "usage": {"completion_tokens": 47, "prompt_tokens": 369, "total_tokens": 416}});
 
   });
 });

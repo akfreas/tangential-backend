@@ -46,7 +46,7 @@ function summarizeEpic(epicReport: EpicReport) {
   const { predictedEndDate, predictedOverdue } = analysis ?? {};
 
   // Create a list of recent changes
-  const recentChanges = formatChangelog(changelogTimeline.afterDate);
+  const recentChanges = formatChangelog(changelogTimeline?.afterDate ?? []);
 
   // List long running issues
   const longRunning = (longRunningIssues ?? []).map(issue => `${issue.key}`).join(', ');

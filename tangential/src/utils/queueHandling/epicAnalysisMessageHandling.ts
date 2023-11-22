@@ -26,5 +26,8 @@ export async function handleEpicAnalysisMessage(record: SQSRecord) {
   );
   await storeEpicReport(result);
 
+  // Write the epic report to disk
+  await writeFile(`Epic-${key}.json`, JSON.stringify(result, null, 2));
+
   await sendUpdateProjectAnalysisStatusQueueMessage(key, buildId, auth);
 }

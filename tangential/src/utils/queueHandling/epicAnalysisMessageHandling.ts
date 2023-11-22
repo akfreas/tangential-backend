@@ -3,6 +3,8 @@ import { DateTime } from "luxon";
 import { jsonLog, storeEpicReport } from "@akfreas/tangential-core";
 import { sendUpdateProjectAnalysisStatusQueueMessage } from "../sqs";
 import { analyzeEpic } from "../epicAnalysis";
+import { writeFile } from "fs/promises";
+
 
 
 export async function handleEpicAnalysisMessage(record: SQSRecord) {

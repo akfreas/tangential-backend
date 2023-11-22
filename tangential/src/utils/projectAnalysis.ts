@@ -59,7 +59,7 @@ export async function analyzeProject(
     ownerId: atlassianUserId,
     atlassianWorkspaceId,
     reportGenerationDate,
-    name: displayName || name,
+    title: displayName || name,
     projectKey,
     lead,
     avatar: avatarUrls['48x48'],

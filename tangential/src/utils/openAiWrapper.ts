@@ -9,7 +9,7 @@ interface ChatCompletionParams {
 }
 
 export async function createChatCompletion({
-  messages,
+  messages, 
   model = "gpt-4-1106-preview",
 }: ChatCompletionParams): Promise<any> {
   const openai = new OpenAI({

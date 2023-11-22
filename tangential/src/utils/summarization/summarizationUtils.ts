@@ -1,4 +1,4 @@
-import { ChangelogValue, EpicReport, ScopeDelta, jsonLog } from "@akfreas/tangential-core";
+import { ChangelogValue, EpicReport, ScopeDelta, SummaryText, jsonLog } from "@akfreas/tangential-core";
 import { createChatCompletion } from "../openAiWrapper";
 
 
@@ -87,9 +87,13 @@ Analysis Summary: ${analysisSummary}
   return summaryString.trim(); // Trim to remove any leading/trailing whitespace
 }
 
-export async function summarizeEpicReport(report: EpicReport) {
+export async function summarizeEpicReport(report: EpicReport): Promise<SummaryText> {
   if (process.env.DISABLE_SUMMARIZATION === 'true') {
-    return "Disabled";
+    return {
+      shortSummary: "Summarization is disabled.",
+      longSummary: "Summarization is disabled.",
+      potentialRisks: "Summarization is disabled."
+    };
   }
   const summary = summarizeEpic(report);
   const prompt = `
@@ -106,11 +110,22 @@ export async function summarizeEpicReport(report: EpicReport) {
       shortSummary: "Projected to complete on time. One long running issue (TAN-123) may block the epic. Velocity is 5 points per day.",
       longSummary: "Projected to complete on time. One long running issue (TAN-123) may block the epic. Velocity is 5 points per day. Recent changes include a change in assignee and a change in status.",
       potentialRisks: "A change in assignee may cause delays. Because there's a long running issue, that may also have potential impacts because it may mean that someone is blocked.",
+      actionNeeded: false,
+      color: "green"
+    }
+    {
+      shortSummary: "On track to finish on time, but there is one long running issue (TAN-123) that may block the epic. Velocity is 5 points per day.",
+      longSummary: "On track to finish on time, but there is one long running issue (TAN-123) that may block the epic. Velocity is 5 points per day. Recent changes include a change in assignee and a change in status. The change in assignee may cause delays. Because there's a long running issue, that may also have potential impacts because it may mean that someone is blocked.",
+      potentialRisks: "A change in assignee may cause delays. Because there's a long running issue, that may also have potential impacts because it may mean that someone is blocked.",
+      actionNeeded: true,
+      color: "yellow"
     }
     {
       "shortSummary": "Significantly behind schedule. Multiple long running issues (TAN-234, TAN-345) severely blocking the epic. Velocity is only 2 points per day.",
       "longSummary": "The epic is significantly behind schedule due to multiple long running issues (TAN-234, TAN-345), which are severely blocking progress. Current team velocity has dropped to only 2 points per day. Recent changes include multiple shifts in assignee roles and several status updates indicating stalled progress.",
-      "potentialRisks": "Frequent changes in assignees leading to loss of context and delays. The long running issues indicate deep-rooted problems that are hindering progress. Additionally, the low velocity suggests team burnout or resource allocation issues, further impeding the epic's completion."
+      "potentialRisks": "Frequent changes in assignees leading to loss of context and delays. The long running issues indicate deep-rooted problems that are hindering progress. Additionally, the low velocity suggests team burnout or resource allocation issues, further impeding the epic's completion.",
+      "actionNeeded": true,
+      "color": "red"
     }    
   `;
   const result = await createChatCompletion({

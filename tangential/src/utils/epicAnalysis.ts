@@ -81,7 +81,7 @@ export async function analyzeEpic(
     fields: { assignee, duedate,
     status: { name: statusName },
     priority: { name: priority },
-    summary } } = await getIssue(epicKey, auth);
+    summary: title } } = await getIssue(epicKey, auth);
 
     const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
   // Compute the 30-day velocity for issues with that epic as a parent
@@ -130,7 +130,7 @@ export async function analyzeEpic(
     analysis,
     assignee,
     changelogTimeline,
-    summary,
+    title,
     reportGenerationDate,
     statusName,
     priority,
@@ -142,7 +142,7 @@ export async function analyzeEpic(
     totalPoints,
   };
 
-  const summaryText = await summarizeEpicReport(epicReport);
+  const summary = await summarizeEpicReport(epicReport);
   
-  return {...epicReport, summaryText};
+  return {...epicReport, summary};
 }

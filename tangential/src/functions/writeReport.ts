@@ -1,13 +1,9 @@
 import { SQSHandler } from "aws-lambda";
-import {  ProjectReport, doLog, extractFromJiraAuth, fetchLatestProjectReportsWithEpics, fetchReportByBuildId, fetchReportByProjectKey, fetchTemplate, jsonLog } from "@akfreas/tangential-core";
-import { ReportTemplate } from "@akfreas/tangential-core/dist/types/template";
-import { json } from "stream/consumers";
-
-
+import {  ProjectReport, doLog, extractFromJiraAuth, fetchReportByBuildId, jsonLog } from "@akfreas/tangential-core";
 
 async function writeReport(projectReport: ProjectReport) {
   // Extract basic project details
-  const projectName = projectReport.name;
+  const projectName = projectReport.title;
   const reportDate = projectReport.reportGenerationDate;
   
   // Determine the overall project status

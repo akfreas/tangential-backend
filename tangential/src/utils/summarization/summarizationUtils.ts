@@ -92,7 +92,9 @@ export async function summarizeEpicReport(report: EpicReport): Promise<SummaryTe
     return {
       shortSummary: "Summarization is disabled.",
       longSummary: "Summarization is disabled.",
-      potentialRisks: "Summarization is disabled."
+      potentialRisks: "Summarization is disabled.",
+      actionNeeded: false,
+      color: "green"
     };
   }
   const summary = summarizeEpic(report);

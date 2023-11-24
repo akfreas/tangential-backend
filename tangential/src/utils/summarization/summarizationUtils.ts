@@ -107,7 +107,9 @@ export async function summarizeEpicReport(report: EpicReport): Promise<SummaryTe
     Do not mention the epic name.
 
     Give two responses, one that is only a few short sentences long, and another that is between three and four sentences long and goes into more detail about potential risks and recent changes
-    Respond in JSON format, using the following structures as examples:
+    Respond in JSON format, using the following structures as examples. 
+    Only use "green", "yellow", or "red" for the color field. They correspond to "on track", "at risk", and "off track" respectively.
+    The actionNeeded field should be true if there are any significant potential risks.
     {
       shortSummary: "Projected to complete on time. One long running issue (TAN-123) may block the epic. Velocity is 5 points per day.",
       longSummary: "Projected to complete on time. One long running issue (TAN-123) may block the epic. Velocity is 5 points per day. Recent changes include a change in assignee and a change in status.",

@@ -69,11 +69,12 @@ async function analyzeChildIssues(
 
 export async function analyzeEpic(
   epicKey: string,
-  windowStartDate: DateTime,
+  windowStartDate: string,
+  windowEndDate: string,
   auth: JiraRequestAuth,
   buildId: string,
-  velocityWindowDays: number = 30,
-  longRunningDays: number = 10
+  velocityWindowDays: number,
+  longRunningDays: number
 ): Promise<EpicReport> {
 
   const {
@@ -82,7 +83,7 @@ export async function analyzeEpic(
     status: { name: statusName },
     priority: { name: priority },
     summary: title } } = await getIssue(epicKey, auth);
-
+  const windowStartDateObject =  DateTime.fromISO(windowStartDate)
     const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
   // Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;
@@ -94,13 +95,13 @@ export async function analyzeEpic(
   const totalPoints = await sumTotalStoryPointsForEpic(epicKey, pointsFields, auth);
   const inProgressPoints = await fetchAndSumStoryPoints(`parent = ${epicKey} AND statusCategory = "In Progress"`, pointsFields, auth);
   const completedPoints = await fetchAndSumStoryPoints(`parent = ${epicKey} AND statusCategory = "Done"`, pointsFields, auth);
-  const changelogTimeline = await fetchIssueChangelogTimeline(epicKey, auth, windowStartDate.toISO()!);
-  const commentsTimeline = await getCommentsTimeline(epicKey, auth, windowStartDate.toISO()!);
+  const changelogTimeline = await fetchIssueChangelogTimeline(epicKey, auth, windowStartDate);
+  const commentsTimeline = await getCommentsTimeline(epicKey, auth, windowStartDate);
   const { 
     longRunningIssues, 
     childIssues,
     scopeDeltas
-  } = await analyzeChildIssues(jql, epicId, longRunningDays, auth, windowStartDate, pointsFields);
+  } = await analyzeChildIssues(jql, epicId, longRunningDays, auth, windowStartDateObject, pointsFields);
 
   const analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
   const reportGenerationDate = DateTime.local().toISO();
@@ -123,9 +124,12 @@ export async function analyzeEpic(
     ownerId: atlassianUserId,
     scopeDeltas,
     atlassianWorkspaceId,
+    longRunningDays,
     key: epicKey,
     commentsTimeline,
     childIssues,
+    windowStartDate,
+    windowEndDate,
     longRunningIssues,
     analysis,
     assignee,

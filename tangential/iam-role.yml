@@ -4,3 +4,4 @@
   Resource:
     - !GetAtt JiraAnalysisQueue.Arn
     - !GetAtt UpdateProjectAnalysisStatusQueueFifo.Arn
+    - !GetAtt ReportGenerationQueue.Arn

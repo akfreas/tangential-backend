@@ -21,5 +21,5 @@ export async function handleProjectAnalysisFinalizeMessage(record: SQSRecord) {
     }
     await updateReport(report);
 
-    doLog(`Project analysis complete for job ${buildId}`)
+    doLog(`Finalized project analysis for job ${buildId}`)
 }

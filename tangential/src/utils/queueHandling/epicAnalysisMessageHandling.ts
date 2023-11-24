@@ -9,16 +9,16 @@ import { writeFile } from "fs/promises";
 
 export async function handleEpicAnalysisMessage(record: SQSRecord) {
 
+  const parsed = JSON.parse(record.body);
   const { key, buildId,
     velocityWindowDays, windowStartDate,
-    longRunningDays, auth } = JSON.parse(record.body);
-    jsonLog("Handling Epic Analysis Message", {key, buildId,
-      velocityWindowDays, windowStartDate,
-      longRunningDays})
+    longRunningDays, windowEndDate, auth } = parsed;
+    jsonLog("Handling Epic Analysis Message", parsed)
 
   const result = await analyzeEpic(
     key,
-    DateTime.fromISO(windowStartDate),
+    windowStartDate,
+    windowEndDate,
     auth,
     buildId,
     velocityWindowDays,

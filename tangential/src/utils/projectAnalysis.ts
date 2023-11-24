@@ -19,12 +19,20 @@ export async function analyzeProject(
   const { issues: recentlyCompletedResults } = await getByJql(`project = ${projectKey} AND issuetype = "Epic" AND statusCategory = "Done" AND status changed DURING (-10d, now())`, auth)
 
   const epicKeys: string[] = [...notCompletedResults, ...recentlyCompletedResults].map((epic: any) => epic.key);
+  const windowEndDate = DateTime.local().toISO();
+  const windowStartDateString = windowStartDate.toISO()
 
+  if (windowEndDate === null || windowStartDateString === null) {
+    throw new Error('Failed to format window dates');
+  }
+  
   await Promise.all(epicKeys.map((key: any) => {
     return sendEpicAnalysisQueueMessage(
       buildId, 
       key,
       auth, 
+      windowStartDateString,
+      windowEndDate,
       velocityWindowDays, 
       longRunningDays)
   }));
@@ -33,15 +41,10 @@ export async function analyzeProject(
   const totalPoints = await sumTotalStoryPointsForProject(projectKey, fields, auth)
 
   const projectVelocity = await calculateVelocity(`project = ${projectKey}`, velocityWindowDays, fields, auth);
-  const windowEndDate = DateTime.local().toISO();
-  const windowStartDateObject = windowStartDate.toISO()
   const projectRemainingPoints = await fetchAndSumStoryPoints(`project = ${projectKey} AND statusCategory != "Done"`, fields, auth);
   const inProgressPoints = await fetchAndSumStoryPoints(`project = ${projectKey} AND statusCategory = "In Progress"`, fields, auth);
   const completedPoints = await fetchAndSumStoryPoints(`project = ${projectKey} AND statusCategory = "Done"`, fields, auth);
-  if (windowEndDate === null || windowStartDateObject === null) {
-    throw new Error('Failed to format window dates');
-  }
-  
+
   if (reportGenerationDate === null) {
     throw new Error('Failed to format report generation date');
   }
@@ -56,6 +59,7 @@ export async function analyzeProject(
       startedAt: reportGenerationDate,
       remainingItems: epicKeys
     },
+    longRunningDays,
     ownerId: atlassianUserId,
     atlassianWorkspaceId,
     reportGenerationDate,
@@ -65,7 +69,7 @@ export async function analyzeProject(
     avatar: avatarUrls['48x48'],
     windowEndDate,
     totalPoints,
-    windowStartDate: windowStartDateObject,
+    windowStartDate: windowStartDateString,
     velocity: projectVelocity,
     remainingPoints: projectRemainingPoints,
     inProgressPoints,

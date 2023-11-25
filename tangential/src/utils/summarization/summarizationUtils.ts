@@ -1,44 +1,53 @@
-import { ChangelogValue, EpicReport, ScopeDelta, SummaryText, jsonLog } from "@akfreas/tangential-core";
+import {
+  ChangelogValue,
+  EpicReport,
+  ScopeDelta,
+  SummaryText,
+  jsonLog,
+} from "@akfreas/tangential-core";
 import { createChatCompletion } from "../openAiWrapper";
 
-
 function formatChangelog(changelog: ChangelogValue[]) {
-
   if (!changelog || changelog.length === 0) {
     return "No recent changes";
   }
 
   // Filter out the changelog entries for important fields such as 'summary', 'status', and 'assignee'
-  const importantFields = ['summary', 'status', 'assignee'];
+  const importantFields = ["summary", "status", "assignee"];
   const importantChanges = changelog
-    .map(entry => {
+    .map((entry) => {
       const changes = entry.items
-        .filter(item => importantFields.includes(item.field))
-        .map(item => {
-          const from = item.fromString ? `from "${item.fromString}" ` : '';
-          const to = item.toString ? `to "${item.toString}"` : '';
+        .filter((item) => importantFields.includes(item.field))
+        .map((item) => {
+          const from = item.fromString ? `from "${item.fromString}" ` : "";
+          const to = item.toString ? `to "${item.toString}"` : "";
           return `${item.field} ${from}${to}`;
         });
-      return changes.length > 0 ? `On ${entry.created}, ${entry.author.displayName} made the following changes: ${changes.join(', ')}` : null;
+      return changes.length > 0
+        ? `On ${entry.created}, ${
+            entry.author.displayName
+          } made the following changes: ${changes.join(", ")}`
+        : null;
     })
-    .filter(change => change !== null); // Remove null entries where no important changes were found
+    .filter((change) => change !== null); // Remove null entries where no important changes were found
 
-  return importantChanges.join(' | ');
+  return importantChanges.join(" | ");
 }
 
 function scopeDeltaString(scopeDeltas: ScopeDelta[]) {
-
   if (!scopeDeltas || scopeDeltas.length === 0) {
     return "No scope changes";
   }
 
-  const scopeChanges = scopeDeltas.map(delta => {
-    const change = delta.storyPoints > 0 ? `added ${delta.storyPoints} story points` : `removed ${Math.abs(delta.storyPoints)} story points`;
+  const scopeChanges = scopeDeltas.map((delta) => {
+    const change =
+      delta.storyPoints > 0
+        ? `added ${delta.storyPoints} story points`
+        : `removed ${Math.abs(delta.storyPoints)} story points`;
     return `${delta.issueKey} ${change} by ${delta.changingUser.displayName}`;
   });
 
-  return scopeChanges.join(', ');
-
+  return scopeChanges.join(", ");
 }
 
 function summarizeEpic(epicReport: EpicReport) {
@@ -55,7 +64,7 @@ function summarizeEpic(epicReport: EpicReport) {
     dueDate,
     changelogTimeline,
     longRunningIssues,
-    analysis
+    analysis,
   } = epicReport;
 
   const { predictedEndDate, predictedOverdue } = analysis ?? {};
@@ -64,37 +73,48 @@ function summarizeEpic(epicReport: EpicReport) {
   const recentChanges = formatChangelog(changelogTimeline?.afterDate ?? []);
 
   // List long running issues
-  const longRunning = (longRunningIssues ?? []).map(issue => `${issue.key}`).join(', ');
+  const longRunning = (longRunningIssues ?? [])
+    .map((issue) => `${issue.key}`)
+    .join(", ");
 
   // Analysis summary text
-  const analysisSummary = analysis && analysis.summaryText ? analysis.summaryText : 'No summary available';
+  const analysisSummary =
+    analysis && analysis.summaryText
+      ? analysis.summaryText
+      : "No summary available";
 
   // Construct the summary string
   // Epic Key and Summary: ${epicKey} - ${summary}
   const summaryString = `
 Assignee: ${assignee?.displayName ?? "No assignee"}
-Current Status: ${statusName || 'No status'}
-Priority: ${priority ? `${priority.name}` : 'No priority'}
+Current Status: ${statusName || "No status"}
+Priority: ${priority ? `${priority.name}` : "No priority"}
 Progress: ${completedPoints} / ${totalPoints} completed, ${remainingPoints} remaining, ${inProgressPoints} in progress
-Velocity: ${velocity.daily} per day, ${velocity.total} in total over ${velocity.window} days
-Deadlines: Due on ${dueDate || 'No due date'}, Predicted to end by ${predictedEndDate || 'No prediction'}, Overdue: ${predictedOverdue ? 'Yes' : 'No'}
-Recent Changes: ${recentChanges || 'No recent changes'}
+Velocity: ${velocity.daily} per day, ${velocity.total} in total over ${
+    velocity.window
+  } days
+Deadlines: Due on ${dueDate || "No due date"}, Predicted to end by ${
+    predictedEndDate || "No prediction"
+  }, Overdue: ${predictedOverdue ? "Yes" : "No"}
+Recent Changes: ${recentChanges || "No recent changes"}
 Scope Changes: ${scopeDeltaString(epicReport.scopeDeltas)}
-Long Running Issues: ${longRunning || 'None'}
+Long Running Issues: ${longRunning || "None"}
 Analysis Summary: ${analysisSummary}
   `;
 
   return summaryString.trim(); // Trim to remove any leading/trailing whitespace
 }
 
-export async function summarizeEpicReport(report: EpicReport): Promise<SummaryText> {
-  if (process.env.DISABLE_SUMMARIZATION === 'true') {
+export async function summarizeEpicReport(
+  report: EpicReport,
+): Promise<SummaryText> {
+  if (process.env.DISABLE_SUMMARIZATION === "true") {
     return {
       shortSummary: "Summarization is disabled.",
       longSummary: "Summarization is disabled.",
       potentialRisks: "Summarization is disabled.",
       actionNeeded: false,
-      color: "green"
+      color: "green",
     };
   }
   const summary = summarizeEpic(report);
@@ -135,13 +155,13 @@ export async function summarizeEpicReport(report: EpicReport): Promise<SummaryTe
   const result = await createChatCompletion({
     messages: [
       {
-        role: 'system',
-        content: prompt
+        role: "system",
+        content: prompt,
       },
       {
-        role: 'user',
-        content: summary
-      }
+        role: "user",
+        content: summary,
+      },
     ],
   });
 

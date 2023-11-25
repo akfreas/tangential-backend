@@ -9,7 +9,7 @@ export class TangentialHTTPRequestError extends Error {
     requestError: any, // Replace 'any' with a more specific type if possible
     url: string,
     params: Record<string, any>, // Use an appropriate type for the parameters
-    headers: any // Assuming headers are a dictionary with string values
+    headers: any, // Assuming headers are a dictionary with string values
   ) {
     super(message);
     this.requestError = requestError;

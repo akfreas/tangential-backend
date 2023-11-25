@@ -19,7 +19,7 @@ export async function analyzeProject(
   windowStartDate: DateTime,
   auth: JiraRequestAuth,
   velocityWindowDays: number = 30,
-  longRunningDays: number = 10
+  longRunningDays: number = 10,
 ): Promise<ProjectReport> {
   const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
   const reportGenerationDate = DateTime.local().toISO({ includeOffset: false });
@@ -27,15 +27,15 @@ export async function analyzeProject(
 
   const { avatarUrls, displayName, name, lead } = await fetchProjectById(
     projectKey,
-    auth
+    auth,
   );
   const { issues: notCompletedResults } = await getByJql(
     `project = ${projectKey} AND issuetype = Epic AND statusCategory != "Done"`,
-    auth
+    auth,
   );
   const { issues: recentlyCompletedResults } = await getByJql(
     `project = ${projectKey} AND issuetype = "Epic" AND statusCategory = "Done" AND status changed DURING (-10d, now())`,
-    auth
+    auth,
   );
 
   const epicKeys: string[] = [
@@ -58,38 +58,38 @@ export async function analyzeProject(
         windowStartDateString,
         windowEndDate,
         velocityWindowDays,
-        longRunningDays
+        longRunningDays,
       );
-    })
+    }),
   );
   const fields = await getFields(auth, "point");
 
   const totalPoints = await sumTotalStoryPointsForProject(
     projectKey,
     fields,
-    auth
+    auth,
   );
 
   const projectVelocity = await calculateVelocity(
     `project = ${projectKey}`,
     velocityWindowDays,
     fields,
-    auth
+    auth,
   );
   const projectRemainingPoints = await fetchAndSumStoryPoints(
     `project = ${projectKey} AND statusCategory != "Done"`,
     fields,
-    auth
+    auth,
   );
   const inProgressPoints = await fetchAndSumStoryPoints(
     `project = ${projectKey} AND statusCategory = "In Progress"`,
     fields,
-    auth
+    auth,
   );
   const completedPoints = await fetchAndSumStoryPoints(
     `project = ${projectKey} AND statusCategory = "Done"`,
     fields,
-    auth
+    auth,
   );
 
   if (reportGenerationDate === null) {

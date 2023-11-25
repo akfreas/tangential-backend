@@ -1,43 +1,76 @@
-import { JiraRequestAuth, EpicReport, extractFromJiraAuth, 
-  PointsField, IssueReport, LongRunningIssue, ScopeDelta } from "@akfreas/tangential-core";
+import {
+  JiraRequestAuth,
+  EpicReport,
+  extractFromJiraAuth,
+  PointsField,
+  IssueReport,
+  LongRunningIssue,
+  ScopeDelta,
+} from "@akfreas/tangential-core";
 import { DateTime } from "luxon";
-import { getFields, calculateVelocity, sumRemainingStoryPointsForEpic, sumTotalStoryPointsForEpic, sumStoryPoints, getByJql, getCommentsTimeline, createEpicMetricAnalysis, fetchIssueChangelogTimeline, getIssue, fetchAndSumStoryPoints } from "./jira";
+import {
+  getFields,
+  calculateVelocity,
+  sumRemainingStoryPointsForEpic,
+  sumTotalStoryPointsForEpic,
+  sumStoryPoints,
+  getByJql,
+  getCommentsTimeline,
+  createEpicMetricAnalysis,
+  fetchIssueChangelogTimeline,
+  getIssue,
+  fetchAndSumStoryPoints,
+} from "./jira";
 import { summarizeEpicReport } from "./summarization/summarizationUtils";
 
 async function analyzeChildIssues(
-  jql: string, 
+  jql: string,
   epicId: string,
-  longRunningDays: number, 
-  auth: JiraRequestAuth, 
+  longRunningDays: number,
+  auth: JiraRequestAuth,
   windowStartDate: DateTime,
-  pointsFields: PointsField[]
-  ): Promise<{ longRunningIssues: LongRunningIssue[], childIssues: IssueReport[], scopeDeltas: ScopeDelta[]}> {
+  pointsFields: PointsField[],
+): Promise<{
+  longRunningIssues: LongRunningIssue[];
+  childIssues: IssueReport[];
+  scopeDeltas: ScopeDelta[];
+}> {
   const longRunningIssues: LongRunningIssue[] = [];
   const childIssues: IssueReport[] = [];
   const scopeDeltas: ScopeDelta[] = [];
-  const {issues: epicChildIssues} = await getByJql(jql, auth);
+  const { issues: epicChildIssues } = await getByJql(jql, auth);
 
   for (const child of epicChildIssues) {
-
-    const issueChangelogTimeline = await fetchIssueChangelogTimeline(child.id, auth, windowStartDate.toISO()!);
+    const issueChangelogTimeline = await fetchIssueChangelogTimeline(
+      child.id,
+      auth,
+      windowStartDate.toISO()!,
+    );
 
     if (issueChangelogTimeline) {
-
       const currentStatus = child.fields?.status;
 
-      if (currentStatus?.statusCategory?.name === 'In Progress') {
+      if (currentStatus?.statusCategory?.name === "In Progress") {
         for (const log of issueChangelogTimeline.all) {
-          if (log.items.some(item => item.field === 'IssueParentAssociation' && item.to === epicId)) {
+          if (
+            log.items.some(
+              (item) =>
+                item.field === "IssueParentAssociation" && item.to === epicId,
+            )
+          ) {
             scopeDeltas.push({
               issueKey: child.key,
               storyPoints: sumStoryPoints([child], pointsFields),
               changingUser: log.author,
-            }); 
+            });
           }
-          
-          if (log.items.some(item => item.to === currentStatus.id)) {
+
+          if (log.items.some((item) => item.to === currentStatus.id)) {
             const inProgressDate = DateTime.fromISO(log.created);
-            const daysInStatus = DateTime.local().diff(inProgressDate, 'days').days;
+            const daysInStatus = DateTime.local().diff(
+              inProgressDate,
+              "days",
+            ).days;
 
             if (daysInStatus > longRunningDays) {
               longRunningIssues.push({
@@ -50,22 +83,25 @@ async function analyzeChildIssues(
         }
       }
     }
-    const comments = await getCommentsTimeline(child.id, auth, windowStartDate.toISO()!);
+    const comments = await getCommentsTimeline(
+      child.id,
+      auth,
+      windowStartDate.toISO()!,
+    );
 
     childIssues.push({
       id: child.id,
       key: child.key,
       changelogTimeline: issueChangelogTimeline,
-      commentsTimeline: comments
+      commentsTimeline: comments,
     });
   }
   return {
     longRunningIssues,
-    childIssues, 
-    scopeDeltas
-  }
+    childIssues,
+    scopeDeltas,
+  };
 }
-
 
 export async function analyzeEpic(
   epicKey: string,
@@ -74,51 +110,86 @@ export async function analyzeEpic(
   auth: JiraRequestAuth,
   buildId: string,
   velocityWindowDays: number,
-  longRunningDays: number
+  longRunningDays: number,
 ): Promise<EpicReport> {
-
   const {
     id: epicId,
-    fields: { assignee, duedate,
-    status: { name: statusName },
-    priority: { name: priority },
-    summary: title } } = await getIssue(epicKey, auth);
-  const windowStartDateObject =  DateTime.fromISO(windowStartDate)
-    const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
+    fields: {
+      assignee,
+      duedate,
+      status: { name: statusName },
+      priority: { name: priority },
+      summary: title,
+    },
+  } = await getIssue(epicKey, auth);
+  const windowStartDateObject = DateTime.fromISO(windowStartDate);
+  const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
   // Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;
-  const pointsFields: PointsField[] = await getFields(auth, 'point');  // Assuming getFields returns the fields used for story points  
-  const velocity = await calculateVelocity(jql, velocityWindowDays, pointsFields, auth); // Assuming 30 days
-  const remainingPoints = await sumRemainingStoryPointsForEpic(epicKey, pointsFields, auth);
+  const pointsFields: PointsField[] = await getFields(auth, "point"); // Assuming getFields returns the fields used for story points
+  const velocity = await calculateVelocity(
+    jql,
+    velocityWindowDays,
+    pointsFields,
+    auth,
+  ); // Assuming 30 days
+  const remainingPoints = await sumRemainingStoryPointsForEpic(
+    epicKey,
+    pointsFields,
+    auth,
+  );
 
-
-  const totalPoints = await sumTotalStoryPointsForEpic(epicKey, pointsFields, auth);
-  const inProgressPoints = await fetchAndSumStoryPoints(`parent = ${epicKey} AND statusCategory = "In Progress"`, pointsFields, auth);
-  const completedPoints = await fetchAndSumStoryPoints(`parent = ${epicKey} AND statusCategory = "Done"`, pointsFields, auth);
-  const changelogTimeline = await fetchIssueChangelogTimeline(epicKey, auth, windowStartDate);
-  const commentsTimeline = await getCommentsTimeline(epicKey, auth, windowStartDate);
-  const { 
-    longRunningIssues, 
-    childIssues,
-    scopeDeltas
-  } = await analyzeChildIssues(jql, epicId, longRunningDays, auth, windowStartDateObject, pointsFields);
+  const totalPoints = await sumTotalStoryPointsForEpic(
+    epicKey,
+    pointsFields,
+    auth,
+  );
+  const inProgressPoints = await fetchAndSumStoryPoints(
+    `parent = ${epicKey} AND statusCategory = "In Progress"`,
+    pointsFields,
+    auth,
+  );
+  const completedPoints = await fetchAndSumStoryPoints(
+    `parent = ${epicKey} AND statusCategory = "Done"`,
+    pointsFields,
+    auth,
+  );
+  const changelogTimeline = await fetchIssueChangelogTimeline(
+    epicKey,
+    auth,
+    windowStartDate,
+  );
+  const commentsTimeline = await getCommentsTimeline(
+    epicKey,
+    auth,
+    windowStartDate,
+  );
+  const { longRunningIssues, childIssues, scopeDeltas } =
+    await analyzeChildIssues(
+      jql,
+      epicId,
+      longRunningDays,
+      auth,
+      windowStartDateObject,
+      pointsFields,
+    );
 
   const analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
   const reportGenerationDate = DateTime.local().toISO();
-  
+
   if (!reportGenerationDate) {
-    throw new Error('Failed to format report generation date');
+    throw new Error("Failed to format report generation date");
   }
 
   const dueDate = DateTime.fromISO(duedate)?.toISODate() ?? undefined;
   const epicReport: EpicReport = {
     buildId,
-    reportType: 'epic',
+    reportType: "epic",
     buildStatus: {
       buildId,
-      status: 'success',
+      status: "success",
       startedAt: reportGenerationDate,
-      remainingItems: []
+      remainingItems: [],
     },
     id: epicId,
     ownerId: atlassianUserId,
@@ -147,6 +218,6 @@ export async function analyzeEpic(
   };
 
   const summary = await summarizeEpicReport(epicReport);
-  
-  return {...epicReport, summary};
+
+  return { ...epicReport, summary };
 }

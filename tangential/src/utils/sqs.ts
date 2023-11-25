@@ -29,7 +29,7 @@ export async function sendProjectAnalysisBeginQueueMessage(
   windowStartDate: string,
   auth: JiraRequestAuth,
   velocityWindowDays: number,
-  longRunningDays: number
+  longRunningDays: number,
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
@@ -47,7 +47,7 @@ export async function sendProjectAnalysisBeginQueueMessage(
 
 export async function sendProjectAnalysisFinalizeQueueMessage(
   buildId: string,
-  auth: JiraRequestAuth
+  auth: JiraRequestAuth,
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
@@ -67,7 +67,7 @@ export async function sendEpicAnalysisQueueMessage(
   windowStartDate: string,
   windowEndDate: string,
   velocityWindowDays: number,
-  longRunningDays: number
+  longRunningDays: number,
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
@@ -88,11 +88,11 @@ export async function sendEpicAnalysisQueueMessage(
 export async function sendUpdateProjectAnalysisStatusQueueMessage(
   epicKey: string,
   buildId: string,
-  auth: JiraRequestAuth
+  auth: JiraRequestAuth,
 ): Promise<void> {
   if (!buildId) {
     throw new Error(
-      "sendUpdateProjectAnalysisStatusQueueMessage: No job ID provided"
+      "sendUpdateProjectAnalysisStatusQueueMessage: No job ID provided",
     );
   }
   const payload = {
@@ -110,7 +110,7 @@ export async function sendUpdateProjectAnalysisStatusQueueMessage(
 export async function sendTextReportGenerationQueueMessage(
   buildId: string,
   templateId: string,
-  auth: JiraRequestAuth
+  auth: JiraRequestAuth,
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.textReportGenerationQueueUrl as string,

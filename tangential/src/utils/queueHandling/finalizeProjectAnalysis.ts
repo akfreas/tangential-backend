@@ -1,25 +1,30 @@
-import { doLog, extractFromJiraAuth, fetchReportByBuildId, updateReport } from "@akfreas/tangential-core";
+import {
+  doLog,
+  extractFromJiraAuth,
+  fetchReportByBuildId,
+  updateReport,
+} from "@akfreas/tangential-core";
 import { SQSRecord } from "aws-lambda";
-import {  createProjectAnalysis } from "../jira";
+import { createProjectAnalysis } from "../jira";
 
 export async function handleProjectAnalysisFinalizeMessage(record: SQSRecord) {
-    const { buildId, auth } = JSON.parse(record.body);
+  const { buildId, auth } = JSON.parse(record.body);
 
-    const { atlassianUserId } = extractFromJiraAuth(auth);
+  const { atlassianUserId } = extractFromJiraAuth(auth);
 
-    const fullReport = await fetchReportByBuildId(atlassianUserId, buildId);
+  const fullReport = await fetchReportByBuildId(atlassianUserId, buildId);
 
-    if (!fullReport) {
-        throw new Error(`No report found for build ID ${buildId}`);
-    }
-    
-    const { epics, ...report} = fullReport;
+  if (!fullReport) {
+    throw new Error(`No report found for build ID ${buildId}`);
+  }
 
-    report.buildStatus.status = 'success';
-    if (epics) {
-        report.analysis = createProjectAnalysis(epics, report);
-    }
-    await updateReport(report);
+  const { epics, ...report } = fullReport;
 
-    doLog(`Finalized project analysis for job ${buildId}`)
+  report.buildStatus.status = "success";
+  if (epics) {
+    report.analysis = createProjectAnalysis(epics, report);
+  }
+  await updateReport(report);
+
+  doLog(`Finalized project analysis for job ${buildId}`);
 }

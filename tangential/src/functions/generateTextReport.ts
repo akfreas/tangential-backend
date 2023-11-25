@@ -14,7 +14,7 @@ import { DateTime } from "luxon";
 async function writeReport(
   projectReport: ProjectReport,
   templateId: string,
-  owner: string
+  owner: string,
 ) {
   // Extract basic project details
   const projectName = projectReport.title;
@@ -120,7 +120,7 @@ export const handler: SQSHandler = async (event) => {
 
       const report: ProjectReport | null = await fetchReportByBuildId(
         atlassianUserId,
-        buildId
+        buildId,
       );
       // jsonLog("Report", report)
       if (!report) {

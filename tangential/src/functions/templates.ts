@@ -6,15 +6,14 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { extractAtlassianHeaders } from "../utils/request";
 
 export const handler = async (
-  event: APIGatewayProxyEvent
+  event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   try {
     const auth = extractAtlassianHeaders(event.headers);
     const { atlassianUserId } = await extractFromJiraAuth(auth);
 
-    const templates = await fetchAllReportTemplatesByOwnerAndPublic(
-      atlassianUserId
-    );
+    const templates =
+      await fetchAllReportTemplatesByOwnerAndPublic(atlassianUserId);
 
     return {
       statusCode: 200,

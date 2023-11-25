@@ -25,7 +25,7 @@ export async function handleEpicAnalysisMessage(record: SQSRecord) {
     auth,
     buildId,
     velocityWindowDays,
-    longRunningDays
+    longRunningDays,
   );
   await storeEpicReport(result);
 

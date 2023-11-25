@@ -1,7 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { httpsAgent } from '../config/config';
-import { TangentialHTTPRequestError } from '../models/errors/TangentialHTTPRequestError';
-import { JiraRequestAuth } from '@akfreas/tangential-core';
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { httpsAgent } from "../config/config";
+import { TangentialHTTPRequestError } from "../models/errors/TangentialHTTPRequestError";
+import { JiraRequestAuth } from "@akfreas/tangential-core";
 
 export const axiosInstance = axios.create({ httpsAgent });
 
@@ -19,7 +19,15 @@ export function processError({
   error,
 }: ProcessErrorParams): Promise<never> {
   const headers = error.response ? error.response.headers : undefined;
-  return Promise.reject(new TangentialHTTPRequestError(`error on ${method}`, error, url, params, headers));
+  return Promise.reject(
+    new TangentialHTTPRequestError(
+      `error on ${method}`,
+      error,
+      url,
+      params,
+      headers,
+    ),
+  );
 }
 
 interface JsonPostParams {
@@ -30,29 +38,33 @@ interface JsonPostParams {
 }
 
 export function extractAtlassianHeaders(headers: any): JiraRequestAuth {
-  const accessToken = headers['x-atlassian-token'];
-  const atlassianWorkspaceId = headers['x-atlassian-workspace-id'];
-  const refreshToken = headers['x-atlassian-refresh-token'];
+  const accessToken = headers["x-atlassian-token"];
+  const atlassianWorkspaceId = headers["x-atlassian-workspace-id"];
+  const refreshToken = headers["x-atlassian-refresh-token"];
 
   if (!accessToken) {
-    throw new Error('No access token provided');
+    throw new Error("No access token provided");
   }
 
   if (!atlassianWorkspaceId) {
-    throw new Error('No Atlassian Workspace ID provided');
+    throw new Error("No Atlassian Workspace ID provided");
   }
 
   if (!refreshToken) {
-    throw new Error('No refresh token provided');
+    throw new Error("No refresh token provided");
   }
 
   return { accessToken, atlassianWorkspaceId, refreshToken };
 }
 
-export async function jsonPost({ url, headers = {}, ...params }: JsonPostParams): Promise<any> {
-  const jsonHeaders = { 'Content-Type': 'application/json', ...headers };
+export async function jsonPost({
+  url,
+  headers = {},
+  ...params
+}: JsonPostParams): Promise<any> {
+  const jsonHeaders = { "Content-Type": "application/json", ...headers };
   const px: AxiosRequestConfig = {
-    method: 'post',
+    method: "post",
     url,
     params: params.params,
     data: params.data,
@@ -64,7 +76,10 @@ export async function jsonPost({ url, headers = {}, ...params }: JsonPostParams)
     return Promise.resolve(response.data);
   } catch (error) {
     return processError({
-      method: 'post', url, params, error,
+      method: "post",
+      url,
+      params,
+      error,
     });
   }
 }
@@ -77,7 +92,7 @@ interface JsonGetParams {
 
 export async function jsonGet({ url, ...params }: JsonGetParams): Promise<any> {
   const px: AxiosRequestConfig = {
-    method: 'get',
+    method: "get",
     url,
     ...params,
   };
@@ -87,7 +102,10 @@ export async function jsonGet({ url, ...params }: JsonGetParams): Promise<any> {
     return data;
   } catch (error) {
     return processError({
-      method: 'get', url, params, error,
+      method: "get",
+      url,
+      params,
+      error,
     });
   }
 }
@@ -99,9 +117,13 @@ interface JsonPatchParams {
   headers?: any;
 }
 
-export async function jsonPatch({ url, data, ...params }: JsonPatchParams): Promise<any> {
+export async function jsonPatch({
+  url,
+  data,
+  ...params
+}: JsonPatchParams): Promise<any> {
   const px: AxiosRequestConfig = {
-    method: 'patch',
+    method: "patch",
     url,
     data,
     ...params,
@@ -111,6 +133,14 @@ export async function jsonPatch({ url, data, ...params }: JsonPatchParams): Prom
     const response: AxiosResponse = await axiosInstance(px);
     return response.data;
   } catch (error) {
-    return Promise.reject(new TangentialHTTPRequestError('error patching', error, url, data, params));
+    return Promise.reject(
+      new TangentialHTTPRequestError(
+        "error patching",
+        error,
+        url,
+        data,
+        params,
+      ),
+    );
   }
 }

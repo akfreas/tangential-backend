@@ -40,7 +40,7 @@ describe("jira requests", () => {
     const totalPoints = await sumTotalStoryPointsForEpic(
       epicKey,
       pointsFields,
-      auth,
+      auth
     );
 
     expect(totalPoints).toBe(56);
@@ -49,9 +49,14 @@ describe("jira requests", () => {
   it("calculates story points for a project", async () => {
     const pointsFields: PointsField[] = await getFields(auth, "point"); // Assuming getFields returns the fields used for story points
     const totalPoints = await sumTotalStoryPointsForProject(
-      "TAN",
+      {
+        id: "10000",
+        name: "Tangential",
+        jqlQuery: "project = TAN",
+        owner: "akfreas",
+      },
       pointsFields,
-      auth,
+      auth
     );
 
     expect(totalPoints).toBe(96.5);

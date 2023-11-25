@@ -22,14 +22,15 @@ import {
   fetchAndSumStoryPoints,
 } from "./jira";
 import { summarizeEpicReport } from "./summarization/summarizationUtils";
+import { randomUUID } from "crypto";
 
 async function analyzeChildIssues(
   jql: string,
   epicId: string,
   longRunningDays: number,
   auth: JiraRequestAuth,
-  windowStartDate: DateTime,
-  pointsFields: PointsField[],
+  windowStartDate: Date,
+  pointsFields: PointsField[]
 ): Promise<{
   longRunningIssues: LongRunningIssue[];
   childIssues: IssueReport[];
@@ -44,7 +45,7 @@ async function analyzeChildIssues(
     const issueChangelogTimeline = await fetchIssueChangelogTimeline(
       child.id,
       auth,
-      windowStartDate.toISO()!,
+      windowStartDate
     );
 
     if (issueChangelogTimeline) {
@@ -55,7 +56,7 @@ async function analyzeChildIssues(
           if (
             log.items.some(
               (item) =>
-                item.field === "IssueParentAssociation" && item.to === epicId,
+                item.field === "IssueParentAssociation" && item.to === epicId
             )
           ) {
             scopeDeltas.push({
@@ -69,7 +70,7 @@ async function analyzeChildIssues(
             const inProgressDate = DateTime.fromISO(log.created);
             const daysInStatus = DateTime.local().diff(
               inProgressDate,
-              "days",
+              "days"
             ).days;
 
             if (daysInStatus > longRunningDays) {
@@ -83,11 +84,7 @@ async function analyzeChildIssues(
         }
       }
     }
-    const comments = await getCommentsTimeline(
-      child.id,
-      auth,
-      windowStartDate.toISO()!,
-    );
+    const comments = await getCommentsTimeline(child.id, auth, windowStartDate);
 
     childIssues.push({
       id: child.id,
@@ -105,12 +102,12 @@ async function analyzeChildIssues(
 
 export async function analyzeEpic(
   epicKey: string,
-  windowStartDate: string,
-  windowEndDate: string,
+  windowStartDate: Date,
+  windowEndDate: Date,
   auth: JiraRequestAuth,
   buildId: string,
   velocityWindowDays: number,
-  longRunningDays: number,
+  longRunningDays: number
 ): Promise<EpicReport> {
   const {
     id: epicId,
@@ -122,7 +119,6 @@ export async function analyzeEpic(
       summary: title,
     },
   } = await getIssue(epicKey, auth);
-  const windowStartDateObject = DateTime.fromISO(windowStartDate);
   const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
   // Compute the 30-day velocity for issues with that epic as a parent
   const jql = `parent = ${epicKey}`;
@@ -131,38 +127,38 @@ export async function analyzeEpic(
     jql,
     velocityWindowDays,
     pointsFields,
-    auth,
+    auth
   ); // Assuming 30 days
   const remainingPoints = await sumRemainingStoryPointsForEpic(
     epicKey,
     pointsFields,
-    auth,
+    auth
   );
 
   const totalPoints = await sumTotalStoryPointsForEpic(
     epicKey,
     pointsFields,
-    auth,
+    auth
   );
   const inProgressPoints = await fetchAndSumStoryPoints(
     `parent = ${epicKey} AND statusCategory = "In Progress"`,
     pointsFields,
-    auth,
+    auth
   );
   const completedPoints = await fetchAndSumStoryPoints(
     `parent = ${epicKey} AND statusCategory = "Done"`,
     pointsFields,
-    auth,
+    auth
   );
   const changelogTimeline = await fetchIssueChangelogTimeline(
     epicKey,
     auth,
-    windowStartDate,
+    windowStartDate
   );
   const commentsTimeline = await getCommentsTimeline(
     epicKey,
     auth,
-    windowStartDate,
+    windowStartDate
   );
   const { longRunningIssues, childIssues, scopeDeltas } =
     await analyzeChildIssues(
@@ -170,18 +166,18 @@ export async function analyzeEpic(
       epicId,
       longRunningDays,
       auth,
-      windowStartDateObject,
-      pointsFields,
+      windowStartDate,
+      pointsFields
     );
 
   const analysis = createEpicMetricAnalysis(remainingPoints, velocity, duedate);
-  const reportGenerationDate = DateTime.local().toISO();
+  const reportGenerationDate = DateTime.local().toJSDate();
 
   if (!reportGenerationDate) {
     throw new Error("Failed to format report generation date");
   }
 
-  const dueDate = DateTime.fromISO(duedate)?.toISODate() ?? undefined;
+  const dueDate = DateTime.fromISO(duedate)?.toJSDate() ?? undefined;
   const epicReport: EpicReport = {
     buildId,
     reportType: "epic",
@@ -191,7 +187,7 @@ export async function analyzeEpic(
       startedAt: reportGenerationDate,
       remainingItems: [],
     },
-    id: epicId,
+    id: randomUUID().toString(),
     ownerId: atlassianUserId,
     scopeDeltas,
     atlassianWorkspaceId,

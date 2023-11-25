@@ -5,7 +5,7 @@ import { analyzeProject } from "../projectAnalysis";
 
 export async function handleProjectAnalysisMessage(record: SQSRecord) {
   const {
-    projectKey,
+    projectDefinition,
     windowStartDate,
     velocityWindowDays,
     longRunningDays,
@@ -13,11 +13,12 @@ export async function handleProjectAnalysisMessage(record: SQSRecord) {
   } = JSON.parse(record.body);
 
   const result = await analyzeProject(
-    projectKey,
-    DateTime.fromISO(windowStartDate),
+    projectDefinition,
+    DateTime.fromISO(windowStartDate).toJSDate(),
     auth,
     velocityWindowDays,
-    longRunningDays,
+    longRunningDays
   );
+
   await storeProjectReport(result);
 }

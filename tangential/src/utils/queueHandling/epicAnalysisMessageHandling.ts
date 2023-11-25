@@ -10,22 +10,31 @@ export async function handleEpicAnalysisMessage(record: SQSRecord) {
   const {
     key,
     buildId,
+    parentProjectId,
     velocityWindowDays,
     windowStartDate,
     longRunningDays,
     windowEndDate,
     auth,
   } = parsed;
-  jsonLog("Handling Epic Analysis Message", parsed);
+  jsonLog("Handling Epic Analysis Message", {
+    key,
+    buildId,
+    velocityWindowDays,
+    parentProjectId,
+    windowStartDate,
+    longRunningDays,
+    windowEndDate,
+  });
 
   const result = await analyzeEpic(
     key,
-    windowStartDate,
-    windowEndDate,
+    DateTime.fromISO(windowStartDate).toJSDate(),
+    DateTime.fromISO(windowEndDate).toJSDate(),
     auth,
     buildId,
     velocityWindowDays,
-    longRunningDays,
+    longRunningDays
   );
   await storeEpicReport(result);
 
@@ -34,5 +43,5 @@ export async function handleEpicAnalysisMessage(record: SQSRecord) {
     await writeFile(`Epic-${key}.json`, JSON.stringify(result, null, 2));
   }
 
-  await sendUpdateProjectAnalysisStatusQueueMessage(key, buildId, auth);
+  await sendUpdateProjectAnalysisStatusQueueMessage(key, parentProjectId, auth);
 }

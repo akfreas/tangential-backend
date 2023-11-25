@@ -3,7 +3,11 @@ import {
   SendMessageCommandInput,
 } from "@aws-sdk/client-sqs";
 import { sqs } from "../config/config";
-import { JiraRequestAuth, doError } from "@akfreas/tangential-core";
+import {
+  JiraRequestAuth,
+  ProjectDefinition,
+  doError,
+} from "@akfreas/tangential-core";
 
 export const MessageType = {
   PROJECT_ANALYSIS_BEGIN: "PROJECT_ANALYSIS_BEGIN",
@@ -25,17 +29,17 @@ async function sendMessage(payload: SendMessageCommandInput) {
 }
 
 export async function sendProjectAnalysisBeginQueueMessage(
-  projectKey: string,
+  projectDefinition: ProjectDefinition,
   windowStartDate: string,
   auth: JiraRequestAuth,
   velocityWindowDays: number,
-  longRunningDays: number,
+  longRunningDays: number
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
       messageType: MessageType.PROJECT_ANALYSIS_BEGIN,
-      projectKey,
+      projectDefinition,
       windowStartDate,
       auth,
       velocityWindowDays,
@@ -46,14 +50,14 @@ export async function sendProjectAnalysisBeginQueueMessage(
 }
 
 export async function sendProjectAnalysisFinalizeQueueMessage(
-  buildId: string,
-  auth: JiraRequestAuth,
+  parentProjectId: string,
+  auth: JiraRequestAuth
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
       messageType: MessageType.PROJECT_ANALYSIS_FINALIZE,
-      buildId,
+      parentProjectId,
       auth,
     }),
   };
@@ -62,12 +66,13 @@ export async function sendProjectAnalysisFinalizeQueueMessage(
 
 export async function sendEpicAnalysisQueueMessage(
   buildId: string,
+  parentProjectId: string,
   key: string,
   auth: JiraRequestAuth,
   windowStartDate: string,
   windowEndDate: string,
   velocityWindowDays: number,
-  longRunningDays: number,
+  longRunningDays: number
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
@@ -76,6 +81,7 @@ export async function sendEpicAnalysisQueueMessage(
       messageType: MessageType.EPIC_ANALYSIS,
       key,
       auth,
+      parentProjectId,
       windowStartDate,
       windowEndDate,
       velocityWindowDays,
@@ -87,22 +93,22 @@ export async function sendEpicAnalysisQueueMessage(
 
 export async function sendUpdateProjectAnalysisStatusQueueMessage(
   epicKey: string,
-  buildId: string,
-  auth: JiraRequestAuth,
+  parentProjectId: string,
+  auth: JiraRequestAuth
 ): Promise<void> {
-  if (!buildId) {
+  if (!parentProjectId) {
     throw new Error(
-      "sendUpdateProjectAnalysisStatusQueueMessage: No job ID provided",
+      "sendUpdateProjectAnalysisStatusQueueMessage: No parentProjectId provided"
     );
   }
   const payload = {
     QueueUrl: process.env.updateProjectAnalysisStatusQueueUrl as string,
     MessageBody: JSON.stringify({
       epicKey,
-      buildId,
+      parentProjectId,
       auth,
     }),
-    MessageGroupId: buildId,
+    MessageGroupId: parentProjectId,
   };
   await sendMessage(payload);
 }
@@ -110,7 +116,7 @@ export async function sendUpdateProjectAnalysisStatusQueueMessage(
 export async function sendTextReportGenerationQueueMessage(
   buildId: string,
   templateId: string,
-  auth: JiraRequestAuth,
+  auth: JiraRequestAuth
 ): Promise<void> {
   const payload = {
     QueueUrl: process.env.textReportGenerationQueueUrl as string,

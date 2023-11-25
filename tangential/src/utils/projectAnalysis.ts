@@ -1,5 +1,6 @@
 import {
   JiraRequestAuth,
+  ProjectDefinition,
   ProjectReport,
   extractFromJiraAuth,
 } from "@akfreas/tangential-core";
@@ -13,37 +14,51 @@ import {
 } from "./jira";
 import { DateTime } from "luxon";
 import { sendEpicAnalysisQueueMessage } from "./sqs";
+import { randomUUID } from "crypto";
 
 export async function analyzeProject(
-  projectKey: string,
-  windowStartDate: DateTime,
+  projectDefinition: ProjectDefinition,
+  windowStartDate: Date,
   auth: JiraRequestAuth,
   velocityWindowDays: number = 30,
-  longRunningDays: number = 10,
+  longRunningDays: number = 10
 ): Promise<ProjectReport> {
   const { atlassianUserId, atlassianWorkspaceId } = extractFromJiraAuth(auth);
-  const reportGenerationDate = DateTime.local().toISO({ includeOffset: false });
-  const buildId = `${atlassianUserId}-${projectKey}-${reportGenerationDate}`;
+  const reportGenerationDate = DateTime.local();
+  const reportGenerationDateString = reportGenerationDate.toISO({
+    includeOffset: false,
+  });
+  const id = randomUUID().toString();
+  if (!projectDefinition.id) {
+    throw new Error("Project definition must have an ID");
+  }
+  const buildId = `${projectDefinition.id}-${reportGenerationDateString}`;
 
-  const { avatarUrls, displayName, name, lead } = await fetchProjectById(
-    projectKey,
-    auth,
-  );
+  let lead: any = null;
+  let avatarUrls: any = null;
+
+  if (projectDefinition.associatedProjectKey) {
+    ({ avatarUrls, lead } = await fetchProjectById(
+      projectDefinition.associatedProjectKey,
+      auth
+    ));
+  }
+
   const { issues: notCompletedResults } = await getByJql(
-    `project = ${projectKey} AND issuetype = Epic AND statusCategory != "Done"`,
-    auth,
+    `${projectDefinition.jqlQuery} AND issuetype = Epic AND statusCategory != "Done"`,
+    auth
   );
   const { issues: recentlyCompletedResults } = await getByJql(
-    `project = ${projectKey} AND issuetype = "Epic" AND statusCategory = "Done" AND status changed DURING (-10d, now())`,
-    auth,
+    `${projectDefinition.jqlQuery} AND issuetype = "Epic" AND statusCategory = "Done" AND status changed DURING (-10d, now())`,
+    auth
   );
 
   const epicKeys: string[] = [
     ...notCompletedResults,
     ...recentlyCompletedResults,
   ].map((epic: any) => epic.key);
-  const windowEndDate = DateTime.local().toISO();
-  const windowStartDateString = windowStartDate.toISO();
+  const windowEndDate = DateTime.local();
+  const windowStartDateString = DateTime.fromJSDate(windowStartDate).toISO();
 
   if (windowEndDate === null || windowStartDateString === null) {
     throw new Error("Failed to format window dates");
@@ -53,43 +68,44 @@ export async function analyzeProject(
     epicKeys.map((key: any) => {
       return sendEpicAnalysisQueueMessage(
         buildId,
+        id,
         key,
         auth,
         windowStartDateString,
-        windowEndDate,
+        windowEndDate.toISO()!,
         velocityWindowDays,
-        longRunningDays,
+        longRunningDays
       );
-    }),
+    })
   );
   const fields = await getFields(auth, "point");
 
   const totalPoints = await sumTotalStoryPointsForProject(
-    projectKey,
+    projectDefinition,
     fields,
-    auth,
+    auth
   );
 
   const projectVelocity = await calculateVelocity(
-    `project = ${projectKey}`,
+    projectDefinition.jqlQuery,
     velocityWindowDays,
     fields,
-    auth,
+    auth
   );
   const projectRemainingPoints = await fetchAndSumStoryPoints(
-    `project = ${projectKey} AND statusCategory != "Done"`,
+    `${projectDefinition.jqlQuery} AND statusCategory != "Done"`,
     fields,
-    auth,
+    auth
   );
   const inProgressPoints = await fetchAndSumStoryPoints(
-    `project = ${projectKey} AND statusCategory = "In Progress"`,
+    `${projectDefinition.jqlQuery} AND statusCategory = "In Progress"`,
     fields,
-    auth,
+    auth
   );
   const completedPoints = await fetchAndSumStoryPoints(
-    `project = ${projectKey} AND statusCategory = "Done"`,
+    `${projectDefinition.jqlQuery} AND statusCategory = "Done"`,
     fields,
-    auth,
+    auth
   );
 
   if (reportGenerationDate === null) {
@@ -97,25 +113,26 @@ export async function analyzeProject(
   }
 
   const report: ProjectReport = {
+    id,
     buildId,
     reportType: "project",
     buildStatus: {
       status: "pending",
       buildId,
-      startedAt: reportGenerationDate,
+      startedAt: reportGenerationDate.toJSDate(),
       remainingItems: epicKeys,
     },
     longRunningDays,
     ownerId: atlassianUserId,
     atlassianWorkspaceId,
-    reportGenerationDate,
-    title: displayName || name,
-    projectKey,
+    reportGenerationDate: reportGenerationDate.toJSDate(),
+    title: projectDefinition.name,
+    projectDefinitionId: projectDefinition.id,
     lead,
-    avatar: avatarUrls["48x48"],
-    windowEndDate,
+    avatar: avatarUrls?.["48x48"] ?? null,
+    windowEndDate: windowEndDate.toJSDate(),
     totalPoints,
-    windowStartDate: windowStartDateString,
+    windowStartDate,
     velocity: projectVelocity,
     remainingPoints: projectRemainingPoints,
     inProgressPoints,

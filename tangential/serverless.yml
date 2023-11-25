@@ -87,6 +87,13 @@ functions:
           method: get
           path: /workspace/analyze
 
+  startProjectAnalysis:
+    handler: src/functions/startProjectAnalysis.handler
+    events:
+      - httpApi:
+          method: post
+          path: /project/analyze
+
   startTextReportGeneration:
     handler: src/functions/startTextReportGeneration.handler
     events:

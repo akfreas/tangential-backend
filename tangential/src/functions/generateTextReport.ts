@@ -14,17 +14,13 @@ import { DateTime } from "luxon";
 async function writeReport(
   projectReport: ProjectReport,
   templateId: string,
-  owner: string,
+  owner: string
 ) {
   // Extract basic project details
   const projectName = projectReport.title;
   const reportDate = projectReport.reportGenerationDate;
 
   // Determine the overall project status
-  let projectStatus = "Unknown";
-  if (projectReport.analysis && projectReport.analysis.state) {
-    projectStatus = projectReport.analysis.state.name;
-  }
 
   // Prepare the epic details
   let epicDetails = "";
@@ -70,7 +66,6 @@ The other contributing epics are on track:
   const user = `
   Project Name: ${projectName}\n
   Report Date: ${reportDate}\n\n
-  Project Status: ${projectStatus}\n
   Epic Statuses:\n${epicDetails}\n`;
   doLog(`Writing report for project ${projectName}...`);
   const report = await createChatCompletion({
@@ -91,7 +86,7 @@ The other contributing epics are on track:
   await storeTextReport({
     basedOnBuildId: projectReport.buildId,
     text: report,
-    generatedOn: DateTime.local().toISO()!,
+    generatedDate: DateTime.local().toJSDate(),
     owner,
     templateId,
     name: `${projectName} Status Update${
@@ -120,7 +115,7 @@ export const handler: SQSHandler = async (event) => {
 
       const report: ProjectReport | null = await fetchReportByBuildId(
         atlassianUserId,
-        buildId,
+        buildId
       );
       // jsonLog("Report", report)
       if (!report) {

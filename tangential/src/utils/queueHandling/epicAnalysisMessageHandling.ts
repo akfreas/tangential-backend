@@ -1,27 +1,47 @@
 import { SQSRecord } from "aws-lambda";
 import { DateTime } from "luxon";
 import { jsonLog, storeEpicReport } from "@akfreas/tangential-core";
-import { analyzeEpic } from "../jira";
 import { sendUpdateProjectAnalysisStatusQueueMessage } from "../sqs";
-
+import { analyzeEpic } from "../epicAnalysis";
+import { writeFile } from "fs/promises";
 
 export async function handleEpicAnalysisMessage(record: SQSRecord) {
-
-  jsonLog("Handling Epic Analysis Message", record)
-  const { epicKey, buildId,
-    velocityWindowDays, windowStartDate,
-     longRunningDays, auth } = JSON.parse(record.body);
-
+  const parsed = JSON.parse(record.body);
+  const {
+    key,
+    buildId,
+    parentProjectId,
+    velocityWindowDays,
+    windowStartDate,
+    longRunningDays,
+    windowEndDate,
+    auth,
+  } = parsed;
+  jsonLog("Handling Epic Analysis Message", {
+    key,
+    buildId,
+    velocityWindowDays,
+    parentProjectId,
+    windowStartDate,
+    longRunningDays,
+    windowEndDate,
+  });
 
   const result = await analyzeEpic(
-    epicKey,
-    DateTime.fromISO(windowStartDate),
+    key,
+    DateTime.fromISO(windowStartDate).toJSDate(),
+    DateTime.fromISO(windowEndDate).toJSDate(),
     auth,
     buildId,
     velocityWindowDays,
-    longRunningDays,
+    longRunningDays
   );
   await storeEpicReport(result);
 
-  await sendUpdateProjectAnalysisStatusQueueMessage(epicKey, buildId, auth);
+  // Write the epic report to disk
+  if (process.env.IS_OFFLINE) {
+    await writeFile(`Epic-${key}.json`, JSON.stringify(result, null, 2));
+  }
+
+  await sendUpdateProjectAnalysisStatusQueueMessage(key, parentProjectId, auth);
 }

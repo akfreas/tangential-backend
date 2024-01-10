@@ -1,21 +1,41 @@
-import { MongoDBWrapper, ProjectReport, doLog } from "@akfreas/tangential-core";
+import {
+  doLog,
+  extractFromJiraAuth,
+  fetchReportById,
+  jsonLog,
+  updateReport,
+} from "@akfreas/tangential-core";
 import { SQSRecord } from "aws-lambda";
+import { createProjectAnalysis } from "../jira";
 
 export async function handleProjectAnalysisFinalizeMessage(record: SQSRecord) {
-    const { buildId } = JSON.parse(record.body);
-    const dbWrapper = await MongoDBWrapper.getInstance(process.env.MONGODB_URI, process.env.MONGODB_DATABASE);
+  const { parentProjectId, auth } = JSON.parse(record.body);
 
-    const dbCollection = dbWrapper.getCollection<any>('reports');
+  const { atlassianUserId } = extractFromJiraAuth(auth);
 
-    const filter = { buildId, reportType: 'project' }
-    const report: ProjectReport = await dbCollection.findOne(filter);
+  jsonLog("Handling project analysis finalize message", {
+    parentProjectId,
+    atlassianUserId,
+  });
 
-    report.buildStatus.status = 'success';
+  const fullReport = await fetchReportById(parentProjectId);
+  if (!fullReport) {
+    throw new Error(`No report found for parent project ID ${parentProjectId}`);
+  }
+  const { buildId } = fullReport;
+  if (!fullReport) {
+    throw new Error(`No report found for build ID ${buildId}`);
+  }
 
-    dbCollection.updateOne(
-      filter,
-      { $set: report },
-      { upsert: true }
-    );
-    doLog(`Project analysis complete for job ${buildId}`)
+  const { epics, ...report } = fullReport;
+
+  report.buildStatus.status = "success";
+  if (epics) {
+    report.analysis = createProjectAnalysis(epics, report);
+  }
+
+  jsonLog("Updating report", report);
+  await updateReport(report);
+
+  doLog(`Finalized project analysis for job ${buildId}`);
 }

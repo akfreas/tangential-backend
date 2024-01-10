@@ -2,11 +2,7 @@ import { APIGatewayEvent } from "aws-lambda";
 import { extractAtlassianHeaders } from "../utils/request";
 import { sendProjectAnalysisBeginQueueMessage } from "../utils/sqs";
 import { DateTime } from "luxon";
-import {
-  extractFromJiraAuth,
-  fetchAllProjectDefinitionsByOwner,
-  jsonLog,
-} from "@akfreas/tangential-core";
+import { fetchProjectDefinitionById } from "@akfreas/tangential-core";
 
 export async function handler(
   event: APIGatewayEvent
@@ -15,29 +11,37 @@ export async function handler(
 
   const auth = extractAtlassianHeaders(headers);
   try {
-    const { atlassianUserId } = extractFromJiraAuth(auth);
-    const projectDefinitions = await fetchAllProjectDefinitionsByOwner(
-      atlassianUserId
-    );
-
-    jsonLog("Project Definitions", projectDefinitions);
-    if (!projectDefinitions) {
-      throw new Error("Could not get project definitions");
-    }
     const date = DateTime.now().minus({ days: 10 }).toISODate();
+
+    const { projectDefinitionId } = JSON.parse(event.body || "{}");
     if (!date) {
       throw new Error("Could not get date");
     }
-    await Promise.all(
-      projectDefinitions.map((projectKey) => {
-        return sendProjectAnalysisBeginQueueMessage(
-          projectKey,
-          date,
-          auth,
-          30,
-          7
-        );
-      })
+
+    if (!projectDefinitionId) {
+      return {
+        statusCode: 400,
+        body: "No project definition ID provided",
+      };
+    }
+
+    const fetchedProjectDefinitions = await fetchProjectDefinitionById(
+      projectDefinitionId
+    );
+
+    if (!fetchedProjectDefinitions) {
+      return {
+        statusCode: 404,
+        body: "Project definition not found",
+      };
+    }
+
+    await sendProjectAnalysisBeginQueueMessage(
+      fetchedProjectDefinitions,
+      date,
+      auth,
+      30,
+      7
     );
 
     // jsonLog('Analyzing Projects', projects);

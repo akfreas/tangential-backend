@@ -1,19 +1,26 @@
-import { SendMessageCommand, SendMessageCommandInput } from "@aws-sdk/client-sqs";
+import {
+  SendMessageCommand,
+  SendMessageCommandInput,
+} from "@aws-sdk/client-sqs";
 import { sqs } from "../config/config";
-import { JiraRequestAuth, doError } from "@akfreas/tangential-core";
+import {
+  JiraRequestAuth,
+  ProjectDefinition,
+  doError,
+} from "@akfreas/tangential-core";
 
 export const MessageType = {
-  PROJECT_ANALYSIS_BEGIN: 'PROJECT_ANALYSIS_BEGIN',
-  EPIC_ANALYSIS: 'EPIC_ANALYSIS',
-  PROJECT_ANALYSIS_FINALIZE: 'PROJECT_ANALYSIS_FINALIZE'
-}
+  PROJECT_ANALYSIS_BEGIN: "PROJECT_ANALYSIS_BEGIN",
+  EPIC_ANALYSIS: "EPIC_ANALYSIS",
+  PROJECT_ANALYSIS_FINALIZE: "PROJECT_ANALYSIS_FINALIZE",
+};
 
 async function sendMessage(payload: SendMessageCommandInput) {
   try {
-    await sqs.send(new SendMessageCommand(payload))
+    await sqs.send(new SendMessageCommand(payload));
   } catch (err) {
     if (err instanceof Error) {
-      doError('Error sending SQS message', err, payload);
+      doError("Error sending SQS message", err, payload);
     } else {
       throw err;
     }
@@ -21,9 +28,8 @@ async function sendMessage(payload: SendMessageCommandInput) {
   return Promise.resolve();
 }
 
-
 export async function sendProjectAnalysisBeginQueueMessage(
-  projectKey: string,
+  projectDefinition: ProjectDefinition,
   windowStartDate: string,
   auth: JiraRequestAuth,
   velocityWindowDays: number,
@@ -33,34 +39,38 @@ export async function sendProjectAnalysisBeginQueueMessage(
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
       messageType: MessageType.PROJECT_ANALYSIS_BEGIN,
-      projectKey,
+      projectDefinition,
       windowStartDate,
       auth,
       velocityWindowDays,
-      longRunningDays
-    })
+      longRunningDays,
+    }),
   };
   await sendMessage(payload);
 }
 
-export async function sendProjectAnalysisFinalizeQueueMessage(buildId: string, auth: JiraRequestAuth): Promise<void> {
+export async function sendProjectAnalysisFinalizeQueueMessage(
+  parentProjectId: string,
+  auth: JiraRequestAuth
+): Promise<void> {
   const payload = {
     QueueUrl: process.env.jiraAnalysisQueueUrl as string,
     MessageBody: JSON.stringify({
       messageType: MessageType.PROJECT_ANALYSIS_FINALIZE,
-      buildId,
-      auth
-    })
+      parentProjectId,
+      auth,
+    }),
   };
   await sendMessage(payload);
-
 }
 
 export async function sendEpicAnalysisQueueMessage(
   buildId: string,
-  projectKey: string,
-  epicKey: string,
+  parentProjectId: string,
+  key: string,
   auth: JiraRequestAuth,
+  windowStartDate: string,
+  windowEndDate: string,
   velocityWindowDays: number,
   longRunningDays: number
 ): Promise<void> {
@@ -69,32 +79,52 @@ export async function sendEpicAnalysisQueueMessage(
     MessageBody: JSON.stringify({
       buildId,
       messageType: MessageType.EPIC_ANALYSIS,
-      projectKey,
-      epicKey,
+      key,
       auth,
+      parentProjectId,
+      windowStartDate,
+      windowEndDate,
       velocityWindowDays,
-      longRunningDays
-    })
+      longRunningDays,
+    }),
   };
   await sendMessage(payload);
 }
 
 export async function sendUpdateProjectAnalysisStatusQueueMessage(
   epicKey: string,
-  buildId: string,
+  parentProjectId: string,
   auth: JiraRequestAuth
 ): Promise<void> {
-  if (!buildId) {
-    throw new Error('sendUpdateProjectAnalysisStatusQueueMessage: No job ID provided');
+  if (!parentProjectId) {
+    throw new Error(
+      "sendUpdateProjectAnalysisStatusQueueMessage: No parentProjectId provided"
+    );
   }
   const payload = {
     QueueUrl: process.env.updateProjectAnalysisStatusQueueUrl as string,
     MessageBody: JSON.stringify({
       epicKey,
-      buildId,
-      auth
+      parentProjectId,
+      auth,
     }),
-    MessageGroupId: buildId
+    MessageGroupId: parentProjectId,
+  };
+  await sendMessage(payload);
+}
+
+export async function sendTextReportGenerationQueueMessage(
+  buildId: string,
+  templateId: string,
+  auth: JiraRequestAuth
+): Promise<void> {
+  const payload = {
+    QueueUrl: process.env.textReportGenerationQueueUrl as string,
+    MessageBody: JSON.stringify({
+      buildId,
+      auth,
+      templateId,
+    }),
   };
   await sendMessage(payload);
 }

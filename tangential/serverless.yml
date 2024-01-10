@@ -25,9 +25,9 @@ provider:
   environment:
     jiraAnalysisQueueUrl: ${self:custom.jiraAnalysisQueueUrl.${self:provider.stage}, self:custom.jiraAnalysisQueueUrl.remote}
     updateProjectAnalysisStatusQueueUrl: ${self:custom.updateProjectAnalysisStatusQueueUrl.${self:provider.stage}, self:custom.updateProjectAnalysisStatusQueueUrl.remote}
-    writeReportQueueUrl: ${self:custom.writeReportQueueUrl.${self:provider.stage}, self:custom.writeReportQueueUrl.remote}
+    textReportGenerationQueueUrl: ${self:custom.textReportGenerationQueueUrl.${self:provider.stage}, self:custom.textReportGenerationQueueUrl.remote}
     OPENAI_API_KEY: ${env:OPENAI_API_KEY}
-    MONGODB_URI: ${env:${self:custom.mongodbUriEnvVar.${self:provider.stage}, self:custom.mongodbUriEnvVar.dev}}
+    MONGODB_URI: ${env:MONGODB_URI}
     MONGODB_DATABASE: tangential-${opt:stage}
 
   httpApi:
@@ -47,10 +47,6 @@ custom:
 
   packageIndividually:
     offline: false
-  mongodbUriEnvVar:
-    offline: MONGODB_URI_OFFLINE
-    dev: MONGODB_URI_DEV
-    live: MONGODB_URI_LIVE
   jiraAnalysisQueueUrl:
     offline: ${self:custom.offlineQueueUrl}/JiraAnalysisQueue-${self:provider.stage}
     remote:
@@ -61,10 +57,10 @@ custom:
     remote:
       Ref: UpdateProjectAnalysisStatusQueueFifo
 
-  writeReportQueueUrl:
-    offline: ${self:custom.offlineQueueUrl}/WriteReportQueue-${self:provider.stage}
+  textReportGenerationQueueUrl:
+    offline: ${self:custom.offlineQueueUrl}/ReportGenerationQueue-${self:provider.stage}
     remote:
-      Ref: WriteReportQueue
+      Ref: ReportGenerationQueue
 
   serverless-offline-sqs:
     endpoint: http://localhost:4566
@@ -81,12 +77,37 @@ custom:
     autoDomain: true
 
 functions:
+  ### HTTP API ###
+
   startWorkspaceAnalysis:
     handler: src/functions/startWorkspaceAnalysis.handler
     events:
       - httpApi:
           method: get
           path: /workspace/analyze
+
+  startProjectAnalysis:
+    handler: src/functions/startProjectAnalysis.handler
+    events:
+      - httpApi:
+          method: post
+          path: /project/analyze
+
+  startTextReportGeneration:
+    handler: src/functions/startTextReportGeneration.handler
+    events:
+      - httpApi:
+          method: post
+          path: /generateReport
+
+  templates:
+    handler: src/functions/templates.handler
+    events:
+      - httpApi:
+          method: get
+          path: /templates
+
+  ### Queue Handlers ###
 
   analysisQueueHandler:
     handler: src/functions/analysisQueueHandler.handler
@@ -102,12 +123,13 @@ functions:
           arn: !GetAtt UpdateProjectAnalysisStatusQueueFifo.Arn
           batchSize: 5
 
-  writeReportQueueHandler:
-    handler: src/functions/writeReport.handler
+  ReportGenerationQueueHandler:
+    handler: src/functions/generateTextReport.handler
     events:
       - sqs:
-          arn: !GetAtt WriteReportQueue.Arn
+          arn: !GetAtt ReportGenerationQueue.Arn
           batchSize: 5
+
 resources:
   Resources:
     JiraAnalysisQueue:
@@ -142,10 +164,10 @@ resources:
         FifoQueue: true
         ContentBasedDeduplication: true
 
-    WriteReportQueue:
+    ReportGenerationQueue:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: WriteReportQueue-${self:provider.stage}
+        QueueName: ReportGenerationQueue-${self:provider.stage}
         RedrivePolicy:
           deadLetterTargetArn: !GetAtt WriteReportDeadLetterQueue.Arn
           maxReceiveCount: 2

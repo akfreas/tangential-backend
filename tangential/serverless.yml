@@ -27,7 +27,7 @@ provider:
     updateProjectAnalysisStatusQueueUrl: ${self:custom.updateProjectAnalysisStatusQueueUrl.${self:provider.stage}, self:custom.updateProjectAnalysisStatusQueueUrl.remote}
     textReportGenerationQueueUrl: ${self:custom.textReportGenerationQueueUrl.${self:provider.stage}, self:custom.textReportGenerationQueueUrl.remote}
     OPENAI_API_KEY: ${env:OPENAI_API_KEY}
-    MONGODB_URI: ${env:${self:custom.mongodbUriEnvVar.${self:provider.stage}, self:custom.mongodbUriEnvVar.dev}}
+    MONGODB_URI: ${env:MONGODB_URI}
     MONGODB_DATABASE: tangential-${opt:stage}
 
   httpApi:
@@ -47,10 +47,6 @@ custom:
 
   packageIndividually:
     offline: false
-  mongodbUriEnvVar:
-    offline: MONGODB_URI_OFFLINE
-    dev: MONGODB_URI_DEV
-    live: MONGODB_URI_LIVE
   jiraAnalysisQueueUrl:
     offline: ${self:custom.offlineQueueUrl}/JiraAnalysisQueue-${self:provider.stage}
     remote:
